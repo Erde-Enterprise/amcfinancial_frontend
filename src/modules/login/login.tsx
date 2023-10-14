@@ -1,16 +1,27 @@
 import { Button, Grid, TextField } from "@mui/material";
 import { FormEvent, useState } from "react";
-import { buttonStyle, inputStyle, labelStyle } from "./utils/utils";
+import {
+  buttonStyle,
+  inputStyle,
+  labelStyle,
+  validateLogin,
+  validatePassword,
+} from "./utils/utils";
 import { FinancialImage } from "./components/financial";
+import { snackActions } from "../../utils/notification/snackbar-util";
 
 export function LoginView() {
-  const [login, setLogin] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const [login, setLogin] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(`Login: ${login}, Password: ${password}`);
+    snackActions.warning("Login realizado mas a tela não será carregada");
   };
+
+  const isLoginValid = validateLogin(login);
+  const isPasswordValid = validatePassword(password);
+  const isFormValid = isLoginValid && isPasswordValid;
 
   return (
     <>
@@ -38,7 +49,7 @@ export function LoginView() {
                   onChange={(event) => setLogin(event.target.value)}
                   InputLabelProps={labelStyle}
                   sx={inputStyle}
-                  
+                  error={!isLoginValid}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -50,11 +61,16 @@ export function LoginView() {
                   onChange={(event) => setPassword(event.target.value)}
                   InputLabelProps={labelStyle}
                   sx={inputStyle}
-                  
+                  error={!isPasswordValid}
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button type="submit" variant="contained" sx={buttonStyle}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={buttonStyle}
+                  disabled={!isFormValid}
+                >
                   Login
                 </Button>
               </Grid>
