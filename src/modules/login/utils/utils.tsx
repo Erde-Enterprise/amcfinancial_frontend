@@ -5,6 +5,11 @@ export function validateLogin(email: string): boolean {
   return regex.test(email);
 }
 
+export function validatePassword(password: string): boolean {
+  
+  return password?.trim() !== '' && password.length>3 ? true: false;
+}
+
 export const inputStyle: SxProps<Theme> | undefined = {
   backgroundColor: "#E8EFF8",
   color: "#A0A3BD",
