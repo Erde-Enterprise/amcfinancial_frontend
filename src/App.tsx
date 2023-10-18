@@ -1,6 +1,6 @@
-import { LoginView } from "./modules/login/login";
 import { SnackbarProvider } from "notistack";
 import { SnackbarUtilsConfigurator } from "./utils/notification/snackbar-util";
+import AppRoutes from "./routes/app-routes";
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
       >
         {" "}
         <SnackbarUtilsConfigurator />
-        <LoginView />;
+        <AppRoutes />
       </SnackbarProvider>
     </div>
   );
