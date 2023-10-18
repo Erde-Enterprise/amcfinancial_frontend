@@ -10,7 +10,7 @@ import {
 import { FinancialImage } from "./components/financial";
 import { snackActions } from "../../utils/notification/snackbar-util";
 
-export function LoginView() {
+export function LoginPage() {
   const [login, setLogin] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
