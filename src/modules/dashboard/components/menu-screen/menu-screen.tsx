@@ -10,17 +10,15 @@ import LocalHospitalRoundedIcon from "@mui/icons-material/LocalHospitalRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import { styleMenuIconItem, styleMenuItem } from "../../utils/utils";
 
-export function MenuScreen() {
-  const [open, setOpen] = useState(false);
+interface MenuScreenProps {
+  handleMenuOpen: () => void;
+  handleMenuClose: () => void;
+  open: boolean;
+}
+
+export function MenuScreen(props: MenuScreenProps) {
+  const { handleMenuOpen, handleMenuClose, open } = props;
   const navigate = useNavigate();
-
-  const handleMenuOpen = () => {
-    setOpen(true);
-  };
-
-  const handleMenuClose = () => {
-    setOpen(false);
-  };
 
   const handleRedirect = (path: string) => {
     navigate(path);
@@ -54,24 +52,33 @@ export function MenuScreen() {
         }}
       >
         <List>
-        <MenuItem></MenuItem>
-          <MenuItem sx={styleMenuItem} onClick={() => handleRedirect("/dashboard")}>
-          <DashboardRoundedIcon fontSize="small" sx={styleMenuIconItem}/>
+          <MenuItem></MenuItem>
+          <MenuItem
+            sx={styleMenuItem}
+            onClick={() => handleRedirect("/dashboard")}
+          >
+            <DashboardRoundedIcon fontSize="small" sx={styleMenuIconItem} />
             Dashboard
           </MenuItem>
           <MenuItem></MenuItem>
-          <MenuItem sx={styleMenuItem} onClick={() => handleRedirect("/activity-history")}>
-          <ArticleRoundedIcon fontSize="small" sx={styleMenuIconItem}/>
+          <MenuItem
+            sx={styleMenuItem}
+            onClick={() => handleRedirect("/activity-history")}
+          >
+            <ArticleRoundedIcon fontSize="small" sx={styleMenuIconItem} />
             Activity History
           </MenuItem>
           <MenuItem></MenuItem>
-          <MenuItem sx={styleMenuItem} onClick={() => handleRedirect("/clinics")}>
-          <LocalHospitalRoundedIcon fontSize="small" sx={styleMenuIconItem}/>
+          <MenuItem
+            sx={styleMenuItem}
+            onClick={() => handleRedirect("/clinics")}
+          >
+            <LocalHospitalRoundedIcon fontSize="small" sx={styleMenuIconItem} />
             Clinics
           </MenuItem>
           <MenuItem></MenuItem>
           <MenuItem sx={styleMenuItem} onClick={() => handleRedirect("/users")}>
-          <PersonRoundedIcon fontSize="small" sx={styleMenuIconItem} />
+            <PersonRoundedIcon fontSize="small" sx={styleMenuIconItem} />
             Users
           </MenuItem>
         </List>
