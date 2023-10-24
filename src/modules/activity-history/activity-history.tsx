@@ -1,3 +1,3 @@
 export function ActivityHistoryPage(){
-    return(<></>);
+    return(<>Activity</>);
 }

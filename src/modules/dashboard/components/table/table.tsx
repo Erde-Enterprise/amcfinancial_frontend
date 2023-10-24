@@ -132,7 +132,7 @@ export function Table() {
         columns={columns}
         data={[]}
         containerProps={{
-          sx: { maxHeight: "55vh", minHeight: "45vh", minWidth: "1700px" },
+          sx: { maxHeight: "55vh", minHeight: "45vh", minWidth: "1000px" },
         }}
         displayColumnDefOptions={{
           "mrt-row-actions": {
