@@ -10,38 +10,41 @@ interface AmcFinancialRoutes {
   key: string;
   element: any;
 }
-
+/*
+Para rotas privadas deve-se passar como se fosse uma referência/função etc
+Para a rota pública, ou seja Login deve passar o componente diretamente.
+*/
 const routers: AmcFinancialRoutes[] = [
   {
     index: true,
     path: "/",
     key: "root",
-    element: <LoginPage />,
+    element: <LoginPage/>,
   },
   {
     path: "/login",
     key: "login-page",
-    element: <LoginPage />,
+    element: <LoginPage/>,
   },
   {
     path: "/dashboard",
     key: "dashboard-page",
-    element: <DashboardPage />,
+    element: DashboardPage,
   },
   {
     path: "/users",
     key: "users-page",
-    element: <UsersPage />,
+    element: UsersPage,
   },
   {
     path: "/clinics",
     key: "clinics-page",
-    element: <ClinicsPage />,
+    element: ClinicsPage,
   },
   {
     path: "/activity-history",
     key: "activity-history-page",
-    element: <ActivityHistoryPage />,
+    element: ActivityHistoryPage,
   },
 ];
 
