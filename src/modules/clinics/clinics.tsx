@@ -1,3 +1,3 @@
 export function ClinicsPage(){
-    return(<></>);
+    return(<>clinics</>);
 }

@@ -1,6 +1,7 @@
 import { SnackbarProvider } from "notistack";
 import { SnackbarUtilsConfigurator } from "./utils/notification/snackbar-util";
 import AppRoutes from "./routes/app-routes";
+import { AuthProvider } from "./auth/auth";
 
 function App() {
   return (
@@ -15,7 +16,9 @@ function App() {
       >
         {" "}
         <SnackbarUtilsConfigurator />
-        <AppRoutes />
+        <AuthProvider> 
+          <AppRoutes />
+        </AuthProvider>
       </SnackbarProvider>
     </div>
   );

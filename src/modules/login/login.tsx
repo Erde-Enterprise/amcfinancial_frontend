@@ -1,5 +1,5 @@
 import { Button, Grid, TextField } from "@mui/material";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import {
   buttonStyle,
   inputStyle,
@@ -8,18 +8,20 @@ import {
   validatePassword,
 } from "./utils/utils";
 import { FinancialImage } from "./components/financial";
-import { snackActions } from "../../utils/notification/snackbar-util";
+import useEndPoint from "../../auth/endpoints";
+
 
 export function LoginPage() {
-  const [login, setLogin] = useState<string>("");
+  const [access, setAccess] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const { login } = useEndPoint();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    snackActions.warning("Login realizado mas a tela não será carregada");
+    await login(access, password);
   };
 
-  const isLoginValid = validateLogin(login);
+  const isLoginValid = validateLogin(access);
   const isPasswordValid = validatePassword(password);
   const isFormValid = isLoginValid && isPasswordValid;
 
@@ -45,8 +47,8 @@ export function LoginPage() {
                 <TextField
                   label="Login or access key"
                   variant="outlined"
-                  value={login}
-                  onChange={(event) => setLogin(event.target.value)}
+                  value={access}
+                  onChange={(event) => setAccess(event.target.value)}
                   InputLabelProps={labelStyle}
                   sx={inputStyle}
                   error={!isLoginValid}

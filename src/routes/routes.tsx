@@ -14,28 +14,34 @@ interface AmcFinancialRoutes {
 const routers: AmcFinancialRoutes[] = [
   {
     index: true,
-    key: "login",
+    path: "/",
+    key: "root",
     element: <LoginPage />,
   },
   {
-    path:'/dashboard',
-    key:'dashboard-page',
-    element: <DashboardPage/>
+    path: "/login",
+    key: "login-page",
+    element: <LoginPage />,
   },
   {
-    path:'/users',
-    key:'users-page',
-    element: <UsersPage/>
+    path: "/dashboard",
+    key: "dashboard-page",
+    element: <DashboardPage />,
   },
   {
-    path:'/clinics',
-    key:'clinics-page',
-    element: <ClinicsPage/>
+    path: "/users",
+    key: "users-page",
+    element: <UsersPage />,
   },
   {
-    path:'/activity-history',
-    key:'activity-history-page',
-    element: <ActivityHistoryPage/>
+    path: "/clinics",
+    key: "clinics-page",
+    element: <ClinicsPage />,
+  },
+  {
+    path: "/activity-history",
+    key: "activity-history-page",
+    element: <ActivityHistoryPage />,
   },
 ];
 

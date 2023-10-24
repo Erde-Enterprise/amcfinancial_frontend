@@ -1,3 +1,3 @@
 export function UsersPage(){
-    return(<></>);
+    return(<>Users</>);
 }
