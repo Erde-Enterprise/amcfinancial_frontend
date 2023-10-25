@@ -11,7 +11,7 @@ function useEndPoint() {
   const navigate = useNavigate();
   async function login(email_or_nickname: string, password: string) {
     try {
-      const response = await api.post("/login", {
+      const response = await api.post("/login/", {
         email_or_nickname,
         password,
       });

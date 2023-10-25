@@ -12,10 +12,8 @@ import { useContext, useState } from "react";
 import AuthContext from "../../auth/auth";
 
 export function DashboardPage() {
-  console.log('DashboardPage is being rendered');
   const [open, setOpen] = useState(false);
   const { user } = useContext(AuthContext);
-  console.log(user);
 
   const handleMenuOpen = () => {
     setOpen(true);
@@ -32,9 +30,14 @@ export function DashboardPage() {
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <AppBar
               position="static"
-              style={{ backgroundColor: "transparent" }}
+              style={{
+                backgroundColor: "transparent",
+                width: "100%",
+                boxShadow: "none",
+                border: "1px solid rgba(0, 0, 0, 0.12)",
+              }}
             >
-              <Toolbar>
+              <Toolbar style={{ justifyContent: "space-between" }}>
                 <MenuScreen
                   handleMenuOpen={() => handleMenuOpen()}
                   handleMenuClose={() => handleMenuClose()}
@@ -49,8 +52,8 @@ export function DashboardPage() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: "75vh",
-              marginLeft: open ? "15%" : "0",
+              height: "100vh",
+              marginLeft: open ? "20%" : "auto",
             }}
           >
             <Table />

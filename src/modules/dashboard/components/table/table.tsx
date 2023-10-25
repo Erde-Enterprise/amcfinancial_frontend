@@ -14,13 +14,6 @@ export function Table() {
         id: "rechnung",
         columnDefType: "data",
         _filterFn: "contains",
-        GroupedCell: ({ cell }: any) => (
-          <>
-            <span>
-              <b>{cell.getValue()}</b> ({cell.row.leafRows.length})
-            </span>
-          </>
-        ),
       },
       {
         accessorKey: "name",
@@ -51,6 +44,13 @@ export function Table() {
         id: "dueDate",
         columnDefType: "data",
         _filterFn: "contains",
+        GroupedCell: ({ cell }: any) => (
+          <>
+            <span>
+              <b>{cell.getValue()}</b> ({cell.row.leafRows.length})
+            </span>
+          </>
+        ),
       },
       {
         accessorKey: "mahnung",
@@ -61,6 +61,13 @@ export function Table() {
         id: "mahnung",
         columnDefType: "data",
         _filterFn: "contains",
+        GroupedCell: ({ cell }: any) => (
+          <>
+            <span>
+              <b>{cell.getValue()}</b> ({cell.row.leafRows.length})
+            </span>
+          </>
+        ),
       },
       {
         accessorKey: "description",
@@ -106,7 +113,7 @@ export function Table() {
         accessorKey: "type",
         header: "Type",
         maxSize: 400,
-        size: 80,
+        size: 45,
         minSize: 20,
         id: "type",
         columnDefType: "data",
@@ -116,7 +123,7 @@ export function Table() {
         accessorKey: "clinic",
         header: "Clinuc",
         maxSize: 400,
-        size: 80,
+        size: 50,
         minSize: 20,
         id: "clinic",
         columnDefType: "data",
@@ -132,7 +139,7 @@ export function Table() {
         columns={columns}
         data={[]}
         containerProps={{
-          sx: { maxHeight: "55vh", minHeight: "45vh", minWidth: "1000px" },
+          sx: { maxHeight: "55vh", minHeight: "45vh", minWidth: "50%", flex:1 },
         }}
         displayColumnDefOptions={{
           "mrt-row-actions": {
@@ -145,9 +152,9 @@ export function Table() {
           "mrt-row-select": {
             enableColumnActions: false,
             enableHiding: false,
-            size: 5,
+            size: 15,
             minSize: 5,
-            maxSize: 5,
+            maxSize: 25,
           },
           "mrt-row-expand": {
             size: 10,
@@ -155,7 +162,7 @@ export function Table() {
             maxSize: 10,
           },
         }}
-        initialState={{ grouping: ["rechnung"], expanded: true }}
+        initialState={{ grouping: ["mahnung","dueDate"], expanded: true }}
         cellFontSizeInBody={"0.5rem"}
         headerCellFontSize={"0.6rem"}
       />
