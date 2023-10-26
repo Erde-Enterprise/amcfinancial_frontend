@@ -1,8 +1,17 @@
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import CustomTable from "./custom-table/Custom-React-Table";
 import { MRT_ColumnDef } from "material-react-table";
+import { Box, Button, Grid } from "@mui/material";
+import { getRandomPhrase, styleMenuItem } from "../../utils/utils";
+import AuthContext from "../../../../auth/auth";
+import PlaylistAddCircleIcon from "@mui/icons-material/PlaylistAddCircle";
+import UpdateIcon from "@mui/icons-material/Update";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import useEndPoint from "../../../../auth/endpoints";
 
 export function Table() {
+  const { user } = useContext(AuthContext);
+  const { addInvoice } = useEndPoint();
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
       {
@@ -133,39 +142,71 @@ export function Table() {
     []
   );
   return (
-    <>
-      <CustomTable
-        title=""
-        columns={columns}
-        data={[]}
-        containerProps={{
-          sx: { maxHeight: "55vh", minHeight: "45vh", minWidth: "50%", flex:1 },
-        }}
-        displayColumnDefOptions={{
-          "mrt-row-actions": {
-            size: 20,
-            minSize: 10,
-            maxSize: 30,
-            enableColumnActions: false,
-            enableHiding: false,
-          },
-          "mrt-row-select": {
-            enableColumnActions: false,
-            enableHiding: false,
-            size: 15,
-            minSize: 5,
-            maxSize: 25,
-          },
-          "mrt-row-expand": {
-            size: 10,
-            minSize: 10,
-            maxSize: 10,
-          },
-        }}
-        initialState={{ grouping: ["mahnung","dueDate"], expanded: true }}
-        cellFontSizeInBody={"0.5rem"}
-        headerCellFontSize={"0.6rem"}
-      />
-    </>
+    <Grid container alignItems={"center"} spacing={1} flexDirection={"column"}>
+      <Box mb={0.5}>
+        <Grid item>
+          <h3>Welcome, {user?.name}</h3>
+        </Grid>
+      </Box>
+      <Box mb={3}>
+        <Grid item sx={styleMenuItem}>
+          {getRandomPhrase()}
+        </Grid>
+      </Box>
+      <Box mb={0.1}>
+        <Grid item>
+          <Button endIcon={<UpdateIcon fontSize="small" />} color="error">Delete</Button>
+          <Button endIcon={<DeleteForeverIcon fontSize="small" />} color="warning">Update</Button>
+          <Button
+            endIcon={<PlaylistAddCircleIcon fontSize="small" />}
+            color="primary"
+            onClick={()=>{addInvoice();}}
+          >
+            Insert
+          </Button>
+        </Grid>
+      </Box>
+      <Box mb={0.1}>
+        <Grid item>
+          <CustomTable
+            title=""
+            columns={columns}
+            data={[]}
+            containerProps={{
+              sx: {
+                maxHeight: "55vh",
+                minHeight: "45vh",
+                minWidth: "50%",
+                flex: 1,
+              },
+            }}
+            displayColumnDefOptions={{
+              "mrt-row-actions": {
+                size: 20,
+                minSize: 10,
+                maxSize: 30,
+                enableColumnActions: false,
+                enableHiding: false,
+              },
+              "mrt-row-select": {
+                enableColumnActions: false,
+                enableHiding: false,
+                size: 15,
+                minSize: 5,
+                maxSize: 25,
+              },
+              "mrt-row-expand": {
+                size: 10,
+                minSize: 10,
+                maxSize: 10,
+              },
+            }}
+            initialState={{ grouping: ["mahnung", "dueDate"], expanded: true }}
+            cellFontSizeInBody={"0.5rem"}
+            headerCellFontSize={"0.6rem"}
+          />
+        </Grid>
+      </Box>
+    </Grid>
   );
 }

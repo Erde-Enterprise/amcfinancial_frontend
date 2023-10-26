@@ -3,6 +3,7 @@ import { UsersPage } from "../modules/users/users";
 import { ClinicsPage } from "../modules/clinics/clinics";
 import { ActivityHistoryPage } from "../modules/activity-history/activity-history";
 import { LoginPage } from "../modules/login/login";
+import { AddInvoice } from "../modules/dashboard/features/add-invoice/add-invoice";
 
 interface AmcFinancialRoutes {
   path?: string;
@@ -45,6 +46,11 @@ const routers: AmcFinancialRoutes[] = [
     path: "/activity-history",
     key: "activity-history-page",
     element: ActivityHistoryPage,
+  },
+  {
+    path: "/new-invoice",
+    key: "new-invoice-page",
+    element: AddInvoice,
   },
 ];
 
