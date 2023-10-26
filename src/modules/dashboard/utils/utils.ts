@@ -9,8 +9,6 @@ export const styleMenuIconItem: SxProps<Theme> | undefined = {
   marginRight: 2,
 };
 
-
-
 export function getRandomPhrase(): string {
   let financialPhrases: string[] = [
     "Today is a great day to conduct financial activities.",
@@ -41,19 +39,39 @@ export function getRandomPhrase(): string {
     "It's an ideal day for setting up automatic savings transfers.",
     "Today is a perfect day for checking on your financial health.",
     "It's a great day for creating a new income stream.",
-    "Today is an excellent day for reviewing your financial goals progress."
+    "Today is an excellent day for reviewing your financial goals progress.",
   ];
-let randomIndex = Math.floor(Math.random() * financialPhrases.length);
-return financialPhrases[randomIndex];
+  let randomIndex = Math.floor(Math.random() * financialPhrases.length);
+  return financialPhrases[randomIndex];
 }
 
 export function validateForm(invoice: InvoiceInsertEntity) {
   for (let key in invoice) {
-    if (invoice[key as keyof InvoiceInsertEntity] === '' || invoice[key as keyof InvoiceInsertEntity] === 0) {
-      snackActions.error(`Erro: O campo ${key} está em branco.`);
+    if (key === 'attachment') {
+      if ((invoice[key as keyof InvoiceInsertEntity] as File).size === 0) {
+        snackActions.error(`${key} is required.`);
+        return false;
+      }
+    } else if (invoice[key as keyof InvoiceInsertEntity] === "") {
+      snackActions.error(`${key} is required.`);
       return false;
     }
   }
   return true;
 }
 
+
+export const validatorsInvoice = {
+  rechnung: (value: string) => value !== "" && /^[0-9]+$/.test(value),
+  name: (value: string) => value !== "",
+  price: (value: string) => value !== "" && /^[0-9]*\.?[0-9]*$/.test(value),
+  dueDate: (value: string) => value !== "", //&& /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d\d$/.test(value),
+  mahnung: (value: string) => value !== "" && /^[0-9]+$/.test(value),
+  description: (value: string) => value !== "",
+  issuedOn: (value: string) => value !== "", // && /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d\d$/.test(value),
+  attachment: (file: File) =>
+    /\.(pdf|jpg|jpeg|png|gif)$/.test(file.name.toLowerCase()),
+  status: (value: string) => value !== "",
+  type: (value: string) => value !== "",
+  clinic: (value: string) => value !== "",
+};

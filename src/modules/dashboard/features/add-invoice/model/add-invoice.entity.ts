@@ -1,12 +1,12 @@
 export interface InvoiceInsertEntity {
     rechnung: string;
     name: string;
-    price: number;
+    price: string;
     dueDate: string;
-    mahnung: number;
+    mahnung: string;
     description: string;
     issuedOn: string;
-    attachment: string;
+    attachment: File;
     status: string;
     type: string;
     clinic: string;

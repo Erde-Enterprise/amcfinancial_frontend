@@ -1,30 +1,81 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { TextField, Button, Container, Grid } from "@mui/material";
 import { InvoiceInsertEntity } from "./model/add-invoice.entity";
-import { validateForm } from "../../utils/utils";
+import { validateForm, validatorsInvoice } from "../../utils/utils";
 import useEndPoint from "../../../../auth/endpoints";
-
+import SendIcon from '@mui/icons-material/Send';
+import ReplayIcon from '@mui/icons-material/Replay';
+import CloseIcon from '@mui/icons-material/Close';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 export function AddInvoice() {
   const { goToDashboardInCancelButton } = useEndPoint();
   const [invoice, setInvoice] = useState<InvoiceInsertEntity>({
     rechnung: "",
     name: "",
-    price: 0,
+    price: "",
     dueDate: "",
-    mahnung: 0,
+    mahnung: "",
     description: "",
     issuedOn: "",
-    attachment: "",
+    attachment: new File([""], ""),
     status: "",
     type: "",
     clinic: "",
   });
+  // const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   setInvoice({
+  //     ...invoice,
+  //     [event.target.name]: event.target.value,
+  //   });
+  // };
+  // const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = event.target;
+  //   let formattedValue = value;
+
+  //   // Se o campo alterado for uma data, reformate a data
+  //   if (name === "dueDate" || name === "issuedOn") {
+  //     const dateParts = value.split("/");
+  //     if (dateParts.length === 3) {
+  //       formattedValue = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
+  //     }
+  //   }
+
+  //   setInvoice({ ...invoice, [name]: formattedValue });
+  // };
+  // const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   const { name } = event.target;
+
+  //   if (name === 'attachment') {
+  //     if (event.target.files && event.target.files.length > 0) {
+  //       let file = event.target.files[0];
+  //       if (validatorsInvoice.attachment(file)) {
+  //         // Se o arquivo for válido, atualize o estado
+  //         setInvoice({ ...invoice, [name]: file });
+  //       } else {
+  //         console.log('Invalid file');
+  //       }
+  //     }
+  //   } else {
+  //     setInvoice({ ...invoice, [name]: event.target.value });
+  //   }
+  // };
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInvoice({
-      ...invoice,
-      [event.target.name]: event.target.value,
-    });
+    const { name } = event.target;
+
+    if (name === "attachment") {
+      if (event.target.files && event.target.files.length > 0) {
+        let file = event.target.files[0];
+        if (validatorsInvoice.attachment(file)) {
+          // Se o arquivo for válido, atualize o estado
+          setInvoice((prevState) => ({ ...prevState, [name]: file }));
+        } else {
+          console.log("Invalid file");
+        }
+      }
+    } else {
+      setInvoice((prevState) => ({ ...prevState, [name]: event.target.value }));
+    }
   };
 
   const handleSubmit = (event: FormEvent) => {
@@ -37,158 +88,192 @@ export function AddInvoice() {
   const handleCancel = () => {
     goToDashboardInCancelButton();
   };
+  const handleReset = () => {
+    setInvoice({
+      rechnung: "",
+      name: "",
+      price: "",
+      dueDate: "",
+      mahnung: "",
+      description: "",
+      issuedOn: "",
+      attachment: new File([""], ""),
+      status: "",
+      type: "",
+      clinic: "",
+    });
+  };
   return (
     <>
-    <Container sx={{ flexDirection: "column", flex: 1 }}>
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2} alignItems={"center"}>
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  name="rechnung"
-                  label="Rechnung"
-                  value={invoice.rechnung}
-                  onChange={handleChange}
-                  error={invoice.rechnung === "" ? true : false}
-                  fullWidth
-                />
+      <Container sx={{ flexDirection: "column", flex: 1, marginTop: "10%" }}>
+        <form onSubmit={handleSubmit}>
+          <Grid
+            container
+            spacing={2}
+            direction={"column"}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Button variant="outlined" endIcon={<AttachFileIcon fontSize="small" />} component="label">
+              Attachment
+              <input
+                type="file"
+                id="attachment"
+                name="attachment"
+                onChange={handleChange}
+                hidden
+              />
+            </Button>
+            <br />
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="filled"
+                    name="rechnung"
+                    label="Rechnung"
+                    value={invoice.rechnung}
+                    onChange={handleChange}
+                    error={!validatorsInvoice.rechnung(invoice.rechnung)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={1.5}>
+                  <TextField
+                    variant="filled"
+                    name="price"
+                    label="Price"
+                    value={invoice.price}
+                    onChange={handleChange}
+                    error={!validatorsInvoice.price(invoice.price)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={1.5}>
+                  <TextField
+                    variant="filled"
+                    name="mahnung"
+                    label="Mahnung"
+                    value={invoice.mahnung}
+                    onChange={handleChange}
+                    error={!validatorsInvoice.mahnung(invoice.mahnung)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <TextField
+                    variant="filled"
+                    name="type"
+                    label="Type"
+                    value={invoice.type}
+                    onChange={handleChange}
+                    error={!validatorsInvoice.type(invoice.type)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={2.5}>
+                  <TextField
+                    variant="filled"
+                    name="issuedOn"
+                    label="IssuedOn"
+                    value={invoice.issuedOn}
+                    onChange={handleChange}
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    error={!validatorsInvoice.issuedOn(invoice.issuedOn)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={2.5}>
+                  <TextField
+                    variant="filled"
+                    name="dueDate"
+                    label="DueDate"
+                    value={invoice.dueDate}
+                    onChange={handleChange}
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    error={!validatorsInvoice.dueDate(invoice.dueDate)}
+                    fullWidth
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="name"
-                  label="Name"
-                  value={invoice.name}
-                  onChange={handleChange}
-                  error={invoice.name === "" ? true : false}
-                  fullWidth
-                />
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    variant="filled"
+                    name="name"
+                    label="Name"
+                    value={invoice.name}
+                    onChange={handleChange}
+                    error={!validatorsInvoice.name(invoice.name)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    variant="filled"
+                    name="status"
+                    label="Status"
+                    value={invoice.status}
+                    onChange={handleChange}
+                    error={!validatorsInvoice.status(invoice.status)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    variant="filled"
+                    name="clinic"
+                    label="Clinic"
+                    value={invoice.clinic}
+                    onChange={handleChange}
+                    error={!validatorsInvoice.clinic(invoice.clinic)}
+                    fullWidth
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="price"
-                  label="Price"
-                  value={invoice.price}
-                  onChange={handleChange}
-                  type="number"
-                  error={invoice.price === 0 ? true : false}
-                  fullWidth
-                />
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="filled"
+                    name="description"
+                    label="Description"
+                    value={invoice.description}
+                    onChange={handleChange}
+                    error={!validatorsInvoice.description(invoice.description)}
+                    fullWidth
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid
+                container
+                spacing={2}
+                alignItems={"center"}
+                justifyContent={"center"}
+              >
+                <Grid item xs={3.5}>
+                  <Button color="inherit" endIcon={<CloseIcon fontSize="small" />} onClick={handleCancel}>
+                    Cancel
+                  </Button>
+                  <Button color="secondary" endIcon={<ReplayIcon fontSize="small" />} onClick={handleReset}>
+                    Reset
+                  </Button>
+                  <Button endIcon={<SendIcon fontSize="small" />} type="submit">Send</Button>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  name="dueDate"
-                  label="Due Date"
-                  value={invoice.dueDate}
-                  onChange={handleChange}
-                  type="date"
-                  InputLabelProps={{ shrink: true }}
-                  error={invoice.dueDate === "" ? true : false}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="mahnung"
-                  label="Mahnung"
-                  value={invoice.mahnung}
-                  onChange={handleChange}
-                  type="number"
-                  error={invoice.mahnung < 0 ? true : false}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="description"
-                  label="Description"
-                  value={invoice.description}
-                  onChange={handleChange}
-                  error={invoice.description === "" ? true : false}
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <TextField
-                  name="issuedOn"
-                  label="Issued On"
-                  value={invoice.issuedOn}
-                  onChange={handleChange}
-                  type="date"
-                  InputLabelProps={{ shrink: true }}
-                  error={invoice.issuedOn === "" ? true : false}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="attachment"
-                  label="Attachment"
-                  value={invoice.attachment}
-                  onChange={handleChange}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="status"
-                  label="Status"
-                  value={invoice.status}
-                  onChange={handleChange}
-                  error={invoice.status === "" ? true : false}
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={6}>
-            <Grid container spacing={2}>
-              <Grid item xs={3}>
-                <TextField
-                  name="type"
-                  label="Type"
-                  value={invoice.type}
-                  onChange={handleChange}
-                  error={invoice.type === "" ? true : false}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
-                  name="clinic"
-                  label="Clinic"
-                  value={invoice.clinic}
-                  onChange={handleChange}
-                  error={invoice.clinic === "" ? true : false}
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={6}>
-            <Grid container spacing={2}>
-              <Grid item xs={3}>
-                <Button color="inherit" onClick={handleCancel}>
-                  {" "}
-                  Cancel
-                </Button>
-              </Grid>
-              <Grid item xs={3}>
-                <Button type="submit">Submit</Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </form>
-    </Container>
+        </form>
+      </Container>
     </>
   );
 }
