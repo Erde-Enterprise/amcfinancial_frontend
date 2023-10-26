@@ -1,6 +1,6 @@
 import { Avatar, Button, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useContext, useState } from "react";
-import AuthContext from "../../../../auth/auth";
+import AuthContext from "../../../auth/auth";
 
 export function MenuUser() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLButtonElement>(null);

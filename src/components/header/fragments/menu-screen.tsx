@@ -1,5 +1,5 @@
 import { Button, MenuItem, Drawer, List } from "@mui/material";
-import MenuIcon from "../../../../icons-images/Logo_Avegena_Finance.svg";
+import MenuIcon from "../../../icons-images/Logo_Avegena_Finance.svg";
 import { useNavigate } from "react-router-dom";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -7,8 +7,8 @@ import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 import LocalHospitalRoundedIcon from "@mui/icons-material/LocalHospitalRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
-import { styleMenuIconItem, styleMenuItem } from "../../utils/utils";
-import { useResponsive } from "../../../../utils/use-utils";
+import { styleMenuIconItem, styleMenuItem } from "../../../modules/dashboard/utils/utils";
+import { useResponsive } from "../../../utils/use-utils";
 
 interface MenuScreenProps {
   handleMenuOpen: () => void;
@@ -28,7 +28,7 @@ export function MenuScreen(props: MenuScreenProps) {
 
   return (
     <div>
-      <Button onClick={open ? handleMenuClose : handleMenuOpen}>
+      <Button style={{ transition: 'transform 1s' }} onClick={open ? handleMenuClose : handleMenuOpen}>
         <img
           src={MenuIcon}
           style={{ width: "90%", ...responsiveStyles}}
@@ -52,6 +52,7 @@ export function MenuScreen(props: MenuScreenProps) {
             overflowY: "auto",
             top: "10%",
             border: "none",
+            transition: "width 1s"
           },
         }}
       >

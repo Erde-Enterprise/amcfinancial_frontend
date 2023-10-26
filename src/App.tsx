@@ -16,7 +16,7 @@ function App() {
       >
         {" "}
         <SnackbarUtilsConfigurator />
-        <AuthProvider> 
+        <AuthProvider>
           <AppRoutes />
         </AuthProvider>
       </SnackbarProvider>

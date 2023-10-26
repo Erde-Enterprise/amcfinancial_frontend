@@ -20,17 +20,23 @@ function useEndPoint() {
       if (success) {
         setUser(response.data);
         localStorage.setItem("user", JSON.stringify(response.data));
-        navigate('/dashboard');
+        navigate("/dashboard/");
       }
     } catch (error) {
       const axiosError = error as AxiosError;
       snackActions.error(axiosError.message);
     }
   }
-  function logOff(){
+  function addInvoice() {
+    navigate("/new-invoice/");
+  }
+  function goToDashboardInCancelButton() {
+    navigate("/dashboard/");
+  }
+  function logOff() {
     //Esvaizar o Local Storage do User e o Context do User
   }
-  return { login, logOff };
+  return { login, logOff, goToDashboardInCancelButton, addInvoice };
 }
 
 export default useEndPoint;
