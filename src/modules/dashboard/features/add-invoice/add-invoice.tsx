@@ -3,10 +3,10 @@ import { TextField, Button, Container, Grid } from "@mui/material";
 import { InvoiceInsertEntity } from "./model/add-invoice.entity";
 import { validateForm, validatorsInvoice } from "../../utils/utils";
 import useEndPoint from "../../../../auth/endpoints";
-import SendIcon from '@mui/icons-material/Send';
-import ReplayIcon from '@mui/icons-material/Replay';
-import CloseIcon from '@mui/icons-material/Close';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+import SendIcon from "@mui/icons-material/Send";
+import ReplayIcon from "@mui/icons-material/Replay";
+import CloseIcon from "@mui/icons-material/Close";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 export function AddInvoice() {
   const { goToDashboardInCancelButton } = useEndPoint();
@@ -23,43 +23,7 @@ export function AddInvoice() {
     type: "",
     clinic: "",
   });
-  // const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   setInvoice({
-  //     ...invoice,
-  //     [event.target.name]: event.target.value,
-  //   });
-  // };
-  // const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = event.target;
-  //   let formattedValue = value;
 
-  //   // Se o campo alterado for uma data, reformate a data
-  //   if (name === "dueDate" || name === "issuedOn") {
-  //     const dateParts = value.split("/");
-  //     if (dateParts.length === 3) {
-  //       formattedValue = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
-  //     }
-  //   }
-
-  //   setInvoice({ ...invoice, [name]: formattedValue });
-  // };
-  // const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   const { name } = event.target;
-
-  //   if (name === 'attachment') {
-  //     if (event.target.files && event.target.files.length > 0) {
-  //       let file = event.target.files[0];
-  //       if (validatorsInvoice.attachment(file)) {
-  //         // Se o arquivo for válido, atualize o estado
-  //         setInvoice({ ...invoice, [name]: file });
-  //       } else {
-  //         console.log('Invalid file');
-  //       }
-  //     }
-  //   } else {
-  //     setInvoice({ ...invoice, [name]: event.target.value });
-  //   }
-  // };
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name } = event.target;
 
@@ -114,7 +78,11 @@ export function AddInvoice() {
             alignItems={"center"}
             justifyContent={"center"}
           >
-            <Button variant="outlined" endIcon={<AttachFileIcon fontSize="small" />} component="label">
+            <Button
+              variant="outlined"
+              endIcon={<AttachFileIcon fontSize="small" />}
+              component="label"
+            >
               Attachment
               <input
                 type="file"
@@ -261,13 +229,23 @@ export function AddInvoice() {
                 justifyContent={"center"}
               >
                 <Grid item xs={3.5}>
-                  <Button color="inherit" endIcon={<CloseIcon fontSize="small" />} onClick={handleCancel}>
+                  <Button
+                    color="inherit"
+                    endIcon={<CloseIcon fontSize="small" />}
+                    onClick={handleCancel}
+                  >
                     Cancel
                   </Button>
-                  <Button color="secondary" endIcon={<ReplayIcon fontSize="small" />} onClick={handleReset}>
+                  <Button
+                    color="secondary"
+                    endIcon={<ReplayIcon fontSize="small" />}
+                    onClick={handleReset}
+                  >
                     Reset
                   </Button>
-                  <Button endIcon={<SendIcon fontSize="small" />} type="submit">Send</Button>
+                  <Button endIcon={<SendIcon fontSize="small" />} type="submit">
+                    Send
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>
