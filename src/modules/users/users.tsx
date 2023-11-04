@@ -1,34 +1,43 @@
-import { ChangeEvent, FormEvent, useContext } from "react";
-import { useState } from "react";
-import { Button, Grid, TextField, FormHelperText, Box } from "@mui/material";
+import {
+  Button,
+  Grid,
+  TextField,
+  FormHelperText,
+  Box,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+} from "@mui/material";
 import { UserInsertEntity } from "./model/user.entity";
-import AuthContext from "../../auth/auth";
-import SendIcon from "@mui/icons-material/Send";
-import ReplayIcon from "@mui/icons-material/Replay";
-import CloseIcon from "@mui/icons-material/Close";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { snackActions } from "../../utils/notification/snackbar-util";
-import useEndPoint from "../../auth/endpoints";
 import { validateLogin, validatePassword } from "../login/utils/utils";
 import { passwordsMatch } from "./utils/utils";
+import { CancelButtonFormToDashboard } from "../../components/header/buttons/Cancel-Form-Button";
+import { ResetButtonForm } from "../../components/header/buttons/Reset-Form-Button";
+import { SubmitButtonForm } from "../../components/header/buttons/Submit-Form-Button";
+import useUsers from "./hooks/use-users";
+import { ChangeEvent, FormEvent, useState } from "react";
+
 
 export function UsersPage() {
-  const { user } = useContext(AuthContext);
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const { goToDashboardInCancelButton } = useEndPoint();
-
+  const { registerUser } = useUsers();
+  const [fileName, setFileName] = useState("");
   const [newUser, setNewUser] = useState<UserInsertEntity>({
-    access_token: user?.token ?? "",
     email: "",
     nickname: "",
     name: "",
     photo: undefined,
-    type: 0,
+    type: 1,
     password: "",
   });
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
+    await registerUser(newUser);
+    handleReset();
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -38,6 +47,13 @@ export function UsersPage() {
       [name]: value,
     }));
   };
+  const hadleSelect=( event: SelectChangeEvent)=>{
+    const { name, value } = event.target;
+    setNewUser((prevState) => ({
+      ...prevState,
+      [name]: Number(value),
+    }));
+  }
 
   const handlePhotoChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -45,6 +61,9 @@ export function UsersPage() {
       ...prevState,
       photo: file,
     }));
+    if (file) {
+      setFileName(file.name);
+    }
   };
 
   const handleConfirmPasswordChange = (
@@ -54,22 +73,21 @@ export function UsersPage() {
   };
   const handleReset = () => {
     setNewUser({
-      access_token: user?.token ?? "",
       email: "",
       nickname: "",
       name: "",
       photo: undefined,
-      type: 0,
+      type: 1,
       password: "",
     });
+    setConfirmPassword("");
+    setFileName("");
   };
-  const handleCancel = () => {
-    goToDashboardInCancelButton();
-  };
-
+  const types: string[] = ["1","2"];
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2} direction="column" alignItems="center">
+      {fileName && <p>Arquivo selecionado: {fileName}</p>}
         <Grid item>
           <Button
             variant="outlined"
@@ -86,7 +104,7 @@ export function UsersPage() {
           </Button>
         </Grid>
         <Grid item container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={5}>
             <TextField
               variant="filled"
               label="Name"
@@ -96,7 +114,7 @@ export function UsersPage() {
               required
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={5}>
             <TextField
               variant="filled"
               label="Nickname"
@@ -105,6 +123,23 @@ export function UsersPage() {
               onChange={handleInputChange}
               required
             />
+          </Grid>
+          <Grid item xs={2}>
+            <Select
+              variant="filled"
+              label="Type"
+              name="type"
+              id="type"
+              value={newUser.type.toString()}
+              onChange={hadleSelect}
+              required
+            >
+              {types.map((item, index: number) => (
+                <MenuItem key={index} value={item}>
+                {item}
+                </MenuItem>
+              ))}
+            </Select>
           </Grid>
         </Grid>
         <Grid item xs={12} style={{ width: "100%" }}>
@@ -118,7 +153,9 @@ export function UsersPage() {
             fullWidth
             required
             helperText={
-              newUser.email !== "" && !validateLogin(newUser.email) ? "Invalid email format" : ""
+              newUser.email !== "" && !validateLogin(newUser.email)
+                ? "Invalid email format"
+                : ""
             }
           />
         </Grid>
@@ -168,27 +205,9 @@ export function UsersPage() {
           </Grid>
         </Grid>
         <Grid item>
-          <Button
-            color="inherit"
-            endIcon={<CloseIcon fontSize="small" />}
-            onClick={handleCancel}
-          >
-            Cancel
-          </Button>
-          <Button
-            color="secondary"
-            endIcon={<ReplayIcon fontSize="small" />}
-            onClick={handleReset}
-          >
-            Reset
-          </Button>
-          <Button
-            color="primary"
-            endIcon={<SendIcon fontSize="small" />}
-            type="submit"
-          >
-            Enviar
-          </Button>
+          <CancelButtonFormToDashboard />
+          <ResetButtonForm handleReset={handleReset} />
+          <SubmitButtonForm />
         </Grid>
       </Grid>
     </form>

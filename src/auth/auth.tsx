@@ -1,6 +1,8 @@
-import React, { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { UserModel } from "./model/user";
 import { Box, CircularProgress } from "@mui/material";
+import { SECURITY_KEY } from "./api";
+import * as CryptoJS from 'crypto-js';
 
 interface AuthContextData {
   user: UserModel | undefined;
@@ -24,7 +26,8 @@ export function AuthProvider({ children }: any) {
     const storedUser = localStorage.getItem("user");
 
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const descrypt = CryptoJS.AES.decrypt(storedUser, SECURITY_KEY);
+      setUser(JSON.parse(descrypt.toString(CryptoJS.enc.Utf8)));
       setIsLoggedIn(true);
     }
     setLoading(false);

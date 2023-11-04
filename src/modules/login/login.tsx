@@ -8,13 +8,14 @@ import {
   validatePassword,
 } from "./utils/utils";
 import { FinancialImage } from "./components/financial";
-import useEndPoint from "../../auth/endpoints";
+import useLogin from "./hooks/use-login";
+
 
 
 export function LoginPage() {
   const [access, setAccess] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { login } = useEndPoint();
+  const { login } = useLogin();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
