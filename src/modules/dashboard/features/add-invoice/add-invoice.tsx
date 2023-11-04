@@ -2,14 +2,12 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { TextField, Button, Container, Grid } from "@mui/material";
 import { InvoiceInsertEntity } from "./model/add-invoice.entity";
 import { validateForm, validatorsInvoice } from "../../utils/utils";
-import useEndPoint from "../../../../auth/endpoints";
-import SendIcon from "@mui/icons-material/Send";
-import ReplayIcon from "@mui/icons-material/Replay";
-import CloseIcon from "@mui/icons-material/Close";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { CancelButtonFormToDashboard } from "../../../../components/header/buttons/Cancel-Form-Button";
+import { ResetButtonForm } from "../../../../components/header/buttons/Reset-Form-Button";
+import { SubmitButtonForm } from "../../../../components/header/buttons/Submit-Form-Button";
 
 export function AddInvoice() {
-  const { goToDashboardInCancelButton } = useEndPoint();
   const [invoice, setInvoice] = useState<InvoiceInsertEntity>({
     rechnung: "",
     name: "",
@@ -47,10 +45,6 @@ export function AddInvoice() {
     if (validateForm(invoice)) {
       console.log(invoice);
     }
-  };
-
-  const handleCancel = () => {
-    goToDashboardInCancelButton();
   };
   const handleReset = () => {
     setInvoice({
@@ -229,23 +223,9 @@ export function AddInvoice() {
                 justifyContent={"center"}
               >
                 <Grid item xs={3.5}>
-                  <Button
-                    color="inherit"
-                    endIcon={<CloseIcon fontSize="small" />}
-                    onClick={handleCancel}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="secondary"
-                    endIcon={<ReplayIcon fontSize="small" />}
-                    onClick={handleReset}
-                  >
-                    Reset
-                  </Button>
-                  <Button endIcon={<SendIcon fontSize="small" />} type="submit">
-                    Send
-                  </Button>
+                  <CancelButtonFormToDashboard />
+                  <ResetButtonForm handleReset={handleReset} />
+                  <SubmitButtonForm />
                 </Grid>
               </Grid>
             </Grid>

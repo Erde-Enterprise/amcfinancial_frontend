@@ -1,5 +1,4 @@
 export interface UserInsertEntity {
-    access_token: string;
     email: string;
     nickname: string;
     name: string;

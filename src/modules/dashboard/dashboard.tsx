@@ -3,9 +3,10 @@ import { Table } from "./components/table/table";
 import { useContext } from "react";
 import AuthContext from "../../auth/auth";
 
+
+
 export function DashboardPage() {
   const { user } = useContext(AuthContext);
-
   return (
     <>
       {user?.token ? (

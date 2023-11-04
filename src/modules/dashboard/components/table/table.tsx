@@ -7,11 +7,12 @@ import AuthContext from "../../../../auth/auth";
 import PlaylistAddCircleIcon from "@mui/icons-material/PlaylistAddCircle";
 import UpdateIcon from "@mui/icons-material/Update";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import useEndPoint from "../../../../auth/endpoints";
+import useDashboard from "../../hooks/use-dashboard";
+
 
 export function Table() {
   const { user } = useContext(AuthContext);
-  const { addInvoice } = useEndPoint();
+  const {goToAddInvoice} = useDashboard();
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
       {
@@ -160,7 +161,7 @@ export function Table() {
           <Button
             endIcon={<PlaylistAddCircleIcon fontSize="small" />}
             color="primary"
-            onClick={()=>{addInvoice();}}
+            onClick={()=>{goToAddInvoice();}}
           >
             Insert
           </Button>
