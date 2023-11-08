@@ -31,8 +31,6 @@ export function AddInvoice() {
         if (validatorsInvoice.attachment(file)) {
           // Se o arquivo for válido, atualize o estado
           setInvoice((prevState) => ({ ...prevState, [name]: file }));
-        } else {
-          console.log("Invalid file");
         }
       }
     } else {
