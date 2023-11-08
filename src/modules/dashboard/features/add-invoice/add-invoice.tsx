@@ -6,8 +6,13 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { CancelButtonFormToDashboard } from "../../../../components/header/buttons/Cancel-Form-Button";
 import { ResetButtonForm } from "../../../../components/header/buttons/Reset-Form-Button";
 import { SubmitButtonForm } from "../../../../components/header/buttons/Submit-Form-Button";
+import useDashboard from "../../hooks/use-dashboard";
+import { CustomType } from "../../../../components/inputs/input-type";
+import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
 
 export function AddInvoice() {
+  const [fileName, setFileName] = useState("");
+  const {registerInvoice} = useDashboard();
   const [invoice, setInvoice] = useState<InvoiceInsertEntity>({
     rechnung: "",
     name: "",
@@ -22,26 +27,30 @@ export function AddInvoice() {
     clinic: "",
   });
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name } = event.target;
-
-    if (name === "attachment") {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>, name?: string) => {
+    const targetName = name ?? event.target.name;
+    const targetValue = event.target.value;
+  
+    if (targetName === "attachment") {
       if (event.target.files && event.target.files.length > 0) {
         let file = event.target.files[0];
         if (validatorsInvoice.attachment(file)) {
-          // Se o arquivo for válido, atualize o estado
-          setInvoice((prevState) => ({ ...prevState, [name]: file }));
+          
+          setInvoice((prevState) => ({ ...prevState, [targetName]: file }));
+          setFileName(file.name);
         }
       }
     } else {
-      setInvoice((prevState) => ({ ...prevState, [name]: event.target.value }));
+      setInvoice((prevState) => ({ ...prevState, [targetName]: targetValue }));
     }
   };
+  
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (validateForm(invoice)) {
-      console.log(invoice);
+      await registerInvoice(invoice);
+      handleReset();
     }
   };
   const handleReset = () => {
@@ -70,6 +79,7 @@ export function AddInvoice() {
             alignItems={"center"}
             justifyContent={"center"}
           >
+            {fileName && <p>Arquivo selecionado: {fileName}</p>}
             <Button
               variant="outlined"
               endIcon={<AttachFileIcon fontSize="small" />}
@@ -123,21 +133,21 @@ export function AddInvoice() {
                   />
                 </Grid>
                 <Grid item xs={2}>
-                  <TextField
+                  <CustomType
                     variant="filled"
-                    name="type"
                     label="Type"
                     value={invoice.type}
-                    onChange={handleChange}
+                    onChange={(event: any) => handleChange(event, "type")}
                     error={!validatorsInvoice.type(invoice.type)}
-                    fullWidth
+                    itens={Object.values(CustomTypeEnum)}
+                    sx={{width:"100%"}}
                   />
                 </Grid>
                 <Grid item xs={2.5}>
                   <TextField
                     variant="filled"
                     name="issuedOn"
-                    label="IssuedOn"
+                    label="Issue Date"
                     value={invoice.issuedOn}
                     onChange={handleChange}
                     type="date"
@@ -150,7 +160,7 @@ export function AddInvoice() {
                   <TextField
                     variant="filled"
                     name="dueDate"
-                    label="DueDate"
+                    label="Due Date"
                     value={invoice.dueDate}
                     onChange={handleChange}
                     type="date"

@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { DashboardInsertEntity } from "../model/dashboard.entity";
 import { AxiosError } from "axios";
 import { snackActions } from "../../../utils/notification/snackbar-util";
 import api from "../../../auth/api";
-import { verifyRequest } from "../../../utils/utils";
+import { getKeyFromValue } from "../../../utils/utils";
 import { InvoiceInsertEntity } from "../features/add-invoice/model/add-invoice.entity";
+import { CustomTypeEnum } from "../../../components/inputs/enum/type.enum";
 
 function useDashboard() {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ function useDashboard() {
       formData.append("name_clinic", invoice.clinic);
       formData.append("status", invoice.status);
       formData.append("title", invoice.name);
-      formData.append("type", invoice.type);
+      formData.append("type", getKeyFromValue(invoice.type, CustomTypeEnum));
       if (invoice.attachment) {
         formData.append("attachment", invoice.attachment as File);
       }
