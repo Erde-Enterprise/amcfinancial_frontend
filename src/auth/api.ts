@@ -32,7 +32,7 @@ api.interceptors.response.use(
   async (response) => {
     const success = await verifyRequest(response);
     if (success) {
-      snackActions.success(`Insertion Successfully`);
+      snackActions.success(`Successfully`);
     }
     return response;
   },
