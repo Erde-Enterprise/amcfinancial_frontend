@@ -25,7 +25,7 @@ export function LoginPage() {
   const isLoginValid = validateLogin(access);
   const isPasswordValid = validatePassword(password);
   const isFormValid = isLoginValid && isPasswordValid;
-
+  localStorage.clear();
   return (
     <>
       <Grid
