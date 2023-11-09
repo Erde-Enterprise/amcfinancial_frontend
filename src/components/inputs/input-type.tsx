@@ -1,7 +1,7 @@
 import { FormControl, InputLabel, MenuItem, Select, SxProps, Theme } from "@mui/material";
 import { ReactNode } from "react";
 
-export interface CustomSelectEntity {
+ interface CustomSelectEntity {
   children?: ReactNode[];
   labelId?: string;
   label?: string;
