@@ -5,6 +5,7 @@ import api from "../../../auth/api";
 import { getKeyFromValue } from "../../../utils/utils";
 import { InvoiceInsertEntity } from "../features/add-invoice/model/add-invoice.entity";
 import { CustomTypeEnum } from "../../../components/inputs/enum/type.enum";
+import { StatusInvoiceEnum } from "../features/add-invoice/enum/add-invoice.enum";
 
 function useDashboard() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ function useDashboard() {
       formData.append("invoice_number", invoice.rechnung);
       formData.append("issue_date", invoice.issuedOn);
       formData.append("name_clinic", invoice.clinic);
-      formData.append("status", invoice.status);
+      formData.append("status", getKeyFromValue(invoice.status, StatusInvoiceEnum));
       formData.append("title", invoice.name);
       formData.append("type", getKeyFromValue(invoice.type, CustomTypeEnum));
       if (invoice.attachment) {
