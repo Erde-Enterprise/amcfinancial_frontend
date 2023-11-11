@@ -75,3 +75,24 @@ export const validatorsInvoice = {
   type: (value: string) => value !== "",
   clinic: (value: string) => value !== "",
 };
+
+export function getFirstDayOfMonth() {
+  const today = new Date();
+  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+  const year = firstDayOfMonth.getFullYear();
+  const month = ('0' + (firstDayOfMonth.getMonth() + 1)).slice(-2);
+  const day = ('0' + firstDayOfMonth.getDate()).slice(-2);
+
+  return `${year}-${month}-${day}`;
+}
+
+export function getToday() {
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = ('0' + (today.getMonth() + 1)).slice(-2);
+  const day = ('0' + today.getDate()).slice(-2);
+
+  return `${year}-${month}-${day}`;
+}

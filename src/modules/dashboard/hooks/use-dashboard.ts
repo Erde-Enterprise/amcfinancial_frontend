@@ -6,8 +6,12 @@ import { getKeyFromValue } from "../../../utils/utils";
 import { InvoiceInsertEntity } from "../features/add-invoice/model/add-invoice.entity";
 import { CustomTypeEnum } from "../../../components/inputs/enum/type.enum";
 import { StatusInvoiceEnum } from "../features/add-invoice/enum/add-invoice.enum";
+import { useState } from "react";
+import { InvoiceEntity } from "../model/dashboard.entity";
 
 function useDashboard() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [invoices, setInvoices] = useState<InvoiceEntity[] | undefined>();
   const navigate = useNavigate();
   function goToAddInvoice() {
     navigate("/new-invoice/");
@@ -34,8 +38,29 @@ function useDashboard() {
       snackActions.error(axiosError.request.response);
     }
   }
+  async function listInvoices(initialDate?: string, finalDate?: string){
+    try { 
+      const response =  await api.get("/list/invoices/",{
+        params:{
+          start_date: initialDate,
+          end_date: finalDate
+        }
+      });
+      return response;
+      } catch (error) {
+        const axiosError = error as AxiosError;
+        snackActions.error(axiosError.request.response);
+      }
+  }
+  async function getInvoices(initialDate?: string, finalDate?: string){
+    setLoading(true);
+    await listInvoices(initialDate, finalDate).then((data)=>{
+      setInvoices(data?.data);
+      setLoading(false);
+    });
+  }
 
-  return { goToAddInvoice, registerInvoice };
+  return { goToAddInvoice, registerInvoice, invoices,loading, getInvoices };
 }
 
 export default useDashboard;

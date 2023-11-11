@@ -1,18 +1,27 @@
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import CustomTable from "./custom-table/Custom-React-Table";
 import { MRT_ColumnDef } from "material-react-table";
 import { Box, Button, Grid } from "@mui/material";
-import { getRandomPhrase, styleMenuItem } from "../../utils/utils";
+import {
+  getFirstDayOfMonth,
+  getRandomPhrase,
+  getToday,
+  styleMenuItem,
+} from "../../utils/utils";
 import AuthContext from "../../../../auth/auth";
 import PlaylistAddCircleIcon from "@mui/icons-material/PlaylistAddCircle";
 import UpdateIcon from "@mui/icons-material/Update";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import useDashboard from "../../hooks/use-dashboard";
-
+import { InvoiceEntity, InvoiceRowsEntity } from "../../model/dashboard.entity";
+import { getValueFromKey } from "../../../../utils/utils";
+import { StatusInvoiceEnum } from "../../features/add-invoice/enum/add-invoice.enum";
+import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
 
 export function Table() {
   const { user } = useContext(AuthContext);
-  const {goToAddInvoice} = useDashboard();
+  const { goToAddInvoice, getInvoices, invoices, loading } = useDashboard();
+  const [data, setData] = useState<InvoiceRowsEntity[]>([]);
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
       {
@@ -142,6 +151,29 @@ export function Table() {
     ],
     []
   );
+  useEffect(() => {
+    getInvoices(getFirstDayOfMonth(), getToday());
+  }, []);
+
+  useEffect(() => {
+    if (Array.isArray(invoices)) {
+      setData(
+        invoices.map((item: InvoiceEntity) => ({
+          rechnung: item.invoice_number,
+          name: item.title,
+          price: item.amount,
+          dueDate: item.due_date,
+          mahnung: item.reminder,
+          description: item.description,
+          issuedOn: item.issue_date,
+          attachment: "",
+          status: getValueFromKey(item.status, StatusInvoiceEnum),
+          type: getValueFromKey(item.type, CustomTypeEnum),
+          clinic: item.clinic.name,
+        }))
+      );
+    }
+  }, [invoices]);
   return (
     <Grid container alignItems={"center"} spacing={1} flexDirection={"column"}>
       <Box mb={0.5}>
@@ -156,12 +188,21 @@ export function Table() {
       </Box>
       <Box mb={0.1}>
         <Grid item>
-          <Button endIcon={<UpdateIcon fontSize="small" />} color="error">Delete</Button>
-          <Button endIcon={<DeleteForeverIcon fontSize="small" />} color="warning">Update</Button>
+          <Button endIcon={<UpdateIcon fontSize="small" />} color="error">
+            Delete
+          </Button>
+          <Button
+            endIcon={<DeleteForeverIcon fontSize="small" />}
+            color="warning"
+          >
+            Update
+          </Button>
           <Button
             endIcon={<PlaylistAddCircleIcon fontSize="small" />}
             color="primary"
-            onClick={()=>{goToAddInvoice();}}
+            onClick={() => {
+              goToAddInvoice();
+            }}
           >
             Insert
           </Button>
@@ -170,31 +211,32 @@ export function Table() {
       <Box mb={0.1}>
         <Grid item>
           <CustomTable
-            title=""
+            loading={loading}
+            title="Invoices"
             columns={columns}
-            data={[]}
+            data={data}
             containerProps={{
               sx: {
                 maxHeight: "55vh",
                 minHeight: "45vh",
-                minWidth: "50%",
+                minWidth: "70%",
                 flex: 1,
               },
             }}
             displayColumnDefOptions={{
               "mrt-row-actions": {
-                size: 20,
+                size: 10,
                 minSize: 10,
-                maxSize: 30,
+                maxSize: 10,
                 enableColumnActions: false,
                 enableHiding: false,
               },
               "mrt-row-select": {
                 enableColumnActions: false,
                 enableHiding: false,
-                size: 15,
+                size: 10,
                 minSize: 5,
-                maxSize: 25,
+                maxSize: 10,
               },
               "mrt-row-expand": {
                 size: 10,
