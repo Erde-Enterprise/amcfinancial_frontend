@@ -3,7 +3,7 @@ export interface InvoiceInsertEntity {
     name: string;
     price: string;
     dueDate: string;
-    mahnung: string;
+    mahnung: number;
     description: string;
     issuedOn: string;
     attachment: File;

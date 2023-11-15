@@ -19,7 +19,7 @@ function useDashboard() {
   async function registerInvoice(invoice: InvoiceInsertEntity) {
     try {
       const formData = new FormData();
-      formData.append("amount", invoice.mahnung);
+      formData.append("amount", invoice.price);
       formData.append("description", invoice.description);
       formData.append("due_date", invoice.dueDate);
       formData.append("invoice_number", invoice.rechnung);
@@ -31,6 +31,8 @@ function useDashboard() {
       if (invoice.attachment) {
         formData.append("attachment", invoice.attachment as File);
       }
+        formData.append("reminder", invoice.mahnung.toString());
+      
       await api.sendForm("/register/invoice/", formData);
       
     } catch (error) {

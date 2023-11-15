@@ -1,8 +1,10 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import CustomTable from "./custom-table/Custom-React-Table";
 import { MRT_ColumnDef } from "material-react-table";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import {
+  getColor,
+  getColorWithOpacity,
   getFirstDayOfMonth,
   getRandomPhrase,
   getToday,
@@ -17,6 +19,8 @@ import { InvoiceEntity, InvoiceRowsEntity } from "../../model/dashboard.entity";
 import { getValueFromKey } from "../../../../utils/utils";
 import { StatusInvoiceEnum } from "../../features/add-invoice/enum/add-invoice.enum";
 import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import { Actions } from "../fragments/actions";
 
 export function Table() {
   const { user } = useContext(AuthContext);
@@ -63,9 +67,9 @@ export function Table() {
         id: "dueDate",
         columnDefType: "data",
         _filterFn: "contains",
-        GroupedCell: ({ cell }: any) => (
+        GroupedCell: ({ cell, row }: any) => (
           <>
-            <span>
+            <span style={{ color: getColor(Number(row.original.mahnung)) }}>
               <b>{cell.getValue()}</b> ({cell.row.leafRows.length})
             </span>
           </>
@@ -80,11 +84,19 @@ export function Table() {
         id: "mahnung",
         columnDefType: "data",
         _filterFn: "contains",
-        GroupedCell: ({ cell }: any) => (
+        GroupedCell: ({ cell, row }: any) => (
           <>
-            <span>
-              <b>{cell.getValue()}</b> ({cell.row.leafRows.length})
-            </span>
+            <Box
+              style={{
+                border: "1px",
+                backgroundColor: getColorWithOpacity(Number(row.original.mahnung))
+              }}
+              sx={{width:"35%"}}
+            >
+              <span style={{ color: getColor(Number(row.original.mahnung)) }}>
+                <b>{cell.getValue()}</b> ({cell.row.leafRows.length})
+              </span>
+            </Box>
           </>
         ),
       },
@@ -147,6 +159,13 @@ export function Table() {
         id: "clinic",
         columnDefType: "data",
         _filterFn: "contains",
+        Cell: ({ row }) => (
+          <>
+            <IconButton size="small" sx={{color:`${row.original.color}`}}>
+              <FiberManualRecordIcon fontSize="small"/>
+            </IconButton>
+          </>
+        ),
       },
     ],
     []
@@ -170,6 +189,7 @@ export function Table() {
           status: getValueFromKey(item.status, StatusInvoiceEnum),
           type: getValueFromKey(item.type, CustomTypeEnum),
           clinic: item.clinic.name,
+          invoice: item
         }))
       );
     }
@@ -217,36 +237,39 @@ export function Table() {
             data={data}
             containerProps={{
               sx: {
-                maxHeight: "55vh",
-                minHeight: "45vh",
-                minWidth: "70%",
+                maxHeight: "60vh",
+                minHeight: "55vh",
+                minWidth: "75%",
                 flex: 1,
               },
             }}
             displayColumnDefOptions={{
               "mrt-row-actions": {
-                size: 10,
+                size: 20,
                 minSize: 10,
-                maxSize: 10,
+                maxSize: 40,
                 enableColumnActions: false,
                 enableHiding: false,
               },
               "mrt-row-select": {
                 enableColumnActions: false,
                 enableHiding: false,
-                size: 10,
+                size: 20,
                 minSize: 5,
-                maxSize: 10,
+                maxSize: 20,
               },
               "mrt-row-expand": {
-                size: 10,
+                size: 40,
                 minSize: 10,
-                maxSize: 10,
+                maxSize: 40,
               },
             }}
             initialState={{ grouping: ["mahnung", "dueDate"], expanded: true }}
             cellFontSizeInBody={"0.5rem"}
             headerCellFontSize={"0.6rem"}
+          //   actions={({ row }) =>
+          //   Actions(  row.original.invoice )
+          // }
           />
         </Grid>
       </Box>
