@@ -37,5 +37,21 @@ export interface InvoiceRowsEntity {
   status: string;
   type: string;
   clinic: string;
-  invoice: InvoiceEntity
+  invoice: InvoiceEntity;
+  checked?: boolean
+}
+
+export interface InvoiceUpdateEntity {
+  attachment: File;
+  invoice_number_older: string;
+  name_clinic: string;
+  invoice_number: string;
+  description: string;
+  amount: number;
+  title: string;
+  issue_date: string;
+  due_date: string;
+  reminder: number;
+  status: string;
+  type: string;
 }

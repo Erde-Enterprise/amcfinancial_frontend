@@ -8,20 +8,42 @@ import { InvoiceEntity, InvoiceRowsEntity } from "../../model/dashboard.entity";
 import { StatusInvoiceEnum } from "../../features/add-invoice/enum/add-invoice.enum";
 import { getValueFromKey } from "../../../../utils/utils";
 import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import useDashboard from "../../hooks/use-dashboard";
 
 export function Actions(invoice: InvoiceEntity) {
   const [open, setOpen] = useState<boolean>(false);
+  const { deleteInvoice } = useDashboard();
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+  const handleDelete = async (invoice_number: string) => {
+    await deleteInvoice(invoice_number);
+  };
+  
   return (
     <>
       <CustomTooltip title="Update">
-        <IconButton onClick={handleOpen} disableRipple>
+        <IconButton
+          sx={{ color: `${invoice.clinic.color}` }}
+          onClick={handleOpen}
+          disableRipple
+        >
           <SaveAsIcon />
+        </IconButton>
+      </CustomTooltip>
+      <CustomTooltip title="Delete">
+        <IconButton
+          color="error"
+          onClick={async () => {
+            //console.log(invoice);
+            await handleDelete(invoice.invoice_number);
+          }}
+        >
+          <DeleteForeverIcon />
         </IconButton>
       </CustomTooltip>
       <CustomModal open={open} title="Update" handleClose={handleClose}>

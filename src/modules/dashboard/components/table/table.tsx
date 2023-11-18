@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import CustomTable from "./custom-table/Custom-React-Table";
-import { MRT_ColumnDef } from "material-react-table";
+import { MRT_ColumnDef, MRT_RowSelectionState } from "material-react-table";
 import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import {
   getColor,
@@ -19,13 +19,15 @@ import { InvoiceEntity, InvoiceRowsEntity } from "../../model/dashboard.entity";
 import { getValueFromKey } from "../../../../utils/utils";
 import { StatusInvoiceEnum } from "../../features/add-invoice/enum/add-invoice.enum";
 import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { Actions } from "../fragments/actions";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 export function Table() {
   const { user } = useContext(AuthContext);
   const { goToAddInvoice, getInvoices, invoices, loading } = useDashboard();
   const [data, setData] = useState<InvoiceRowsEntity[]>([]);
+  const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
       {
@@ -89,9 +91,11 @@ export function Table() {
             <Box
               style={{
                 border: "1px",
-                backgroundColor: getColorWithOpacity(Number(row.original.mahnung))
+                backgroundColor: getColorWithOpacity(
+                  Number(row.original.mahnung)
+                ),
               }}
-              sx={{width:"35%"}}
+              sx={{ width: "25%" }}
             >
               <span style={{ color: getColor(Number(row.original.mahnung)) }}>
                 <b>{cell.getValue()}</b> ({cell.row.leafRows.length})
@@ -117,16 +121,6 @@ export function Table() {
         size: 80,
         minSize: 20,
         id: "issuedOn",
-        columnDefType: "data",
-        _filterFn: "contains",
-      },
-      {
-        accessorKey: "attachment",
-        header: "Attachment",
-        maxSize: 400,
-        size: 80,
-        minSize: 20,
-        id: "attachment",
         columnDefType: "data",
         _filterFn: "contains",
       },
@@ -161,10 +155,47 @@ export function Table() {
         _filterFn: "contains",
         Cell: ({ row }) => (
           <>
-            <IconButton size="small" sx={{color:`${row.original.color}`}}>
-              <FiberManualRecordIcon fontSize="small"/>
+            <IconButton size="small" disableRipple disableTouchRipple>
+              <FiberManualRecordIcon
+                sx={{ color: `${row.original.color}` }}
+                fontSize="small"
+              />
             </IconButton>
+            {row.original.clinic}
           </>
+        ),
+      },
+      {
+        accessorKey: "attachment",
+        header: "Attachment",
+        maxSize: 400,
+        size: 80,
+        minSize: 20,
+        id: "attachment",
+        columnDefType: "data",
+        _filterFn: "contains",
+        Cell: ({ row }) => (
+          <Box sx={{ height: "10%", width: "10%" }}>
+            <Button
+              size="small"
+              sx={{
+                fontSize: "0.5rem", // Ajuste o tamanho da fonte aqui
+                padding: "1px 6px", // Ajuste o preenchimento aqui
+              }}
+              startIcon={
+                <AttachFileIcon
+                  sx={{
+                    color: `${row.original.color}`,
+                    fontSize: "0.5rem", // Ajuste o tamanho da fonte aqui
+                    padding: "1px 6px",
+                  }}
+                  fontSize="small"
+                />
+              }
+            >
+              Download
+            </Button>
+          </Box>
         ),
       },
     ],
@@ -189,11 +220,24 @@ export function Table() {
           status: getValueFromKey(item.status, StatusInvoiceEnum),
           type: getValueFromKey(item.type, CustomTypeEnum),
           clinic: item.clinic.name,
-          invoice: item
+          color: item.clinic.color,
+          invoice: item,
         }))
       );
     }
   }, [invoices]);
+
+  useEffect(() => {
+    let arr = {} as MRT_RowSelectionState;
+    data.forEach((item, index: number) => {
+      if (item.checked === true) {
+        arr = { ...arr, [index]: item.checked };
+      }
+    });
+    setRowSelection(arr);
+  }, [invoices]);
+
+  
   return (
     <Grid container alignItems={"center"} spacing={1} flexDirection={"column"}>
       <Box mb={0.5}>
@@ -267,9 +311,7 @@ export function Table() {
             initialState={{ grouping: ["mahnung", "dueDate"], expanded: true }}
             cellFontSizeInBody={"0.5rem"}
             headerCellFontSize={"0.6rem"}
-          //   actions={({ row }) =>
-          //   Actions(  row.original.invoice )
-          // }
+            actions={({ row }) => Actions(row.original.invoice)}
           />
         </Grid>
       </Box>

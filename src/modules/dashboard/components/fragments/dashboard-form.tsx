@@ -9,6 +9,8 @@ import { validatorsInvoice } from "../../utils/utils";
 import { CustomType } from "../../../../components/inputs/input-type";
 import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
 import { StatusInvoiceEnum } from "../../features/add-invoice/enum/add-invoice.enum";
+import useDashboard from "../../hooks/use-dashboard";
+import { getKeyFromValue, getValueFromKey } from "../../../../utils/utils";
 
 interface ModalDashboardEntity {
   rechnung: string;
@@ -29,6 +31,8 @@ export function DashBoardModal(props: ModalDashboardEntity) {
   const [values, setValues] = useState<ModalDashboardEntity>(props);
   const [fileName, setFileName] = useState("");
   const { clinics, getAllClinics } = useClinic();
+  const { getInvoices, updateInvoice } = useDashboard();
+  const oldRechnung = props.rechnung;
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement>,
@@ -50,9 +54,22 @@ export function DashBoardModal(props: ModalDashboardEntity) {
     }
   };
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    console.log(values);
+    await updateInvoice({
+      amount: values.price,
+      attachment: values.attachment,
+      description: values.description,
+      due_date: values.dueDate,
+      invoice_number: values.rechnung,
+      issue_date: values.issuedOn,
+      name_clinic: values.clinic,
+      invoice_number_older: oldRechnung,
+      reminder: values.mahnung,
+      status: getKeyFromValue(values.status, StatusInvoiceEnum),
+      title: values.name,
+      type: getKeyFromValue(values.type, CustomTypeEnum),
+    });
   };
 
   useEffect(() => {
@@ -85,6 +102,7 @@ export function DashBoardModal(props: ModalDashboardEntity) {
             value={values.rechnung}
             onChange={handleChange}
             label="Rechnung"
+            sx={{ width: "100%" }}
           />
         </Grid>
         <Grid item>
@@ -93,6 +111,7 @@ export function DashBoardModal(props: ModalDashboardEntity) {
             value={values.name}
             onChange={handleChange}
             label="Name"
+            sx={{ width: "100%" }}
           />
         </Grid>
         <Grid item>
@@ -102,6 +121,7 @@ export function DashBoardModal(props: ModalDashboardEntity) {
             onChange={handleChange}
             label="Price"
             type="number"
+            sx={{ width: "100%" }}
           />
         </Grid>
         <Grid item>
@@ -112,6 +132,7 @@ export function DashBoardModal(props: ModalDashboardEntity) {
             label="Due Date"
             type="date"
             InputLabelProps={{ shrink: true }}
+            sx={{ width: "100%" }}
           />
         </Grid>
         <Grid item>
@@ -121,6 +142,7 @@ export function DashBoardModal(props: ModalDashboardEntity) {
             onChange={handleChange}
             label="Mahnung"
             type="number"
+            sx={{ width: "100%" }}
           />
         </Grid>
         <Grid item>
@@ -129,6 +151,7 @@ export function DashBoardModal(props: ModalDashboardEntity) {
             value={values.description}
             onChange={handleChange}
             label="Description"
+            sx={{ width: "100%" }}
           />
         </Grid>
         <Grid item>
@@ -139,6 +162,7 @@ export function DashBoardModal(props: ModalDashboardEntity) {
             label="Issued On"
             type="date"
             InputLabelProps={{ shrink: true }}
+            sx={{ width: "100%" }}
           />
         </Grid>
         <Grid item>
@@ -164,11 +188,14 @@ export function DashBoardModal(props: ModalDashboardEntity) {
           />
         </Grid>
         <Grid item>
-          <TextField
-            name="clinic"
+        <CustomType
+            variant="filled"
+            label="Clinics"
             value={values.clinic}
-            onChange={handleChange}
-            label="Clinic"
+            onChange={(event: any) => handleChange(event, "clinic")}
+            error={!validatorsInvoice.clinic(values.clinic)}
+            itens={clinics?.map(item=> item.name)}
+            sx={{ width: "100%" }}
           />
         </Grid>
         <Grid item>
