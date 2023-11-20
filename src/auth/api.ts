@@ -58,4 +58,15 @@ api.sendForm = function (
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
+
+api.sendUpdateForm = function (
+  url: string,
+  data: any,
+  config: AxiosRequestConfig<any> | undefined
+) {
+  return this.patch(url, data, {
+    ...config,
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
 export default api;

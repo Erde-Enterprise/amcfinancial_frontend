@@ -47,7 +47,7 @@ export function getRandomPhrase(): string {
 
 export function validateForm(invoice: InvoiceInsertEntity) {
   for (let key in invoice) {
-    if (key === 'attachment') {
+    if (key === "attachment") {
       if ((invoice[key as keyof InvoiceInsertEntity] as File).size === 0) {
         snackActions.error(`${key} is required.`);
         return false;
@@ -60,13 +60,12 @@ export function validateForm(invoice: InvoiceInsertEntity) {
   return true;
 }
 
-
 export const validatorsInvoice = {
   rechnung: (value: string) => value !== "" && /^[0-9]+$/.test(value),
   name: (value: string) => value !== "",
   price: (value: string) => value !== "" && /^[0-9]*\.?[0-9]*$/.test(value),
   dueDate: (value: string) => value !== "", //&& /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d\d$/.test(value),
-  mahnung: (value: string) => value !== "" && /^[0-9]+$/.test(value),
+  mahnung: (value: number) => value >= 0,
   description: (value: string) => value !== "",
   issuedOn: (value: string) => value !== "", // && /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d\d$/.test(value),
   attachment: (file: File) =>
@@ -75,3 +74,48 @@ export const validatorsInvoice = {
   type: (value: string) => value !== "",
   clinic: (value: string) => value !== "",
 };
+
+export function getFirstDayOfMonth() {
+  const today = new Date();
+  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+  const year = firstDayOfMonth.getFullYear();
+  const month = ("0" + (firstDayOfMonth.getMonth() + 1)).slice(-2);
+  const day = ("0" + firstDayOfMonth.getDate()).slice(-2);
+
+  return `${year}-${month}-${day}`;
+}
+
+export function getToday() {
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = ("0" + (today.getMonth() + 1)).slice(-2);
+  const day = ("0" + today.getDate()).slice(-2);
+
+  return `${year}-${month}-${day}`;
+}
+
+export function getColor(mahnung: number){
+  if (mahnung >= 3) {
+    return "#FF0000";
+  } else if (mahnung === 2) {
+    return "#FF9900";
+  } else if (mahnung === 1) {
+    return "#DDFF00";
+  } else {
+    return undefined;
+  }
+};
+export function getColorWithOpacity(mahnung: number){
+  const color = getColor(mahnung);
+  if (color) {
+    const r = parseInt(color.slice(1, 3), 16);
+    const g = parseInt(color.slice(3, 5), 16);
+    const b = parseInt(color.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, 0.2)`;
+  } else {
+    return `rgba(0, 0, 0, 0.2)`;
+  }
+};
+

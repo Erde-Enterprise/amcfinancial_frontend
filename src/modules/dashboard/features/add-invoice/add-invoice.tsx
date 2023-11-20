@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { TextField, Button, Container, Grid } from "@mui/material";
 import { InvoiceInsertEntity } from "./model/add-invoice.entity";
 import { validateForm, validatorsInvoice } from "../../utils/utils";
@@ -9,16 +9,19 @@ import { SubmitButtonForm } from "../../../../components/header/buttons/Submit-F
 import useDashboard from "../../hooks/use-dashboard";
 import { CustomType } from "../../../../components/inputs/input-type";
 import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
+import useClinic from "../../../clinics/hooks/use-clinics";
+import { StatusInvoiceEnum } from "./enum/add-invoice.enum";
 
 export function AddInvoice() {
   const [fileName, setFileName] = useState("");
-  const {registerInvoice} = useDashboard();
+  const { clinics, getAllClinics } = useClinic();
+  const { registerInvoice } = useDashboard();
   const [invoice, setInvoice] = useState<InvoiceInsertEntity>({
     rechnung: "",
     name: "",
     price: "",
     dueDate: "",
-    mahnung: "",
+    mahnung: 0,
     description: "",
     issuedOn: "",
     attachment: new File([""], ""),
@@ -27,15 +30,17 @@ export function AddInvoice() {
     clinic: "",
   });
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>, name?: string) => {
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement>,
+    name?: string
+  ) => {
     const targetName = name ?? event.target.name;
     const targetValue = event.target.value;
-  
+
     if (targetName === "attachment") {
       if (event.target.files && event.target.files.length > 0) {
         let file = event.target.files[0];
         if (validatorsInvoice.attachment(file)) {
-          
           setInvoice((prevState) => ({ ...prevState, [targetName]: file }));
           setFileName(file.name);
         }
@@ -44,10 +49,10 @@ export function AddInvoice() {
       setInvoice((prevState) => ({ ...prevState, [targetName]: targetValue }));
     }
   };
-  
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+
     if (validateForm(invoice)) {
       await registerInvoice(invoice);
       handleReset();
@@ -59,7 +64,7 @@ export function AddInvoice() {
       name: "",
       price: "",
       dueDate: "",
-      mahnung: "",
+      mahnung: 0,
       description: "",
       issuedOn: "",
       attachment: new File([""], ""),
@@ -67,7 +72,12 @@ export function AddInvoice() {
       type: "",
       clinic: "",
     });
+    setFileName("");
   };
+
+  useEffect(() => {
+    getAllClinics();
+  }, []);
   return (
     <>
       <Container sx={{ flexDirection: "column", flex: 1, marginTop: "10%" }}>
@@ -140,7 +150,7 @@ export function AddInvoice() {
                     onChange={(event: any) => handleChange(event, "type")}
                     error={!validatorsInvoice.type(invoice.type)}
                     itens={Object.values(CustomTypeEnum)}
-                    sx={{width:"100%"}}
+                    sx={{ width: "100%" }}
                   />
                 </Grid>
                 <Grid item xs={2.5}>
@@ -165,7 +175,10 @@ export function AddInvoice() {
                     onChange={handleChange}
                     type="date"
                     InputLabelProps={{ shrink: true }}
-                    error={!validatorsInvoice.dueDate(invoice.dueDate)}
+                    error={
+                      !validatorsInvoice.dueDate(invoice.dueDate) ||
+                      new Date(invoice.dueDate) < new Date(invoice.issuedOn)
+                    }
                     fullWidth
                   />
                 </Grid>
@@ -185,25 +198,27 @@ export function AddInvoice() {
                   />
                 </Grid>
                 <Grid item xs={3}>
-                  <TextField
+                  <CustomType
                     variant="filled"
-                    name="status"
                     label="Status"
                     value={invoice.status}
-                    onChange={handleChange}
+                    onChange={(event: any) => handleChange(event, "status")}
                     error={!validatorsInvoice.status(invoice.status)}
-                    fullWidth
+                    itens={Object.values(StatusInvoiceEnum)}
+                    sx={{ width: "100%" }}
                   />
                 </Grid>
                 <Grid item xs={3}>
-                  <TextField
+                  <CustomType
                     variant="filled"
-                    name="clinic"
                     label="Clinic"
                     value={invoice.clinic}
-                    onChange={handleChange}
+                    onChange={(event: any) => handleChange(event, "clinic")}
                     error={!validatorsInvoice.clinic(invoice.clinic)}
-                    fullWidth
+                    itens={clinics?.map((item) => {
+                      return item.name;
+                    })}
+                    sx={{ width: "100%" }}
                   />
                 </Grid>
               </Grid>
