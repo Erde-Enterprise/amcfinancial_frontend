@@ -32,7 +32,7 @@ export function DashBoardModal(props: ModalDashboardEntity) {
   const [fileName, setFileName] = useState("");
   const { clinics, getAllClinics } = useClinic();
   const { getInvoices, updateInvoice } = useDashboard();
-  const oldRechnung = props.rechnung;
+  const actualityRechnung = props.rechnung;
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement>,
@@ -61,10 +61,10 @@ export function DashBoardModal(props: ModalDashboardEntity) {
       attachment: values.attachment,
       description: values.description,
       due_date: values.dueDate,
-      invoice_number: values.rechnung,
+      invoice_number: actualityRechnung,
       issue_date: values.issuedOn,
       name_clinic: values.clinic,
-      invoice_number_older: oldRechnung,
+      new_invoice_number: values.rechnung,
       reminder: values.mahnung,
       status: getKeyFromValue(values.status, StatusInvoiceEnum),
       title: values.name,

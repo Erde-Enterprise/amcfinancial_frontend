@@ -43,7 +43,7 @@ export interface InvoiceRowsEntity {
 
 export interface InvoiceUpdateEntity {
   attachment: File;
-  invoice_number_older: string;
+  new_invoice_number: string;
   name_clinic: string;
   invoice_number: string;
   description: string;

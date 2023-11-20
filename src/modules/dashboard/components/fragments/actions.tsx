@@ -10,6 +10,7 @@ import { getValueFromKey } from "../../../../utils/utils";
 import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import useDashboard from "../../hooks/use-dashboard";
+import UpdateIcon from "@mui/icons-material/Update";
 
 export function Actions(invoice: InvoiceEntity) {
   const [open, setOpen] = useState<boolean>(false);
@@ -21,7 +22,9 @@ export function Actions(invoice: InvoiceEntity) {
     setOpen(false);
   };
   const handleDelete = async (invoice_number: string) => {
-    await deleteInvoice(invoice_number);
+    const arrInvoice: string[] = [];
+    arrInvoice.push(invoice_number);
+    await deleteInvoice(arrInvoice);
   };
   
   return (

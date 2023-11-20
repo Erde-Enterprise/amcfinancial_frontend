@@ -17,7 +17,6 @@ function useDashboard() {
     navigate("/new-invoice/");
   }
 
-
   async function registerInvoice(invoice: InvoiceInsertEntity) {
     try {
       const formData = new FormData();
@@ -45,7 +44,6 @@ function useDashboard() {
     }
   }
 
-
   async function listInvoices(initialDate?: string, finalDate?: string) {
     try {
       const response = await api.get("/list/invoices/", {
@@ -61,7 +59,6 @@ function useDashboard() {
     }
   }
 
-
   async function getInvoices(initialDate?: string, finalDate?: string) {
     setLoading(true);
     await listInvoices(initialDate, finalDate).then((data) => {
@@ -69,7 +66,6 @@ function useDashboard() {
       setLoading(false);
     });
   }
-
 
   async function updateInvoice(invoice: InvoiceUpdateEntity) {
     try {
@@ -87,8 +83,8 @@ function useDashboard() {
         formData.append("attachment", invoice.attachment as File);
       }
       formData.append("reminder", invoice.reminder.toString());
-      formData.append("invoice_number_older", invoice.invoice_number_older);
-      console.log(formData);
+      formData.append("new_invoice_number", invoice.new_invoice_number);
+      
       await api.sendUpdateForm("/update/invoice/", formData);
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -96,12 +92,10 @@ function useDashboard() {
     }
   }
 
-  // NÃO ESTÁ FUNCIONANDO
-  async function deleteInvoice(invoice_number: string) {
+  async function deleteInvoice(invoice_number: string[]) {
     try {
-      
-      await api.delete("/delete/invoice/",{
-        params: { invoice_number: invoice_number }
+      await api.delete("/delete/invoice/", {
+        data: { invoices_number: invoice_number },
       });
     } catch (error) {
       console.error(error);
@@ -117,7 +111,7 @@ function useDashboard() {
     loading,
     getInvoices,
     updateInvoice,
-    deleteInvoice
+    deleteInvoice,
   };
 }
 

@@ -12,7 +12,6 @@ import {
 } from "../../utils/utils";
 import AuthContext from "../../../../auth/auth";
 import PlaylistAddCircleIcon from "@mui/icons-material/PlaylistAddCircle";
-import UpdateIcon from "@mui/icons-material/Update";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import useDashboard from "../../hooks/use-dashboard";
 import { InvoiceEntity, InvoiceRowsEntity } from "../../model/dashboard.entity";
@@ -22,12 +21,15 @@ import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { Actions } from "../fragments/actions";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { snackActions } from "../../../../utils/notification/snackbar-util";
 
 export function Table() {
   const { user } = useContext(AuthContext);
-  const { goToAddInvoice, getInvoices, invoices, loading } = useDashboard();
+  const { goToAddInvoice, getInvoices, invoices, loading, deleteInvoice } =
+    useDashboard();
   const [data, setData] = useState<InvoiceRowsEntity[]>([]);
   const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
+  const [invoicesDeleted, setInvoicesDeleted] = useState<string[]>([]);
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
       {
@@ -237,7 +239,29 @@ export function Table() {
     setRowSelection(arr);
   }, [invoices]);
 
+  useEffect(()=>{
+    const rechungsSelecteds: string[] = [];
+    Object.keys(rowSelection).forEach((index) => {
+      const item = data[parseInt(index)];
+      if (item && Object.keys(item).length !== 0) {
+        rechungsSelecteds.push(item.rechnung);
+      }
+    });
+    setInvoicesDeleted(rechungsSelecteds);
+  }, [rowSelection]);
   
+  
+
+  const handleManyDelets = async () => {
+    if (invoicesDeleted.length === 0) {
+      snackActions.warning("Please select one or more itens");
+      return;
+    }
+    await deleteInvoice(invoicesDeleted).then(()=>{
+      const newData = data.filter(item => !invoicesDeleted.includes(item.rechnung));
+      setData(newData);
+    });
+  };
   return (
     <Grid container alignItems={"center"} spacing={1} flexDirection={"column"}>
       <Box mb={0.5}>
@@ -252,15 +276,19 @@ export function Table() {
       </Box>
       <Box mb={0.1}>
         <Grid item>
-          <Button endIcon={<UpdateIcon fontSize="small" />} color="error">
+          <Button
+            onClick={handleManyDelets}
+            endIcon={<DeleteForeverIcon fontSize="small" />}
+            color="error"
+          >
             Delete
           </Button>
-          <Button
+          {/* <Button
             endIcon={<DeleteForeverIcon fontSize="small" />}
             color="warning"
           >
             Update
-          </Button>
+          </Button> */}
           <Button
             endIcon={<PlaylistAddCircleIcon fontSize="small" />}
             color="primary"
@@ -275,6 +303,8 @@ export function Table() {
       <Box mb={0.1}>
         <Grid item>
           <CustomTable
+            state={{ rowSelection: { ...rowSelection } }}
+            onRowSelectionChange={setRowSelection}
             loading={loading}
             title="Invoices"
             columns={columns}
