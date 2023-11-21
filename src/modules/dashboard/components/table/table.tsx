@@ -1,4 +1,10 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import CustomTable from "./custom-table/Custom-React-Table";
 import { MRT_ColumnDef, MRT_RowSelectionState } from "material-react-table";
 import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
@@ -22,11 +28,18 @@ import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { Actions } from "../fragments/actions";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { snackActions } from "../../../../utils/notification/snackbar-util";
+import SearchInvoice from "../fragments/search";
 
 export function Table() {
   const { user } = useContext(AuthContext);
-  const { goToAddInvoice, getInvoices, invoices, loading, deleteInvoice } =
-    useDashboard();
+  const {
+    goToAddInvoice,
+    getInvoices,
+    invoices,
+    loading,
+    deleteInvoice,
+    downloadInvoice,
+  } = useDashboard();
   const [data, setData] = useState<InvoiceRowsEntity[]>([]);
   const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
   const [invoicesDeleted, setInvoicesDeleted] = useState<string[]>([]);
@@ -179,10 +192,13 @@ export function Table() {
         Cell: ({ row }) => (
           <Box sx={{ height: "10%", width: "10%" }}>
             <Button
+              onClick={async () => {
+                await downloadInvoice(row.original.rechnung, row.original.name);
+              }}
               size="small"
               sx={{
                 fontSize: "0.5rem", // Ajuste o tamanho da fonte aqui
-                padding: "1px 6px", // Ajuste o preenchimento aqui
+                //padding: "3px 6px", // Ajuste o preenchimento aqui
               }}
               startIcon={
                 <AttachFileIcon
@@ -207,7 +223,7 @@ export function Table() {
     getInvoices(getFirstDayOfMonth(), getToday());
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (Array.isArray(invoices)) {
       setData(
         invoices.map((item: InvoiceEntity) => ({
@@ -239,7 +255,7 @@ export function Table() {
     setRowSelection(arr);
   }, [invoices]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const rechungsSelecteds: string[] = [];
     Object.keys(rowSelection).forEach((index) => {
       const item = data[parseInt(index)];
@@ -249,16 +265,16 @@ export function Table() {
     });
     setInvoicesDeleted(rechungsSelecteds);
   }, [rowSelection]);
-  
-  
 
   const handleManyDelets = async () => {
     if (invoicesDeleted.length === 0) {
       snackActions.warning("Please select one or more itens");
       return;
     }
-    await deleteInvoice(invoicesDeleted).then(()=>{
-      const newData = data.filter(item => !invoicesDeleted.includes(item.rechnung));
+    await deleteInvoice(invoicesDeleted).then(() => {
+      const newData = data.filter(
+        (item) => !invoicesDeleted.includes(item.rechnung)
+      );
       setData(newData);
     });
   };
@@ -272,6 +288,11 @@ export function Table() {
       <Box mb={3}>
         <Grid item sx={styleMenuItem}>
           {getRandomPhrase()}
+        </Grid>
+      </Box>
+      <Box mb={1}>
+        <Grid item>
+          <SearchInvoice />
         </Grid>
       </Box>
       <Box mb={0.1}>

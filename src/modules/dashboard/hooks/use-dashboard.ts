@@ -67,6 +67,30 @@ function useDashboard() {
     });
   }
 
+  async function uniqueInvoice(rechnung: string){
+    try {
+      const response = await api.get("/find/invoice/", {
+        params: {
+          invoice_number: rechnung
+        },
+      });
+      return response;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      snackActions.error(axiosError.request.response);
+    }
+  }
+
+  async function getUniqueInvoice(rechung: string){
+    setLoading(true);
+    await uniqueInvoice(rechung).then((data)=>{
+      const uniqueData: InvoiceEntity[] = [];
+      uniqueData.push(data?.data);
+      setInvoices(uniqueData);
+      setLoading(false);
+    });
+  }
+
   async function updateInvoice(invoice: InvoiceUpdateEntity) {
     try {
       const formData = new FormData();
@@ -84,7 +108,7 @@ function useDashboard() {
       }
       formData.append("reminder", invoice.reminder.toString());
       formData.append("new_invoice_number", invoice.new_invoice_number);
-      
+
       await api.sendUpdateForm("/update/invoice/", formData);
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -92,10 +116,10 @@ function useDashboard() {
     }
   }
 
-  async function deleteInvoice(invoice_number: string[]) {
+  async function deleteInvoice(invoices_numbers: string[]) {
     try {
       await api.delete("/delete/invoice/", {
-        data: { invoices_number: invoice_number },
+        data: { invoices_number: invoices_numbers },
       });
     } catch (error) {
       console.error(error);
@@ -103,6 +127,37 @@ function useDashboard() {
       snackActions.error(axiosError.message);
     }
   }
+  async function downloadInvoice(invoice_number: string, name_invoice: string) {
+    try {
+      const response = await api.post("/attachment/", {
+        invoice_number,
+      });
+  
+      
+      const base64Response = response.data.attachment;
+      const fileType = response.data.type; 
+  
+      const fileBlob = base64ToBlob(base64Response, fileType);
+  
+      const url = URL.createObjectURL(fileBlob);
+      window.open(url, name_invoice);
+    } catch (error) {
+      console.error(error);
+      const axiosError = error as AxiosError;
+      snackActions.error(axiosError.message);
+    }
+  }
+  
+  function base64ToBlob(base64: string, type: string) {
+    const binaryString = window.atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return new Blob([bytes], {type});
+  }
+  
 
   return {
     goToAddInvoice,
@@ -112,6 +167,8 @@ function useDashboard() {
     getInvoices,
     updateInvoice,
     deleteInvoice,
+    downloadInvoice,
+    getUniqueInvoice
   };
 }
 
