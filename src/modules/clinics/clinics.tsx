@@ -8,9 +8,10 @@ import CustomTable from "../dashboard/components/table/custom-table/Custom-React
 import { MRT_ColumnDef } from "material-react-table";
 import { ClinicsEntity } from "./model/clinics.entity";
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import { Actions } from "./fragments/actions";
 
 export function ClinicsPage() {
-  const { registerClinic, clinics, loading, getAllClinics } = useClinic();
+  const { registerClinic, clinic, getAllClinics } = useClinic();
   const [name, setName] = useState<string>("");
   const [color, setColor] = useState("#fff11");
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
@@ -83,17 +84,17 @@ export function ClinicsPage() {
   }, []);
 
   useEffect(() => {
-    if (Array.isArray(clinics)) {
+    if (Array.isArray(clinic?.clinics)) {
       setData(
-        clinics.map((item: ClinicsEntity, index: number) => ({
+        clinic?.clinics.map((item: ClinicsEntity, index: number) => ({
           id: ++index,
           name: item.name,
           codeColor: item.color,
           color: item.color,
-        }))
+        })) as ClinicsEntity[]
       );
     }
-  }, [clinics]);
+  }, [clinic?.clinics]);
   
   return (
     <Grid container spacing={2} direction={"column"} alignItems={"center"}>
@@ -141,9 +142,11 @@ export function ClinicsPage() {
       <Grid item>
         <CustomTable
           title="List Clinics"
-          loading={loading}
+          loading={clinic?.loading}
           data={data}
           columns={columns}
+          disableRowSelection
+          actions={({ row }) => Actions(row.original.name)}
         ></CustomTable>
       </Grid>
     </Grid>

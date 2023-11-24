@@ -14,7 +14,7 @@ import { StatusInvoiceEnum } from "./enum/add-invoice.enum";
 
 export function AddInvoice() {
   const [fileName, setFileName] = useState("");
-  const { clinics, getAllClinics } = useClinic();
+  const { clinic, getAllClinics } = useClinic();
   const { registerInvoice } = useDashboard();
   const [invoice, setInvoice] = useState<InvoiceInsertEntity>({
     rechnung: "",
@@ -215,7 +215,7 @@ export function AddInvoice() {
                     value={invoice.clinic}
                     onChange={(event: any) => handleChange(event, "clinic")}
                     error={!validatorsInvoice.clinic(invoice.clinic)}
-                    itens={clinics?.map((item) => {
+                    itens={clinic?.clinics?.map((item) => {
                       return item.name;
                     })}
                     sx={{ width: "100%" }}
