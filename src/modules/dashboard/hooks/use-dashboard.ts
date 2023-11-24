@@ -6,12 +6,14 @@ import { getKeyFromValue } from "../../../utils/utils";
 import { InvoiceInsertEntity } from "../features/add-invoice/model/add-invoice.entity";
 import { CustomTypeEnum } from "../../../components/inputs/enum/type.enum";
 import { StatusInvoiceEnum } from "../features/add-invoice/enum/add-invoice.enum";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { InvoiceEntity, InvoiceUpdateEntity } from "../model/dashboard.entity";
+import InvoiceContext from "../context/invoice-context";
 
 function useDashboard() {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [invoices, setInvoices] = useState<InvoiceEntity[] | undefined>();
+  const invoice = useContext(InvoiceContext);
+  //const [loading, setLoading] = useState<boolean>(false);
+  //const [invoices, setInvoices] = useState<InvoiceEntity[] | undefined>();
   const navigate = useNavigate();
   function goToAddInvoice() {
     navigate("/new-invoice/");
@@ -36,7 +38,6 @@ function useDashboard() {
         formData.append("attachment", invoice.attachment as File);
       }
       formData.append("reminder", invoice.mahnung.toString());
-
       await api.sendForm("/register/invoice/", formData);
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -60,10 +61,34 @@ function useDashboard() {
   }
 
   async function getInvoices(initialDate?: string, finalDate?: string) {
-    setLoading(true);
+    invoice?.setLoading(true);
     await listInvoices(initialDate, finalDate).then((data) => {
-      setInvoices(data?.data);
-      setLoading(false);
+      invoice?.setInvoices(data?.data);
+      invoice?.setLoading(false);
+    });
+  }
+
+  async function uniqueInvoice(rechnung: string){
+    try {
+      const response = await api.get("/find/invoice/", {
+        params: {
+          invoice_number: rechnung
+        },
+      });
+      return response;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      snackActions.error(axiosError.request.response);
+    }
+  }
+
+  async function getUniqueInvoice(rechung: string){
+    invoice?.setLoading(true);
+    await uniqueInvoice(rechung).then((data)=>{
+      const uniqueData: InvoiceEntity[] = [];
+      uniqueData.push(data?.data);
+      invoice?.setInvoices(uniqueData);
+      invoice?.setLoading(false);
     });
   }
 
@@ -84,7 +109,7 @@ function useDashboard() {
       }
       formData.append("reminder", invoice.reminder.toString());
       formData.append("new_invoice_number", invoice.new_invoice_number);
-      
+
       await api.sendUpdateForm("/update/invoice/", formData);
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -92,10 +117,10 @@ function useDashboard() {
     }
   }
 
-  async function deleteInvoice(invoice_number: string[]) {
+  async function deleteInvoice(invoices_numbers: string[]) {
     try {
       await api.delete("/delete/invoice/", {
-        data: { invoices_number: invoice_number },
+        data: { invoices_number: invoices_numbers },
       });
     } catch (error) {
       console.error(error);
@@ -103,16 +128,43 @@ function useDashboard() {
       snackActions.error(axiosError.message);
     }
   }
-
+  async function downloadInvoice(invoice_number: string, name_invoice: string) {
+    try {
+      const response = await api.post("/attachment/", {
+        invoice_number,
+      });
+      const base64Response = response.data.attachment;
+      const fileType = response.data.type; 
+      const fileBlob = base64ToBlob(base64Response, fileType);
+      const url = URL.createObjectURL(fileBlob);
+      window.open(url, name_invoice);
+    } catch (error) {
+      console.error(error);
+      const axiosError = error as AxiosError;
+      snackActions.error(axiosError.message);
+    }
+  }
+  
+  function base64ToBlob(base64: string, type: string) {
+    const binaryString = window.atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return new Blob([bytes], {type});
+  }
   return {
     goToAddInvoice,
     registerInvoice,
-    invoices,
-    loading,
+    invoice,
+    //invoices,
+    //loading,
     getInvoices,
     updateInvoice,
     deleteInvoice,
+    downloadInvoice,
+    getUniqueInvoice
   };
 }
-
 export default useDashboard;
