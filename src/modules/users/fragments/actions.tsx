@@ -3,30 +3,29 @@ import { useState } from "react";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import UpdateIcon from "@mui/icons-material/Update";
-import useClinic from "../hooks/use-clinics";
 import CustomTooltip from "../../dashboard/components/table/custom-tooltip/Custom-Tooltip";
+import useUser from "../hooks/use-users";
 import ConfirmDialog from "../../../components/modal/custom-dialog";
 
-export function Actions(clinic_name: string) {
+export function Actions(nickname: string) {
   const [open, setOpen] = useState<boolean>(false);
-  const {getAllClinics, deleteClinic} = useClinic();
+  const { getAllUsers, deleteUser } = useUser();
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
-
   const handleYes = async () => {
-    await deleteClinic(clinic_name)
+    await deleteUser(nickname)
       .then(async () => {
-        await getAllClinics();
+        await getAllUsers();
       })
       .then(() => {
         handleClose();
       });
   };
-  
+
   return (
     <>
       {/* <CustomTooltip title="Update">
@@ -41,7 +40,7 @@ export function Actions(clinic_name: string) {
       <CustomTooltip title="Delete">
         <IconButton
           color="error"
-          onClick={ () => {
+          onClick={() => {
             //console.log(invoice);
             handleOpen();
           }}

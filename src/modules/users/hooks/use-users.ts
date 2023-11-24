@@ -2,8 +2,11 @@ import { AxiosError } from "axios";
 import api from "../../../auth/api";
 import { snackActions } from "../../../utils/notification/snackbar-util";
 import { UserInsertEntity } from "../model/user.entity";
+import { useContext } from "react";
+import UsersContext from "../context/users-context";
 
 function useUser() {
+  const user = useContext(UsersContext);
   async function registerUser(newUser: UserInsertEntity) {
     try {
       const formData = new FormData();
@@ -22,6 +25,37 @@ function useUser() {
     }
   }
 
-  return { registerUser };
+  async function listAllUsers(){
+    try { 
+    const response =  await api.get("/list/customers/");
+    return response;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      snackActions.error(axiosError.request.response);
+    }
+  }
+  
+  
+  async  function getAllUsers() {
+      user?.setLoading(true);
+      await listAllUsers().then((data)=>{
+        user?.setUsers(data?.data);
+        user?.setLoading(false);
+      });
+
+    };
+    async function deleteUser(nickname: string){
+      try {
+        await api.delete("/delete/customer/", {
+          data: { nickname: nickname },
+        });
+      } catch (error) {
+        console.error(error);
+        const axiosError = error as AxiosError;
+        snackActions.error(axiosError.message);
+      }
+    }
+
+  return { registerUser, user, getAllUsers, deleteUser };
 }
 export default useUser;

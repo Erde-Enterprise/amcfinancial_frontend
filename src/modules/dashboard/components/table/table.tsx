@@ -29,6 +29,7 @@ import { Actions } from "../fragments/actions";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { snackActions } from "../../../../utils/notification/snackbar-util";
 import SearchInvoice from "../fragments/search";
+import ConfirmDialog from "../../../../components/modal/custom-dialog";
 
 export function Table() {
   const { user } = useContext(AuthContext);
@@ -41,6 +42,7 @@ export function Table() {
     deleteInvoice,
     downloadInvoice,
   } = useDashboard();
+  const [open, setOpen] = useState<boolean>(false);
   const [data, setData] = useState<InvoiceRowsEntity[]>([]);
   const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
   const [invoicesDeleted, setInvoicesDeleted] = useState<string[]>([]);
@@ -267,6 +269,12 @@ export function Table() {
     });
     setInvoicesDeleted(rechungsSelecteds);
   }, [rowSelection]);
+  const handleOpen = ()=>{
+    setOpen(true);
+  }
+  const handleClose = ()=>{
+    setOpen(false);
+  }
 
   const handleManyDelets = async () => {
     if (invoicesDeleted.length === 0) {
@@ -278,6 +286,8 @@ export function Table() {
         (item) => !invoicesDeleted.includes(item.rechnung)
       );
       setData(newData);
+    }).then(()=>{
+      handleClose();
     });
   };
   return (
@@ -300,7 +310,7 @@ export function Table() {
       <Box mb={0.1}>
         <Grid item>
           <Button
-            onClick={handleManyDelets}
+            onClick={handleOpen}
             endIcon={<DeleteForeverIcon fontSize="small" />}
             color="error"
           >
@@ -368,6 +378,12 @@ export function Table() {
           />
         </Grid>
       </Box>
+      <ConfirmDialog
+        open={open}
+        onClose={handleClose}
+        onClickYes={handleManyDelets}
+        text="Confirm?"
+      />
     </Grid>
   );
 }
