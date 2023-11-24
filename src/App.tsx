@@ -4,6 +4,7 @@ import AppRoutes from "./routes/app-routes";
 import { AuthProvider } from "./auth/auth";
 import { InvoiceProvider } from "./modules/dashboard/context/invoice-context";
 import { ClinicsProvider } from "./modules/clinics/context/clinics-context";
+import { UsersProvider } from "./modules/users/context/users-context";
 
 function App() {
   return (
@@ -19,11 +20,13 @@ function App() {
         {" "}
         <SnackbarUtilsConfigurator />
         <AuthProvider>
+          <UsersProvider>
           <ClinicsProvider>
           <InvoiceProvider>
           <AppRoutes />
           </InvoiceProvider>
           </ClinicsProvider>
+          </UsersProvider>
         </AuthProvider>
       </SnackbarProvider>
     </div>

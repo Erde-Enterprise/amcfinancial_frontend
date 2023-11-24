@@ -11,20 +11,31 @@ import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import useDashboard from "../../hooks/use-dashboard";
 import UpdateIcon from "@mui/icons-material/Update";
+import ConfirmDialog from "../../../../components/modal/custom-dialog";
+import { getFirstDayOfMonth, getToday } from "../../utils/utils";
 
 export function Actions(invoice: InvoiceEntity) {
   const [open, setOpen] = useState<boolean>(false);
-  const { deleteInvoice } = useDashboard();
+  const [confirm, setConfirm] = useState<boolean>(false);
+  const { deleteInvoice, getInvoices } = useDashboard();
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
-  const handleDelete = async (invoice_number: string) => {
+  const handleOpenConfirm = () => {
+    setConfirm(true);
+  };
+  const handleCloseConfirm = () => {
+    setConfirm(false);
+  };
+  const handleDelete = async () => {
     const arrInvoice: string[] = [];
-    arrInvoice.push(invoice_number);
-    await deleteInvoice(arrInvoice);
+    arrInvoice.push(invoice.invoice_number);
+    await deleteInvoice(arrInvoice).then(()=>{
+      handleCloseConfirm();
+    }).then(async ()=>{await getInvoices(getFirstDayOfMonth(), getToday());});
   };
   
   return (
@@ -41,9 +52,9 @@ export function Actions(invoice: InvoiceEntity) {
       <CustomTooltip title="Delete">
         <IconButton
           color="error"
-          onClick={async () => {
+          onClick={ () => {
             //console.log(invoice);
-            await handleDelete(invoice.invoice_number);
+            handleOpenConfirm();
           }}
         >
           <DeleteForeverIcon />
@@ -65,6 +76,12 @@ export function Actions(invoice: InvoiceEntity) {
           type={getValueFromKey(invoice.type, CustomTypeEnum)}
         />
       </CustomModal>
+      <ConfirmDialog
+        open={confirm}
+        onClose={handleCloseConfirm}
+        onClickYes={handleDelete}
+        text="Confirm?"
+      />
     </>
   );
 }

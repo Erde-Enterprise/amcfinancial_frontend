@@ -6,3 +6,11 @@ export interface UserInsertEntity {
     type: number;
     password: string;
   }
+  export interface UserEntity{
+    id?: number,
+    name: string;
+    nickname: string;
+    email: string;
+    photo?: File;
+    type: number;
+  }
