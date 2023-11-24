@@ -3,6 +3,7 @@ import { SnackbarUtilsConfigurator } from "./utils/notification/snackbar-util";
 import AppRoutes from "./routes/app-routes";
 import { AuthProvider } from "./auth/auth";
 import { InvoiceProvider } from "./modules/dashboard/context/invoice-context";
+import { ClinicsProvider } from "./modules/clinics/context/clinics-context";
 
 function App() {
   return (
@@ -18,9 +19,11 @@ function App() {
         {" "}
         <SnackbarUtilsConfigurator />
         <AuthProvider>
+          <ClinicsProvider>
           <InvoiceProvider>
           <AppRoutes />
           </InvoiceProvider>
+          </ClinicsProvider>
         </AuthProvider>
       </SnackbarProvider>
     </div>

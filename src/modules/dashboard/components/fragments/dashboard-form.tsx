@@ -30,7 +30,7 @@ interface ModalDashboardEntity {
 export function DashBoardModal(props: ModalDashboardEntity) {
   const [values, setValues] = useState<ModalDashboardEntity>(props);
   const [fileName, setFileName] = useState("");
-  const { clinics, getAllClinics } = useClinic();
+  const { clinic, getAllClinics } = useClinic();
   const { getInvoices, updateInvoice } = useDashboard();
   const actualityRechnung = props.rechnung;
 
@@ -196,7 +196,7 @@ export function DashBoardModal(props: ModalDashboardEntity) {
             value={values.clinic}
             onChange={(event: any) => handleChange(event, "clinic")}
             error={!validatorsInvoice.clinic(values.clinic)}
-            itens={clinics?.map(item=> item.name)}
+            itens={clinic?.clinics?.map(item=> item.name)}
             sx={{ width: "100%" }}
           />
         </Grid>
