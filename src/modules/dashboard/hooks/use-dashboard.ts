@@ -134,7 +134,7 @@ function useDashboard() {
         invoice_number,
       });
       const base64Response = response.data.attachment;
-      const fileType = response.data.type; 
+      const fileType = response.data.mime_type; 
       const fileBlob = base64ToBlob(base64Response, fileType);
       const url = URL.createObjectURL(fileBlob);
       window.open(url, name_invoice);

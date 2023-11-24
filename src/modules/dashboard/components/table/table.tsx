@@ -196,7 +196,6 @@ export function Table() {
           <Box sx={{ height: "10%", width: "10%" }}>
             <Button
               onClick={async () => {
-                return;
                 await downloadInvoice(row.original.rechnung, row.original.name);
               }}
               size="small"
