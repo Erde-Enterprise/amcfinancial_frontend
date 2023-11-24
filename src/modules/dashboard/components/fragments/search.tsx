@@ -47,7 +47,7 @@ function SearchInvoice() {
           <Grid item xs={12}>
             {!isDateSearch && (
               <TextField
-                label="Número da Invoice"
+                label="Invoice Number"
                 value={invoiceNumber}
                 onChange={(e) => setInvoiceNumber(e.target.value)}
                 InputProps={{
@@ -63,7 +63,7 @@ function SearchInvoice() {
               <Grid container spacing={1}>
                 <Grid item>
                 <TextField
-                  label="Data Inicial"
+                  label="Issued Date"
                   type="date"
                   InputLabelProps={{
                     shrink: true,
@@ -74,7 +74,7 @@ function SearchInvoice() {
                 </Grid>
                 <Grid item>
                 <TextField
-                  label="Data Final"
+                  label="Due Date"
                   type="date"
                   InputLabelProps={{
                     shrink: true,

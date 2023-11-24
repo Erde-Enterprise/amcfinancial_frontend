@@ -35,8 +35,9 @@ export function Table() {
   const {
     goToAddInvoice,
     getInvoices,
-    invoices,
-    loading,
+    invoice,
+    //invoices,
+    //loading,
     deleteInvoice,
     downloadInvoice,
   } = useDashboard();
@@ -193,6 +194,7 @@ export function Table() {
           <Box sx={{ height: "10%", width: "10%" }}>
             <Button
               onClick={async () => {
+                return;
                 await downloadInvoice(row.original.rechnung, row.original.name);
               }}
               size="small"
@@ -224,9 +226,9 @@ export function Table() {
   }, []);
 
   useLayoutEffect(() => {
-    if (Array.isArray(invoices)) {
+    if (Array.isArray(invoice?.invoices)) {
       setData(
-        invoices.map((item: InvoiceEntity) => ({
+        invoice?.invoices.map((item: InvoiceEntity) => ({
           rechnung: item.invoice_number,
           name: item.title,
           price: item.amount,
@@ -240,10 +242,10 @@ export function Table() {
           clinic: item.clinic.name,
           color: item.clinic.color,
           invoice: item,
-        }))
+        })) as InvoiceRowsEntity[]
       );
     }
-  }, [invoices]);
+  }, [invoice?.invoices]);
 
   useEffect(() => {
     let arr = {} as MRT_RowSelectionState;
@@ -253,7 +255,7 @@ export function Table() {
       }
     });
     setRowSelection(arr);
-  }, [invoices]);
+  }, [invoice?.invoices]);
 
   useEffect(() => {
     const rechungsSelecteds: string[] = [];
@@ -326,7 +328,7 @@ export function Table() {
           <CustomTable
             state={{ rowSelection: { ...rowSelection } }}
             onRowSelectionChange={setRowSelection}
-            loading={loading}
+            loading={invoice?.loading}
             title="Invoices"
             columns={columns}
             data={data}

@@ -5,7 +5,7 @@ import { SubmitButtonForm } from "../../../../components/header/buttons/Submit-F
 import { CancelButtonModalForm } from "../../../../components/header/buttons/Cancel-Modal-Form";
 import useClinic from "../../../clinics/hooks/use-clinics";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { validatorsInvoice } from "../../utils/utils";
+import { getFirstDayOfMonth, getToday, validatorsInvoice } from "../../utils/utils";
 import { CustomType } from "../../../../components/inputs/input-type";
 import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
 import { StatusInvoiceEnum } from "../../features/add-invoice/enum/add-invoice.enum";
@@ -69,6 +69,8 @@ export function DashBoardModal(props: ModalDashboardEntity) {
       status: getKeyFromValue(values.status, StatusInvoiceEnum),
       title: values.name,
       type: getKeyFromValue(values.type, CustomTypeEnum),
+    }).then(async ()=>{
+      await getInvoices(getFirstDayOfMonth(), getToday());
     });
   };
 
