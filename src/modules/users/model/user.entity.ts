@@ -14,3 +14,12 @@ export interface UserInsertEntity {
     photo?: File;
     type: number;
   }
+  export interface UserUpdateEntity{
+    new_nickname: string;
+    name: string;
+    nickname: string;
+    email: string;
+    photo?: File;
+    type: number;
+    password: string;
+  }

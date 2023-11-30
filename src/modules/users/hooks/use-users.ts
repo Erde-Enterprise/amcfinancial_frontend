@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import api from "../../../auth/api";
 import { snackActions } from "../../../utils/notification/snackbar-util";
-import { UserInsertEntity } from "../model/user.entity";
+import { UserInsertEntity, UserUpdateEntity } from "../model/user.entity";
 import { useContext } from "react";
 import UsersContext from "../context/users-context";
 
@@ -19,6 +19,25 @@ function useUser() {
         formData.append("photo", newUser.photo as File);
       }
       await api.sendForm("/register/customer/", formData);
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      snackActions.error(axiosError.request.response);
+    }
+  }
+  async function updateUser(newUser: UserUpdateEntity) {
+    try {
+      const formData = new FormData();
+      formData.append("name", newUser.name);
+      formData.append("nickname", newUser.nickname);
+      formData.append("new_nickname", newUser.new_nickname);
+      formData.append("email", newUser.email);
+      formData.append("password", newUser.password);
+      formData.append("type", newUser.type.toString());
+      if (newUser.photo) {
+        formData.append("photo", newUser.photo as File);
+      }
+      
+      await api.sendUpdateForm("/update/customer/", formData);
     } catch (error) {
       const axiosError = error as AxiosError;
       snackActions.error(axiosError.request.response);
@@ -56,6 +75,6 @@ function useUser() {
       }
     }
 
-  return { registerUser, user, getAllUsers, deleteUser };
+  return { registerUser, user, getAllUsers, deleteUser, updateUser };
 }
 export default useUser;

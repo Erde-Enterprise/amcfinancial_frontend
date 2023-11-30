@@ -1,58 +1,54 @@
 import {
-  Button,
-  Grid,
-  TextField,
-  FormHelperText,
   Box,
-  Select,
+  Button,
+  FormHelperText,
+  Grid,
   MenuItem,
+  Select,
   SelectChangeEvent,
-  Avatar,
+  TextField,
 } from "@mui/material";
-import { UserEntity, UserInsertEntity } from "./model/user.entity";
+import { UserUpdateEntity } from "../model/user.entity";
+import { CancelButtonFormToDashboard } from "../../../components/header/buttons/Cancel-Form-Button";
+import { ResetButtonForm } from "../../../components/header/buttons/Reset-Form-Button";
+import { SubmitButtonForm } from "../../../components/header/buttons/Submit-Form-Button";
+import { passwordsMatch, validatePassword, validateUpdatePassword } from "../utils/utils";
+import { ChangeEvent, FormEvent, useState } from "react";
+import useUsers from "../hooks/use-users";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { snackActions } from "../../utils/notification/snackbar-util";
-import { validateLogin, validatePassword } from "../login/utils/utils";
-import { passwordsMatch } from "./utils/utils";
-import { CancelButtonFormToDashboard } from "../../components/header/buttons/Cancel-Form-Button";
-import { ResetButtonForm } from "../../components/header/buttons/Reset-Form-Button";
-import { SubmitButtonForm } from "../../components/header/buttons/Submit-Form-Button";
-import useUsers from "./hooks/use-users";
-import {
-  ChangeEvent,
-  FormEvent,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
-import CustomTable from "../dashboard/components/table/custom-table/Custom-React-Table";
-import { MRT_ColumnDef } from "material-react-table";
-import { Actions } from "./fragments/actions";
+import { validateLogin } from "../../login/utils/utils";
 
-export function UsersPage() {
+export function UserModalUpdateForm({
+  email,
+  name,
+  new_nickname,
+  nickname,
+  photo,
+  type,
+}: UserUpdateEntity) {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const { registerUser, user, getAllUsers } = useUsers();
+  const { updateUser, user, getAllUsers } = useUsers();
   const [fileName, setFileName] = useState("");
-  const [data, setData] = useState<UserEntity[]>([]);
-  const [newUser, setNewUser] = useState<UserInsertEntity>({
-    email: "",
-    nickname: "",
-    name: "",
-    photo: undefined,
-    type: 1,
+  const [newUser, setNewUser] = useState<UserUpdateEntity>({
+    email: email,
+    new_nickname: new_nickname,
+    nickname: nickname,
+    name: name,
+    photo: photo,
+    type: type,
     password: "",
   });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    await registerUser(newUser).then(async () => {
-      await getAllUsers();
-    }).then(()=>{
-      handleReset();
-    });
-    
+    await updateUser(newUser)
+      .then(async () => {
+        await getAllUsers();
+      })
+      .then(() => {
+        handleReset();
+      });
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -88,6 +84,7 @@ export function UsersPage() {
   };
   const handleReset = () => {
     setNewUser({
+      new_nickname: "",
       email: "",
       nickname: "",
       name: "",
@@ -100,80 +97,6 @@ export function UsersPage() {
   };
   const types: string[] = ["1", "2"];
 
-  const columns = useMemo<MRT_ColumnDef<any>[]>(
-    () => [
-      {
-        accessorKey: "id",
-        header: "Id",
-        maxSize: 200,
-        size: 10,
-        minSize: 10,
-      },
-      {
-        accessorKey: "photo",
-        header: "Photo",
-        maxSize: 200,
-        size: 30,
-        minSize: 10,
-        Cell: ({ row }) => (
-          <>
-            <Avatar
-              alt={row.original.name}
-              src={row.original.photo}
-              style={{ border: "none" }}
-            />
-          </>
-        ),
-      },
-      {
-        accessorKey: "name",
-        header: "Name",
-        maxSize: 200,
-        size: 70,
-        minSize: 10,
-      },
-      {
-        accessorKey: "nickname",
-        header: "Nickname",
-        maxSize: 200,
-        size: 35,
-        minSize: 10,
-      },
-      {
-        accessorKey: "type",
-        header: "Type",
-        maxSize: 200,
-        size: 25,
-        minSize: 10,
-      },
-      {
-        accessorKey: "email",
-        header: "Email",
-        maxSize: 200,
-        size: 60,
-        minSize: 10,
-      },
-    ],
-    []
-  );
-  useEffect(() => {
-    getAllUsers();
-  }, []);
-
-  useLayoutEffect(() => {
-    if (Array.isArray(user?.users)) {
-      setData(
-        user?.users?.map((item: UserEntity, index: number) => ({
-          id: ++index,
-          email: item.email,
-          name: item.name,
-          nickname: item.nickname,
-          photo: item.photo,
-          type: item.type,
-        })) as UserEntity[]
-      );
-    }
-  }, [user?.users]);
   return (
     <Grid container direction={"column"} spacing={2}>
       <Grid item xs={12}>
@@ -210,8 +133,8 @@ export function UsersPage() {
                 <TextField
                   variant="filled"
                   label="Nickname"
-                  name="nickname"
-                  value={newUser.nickname}
+                  name="new_nickname"
+                  value={newUser.new_nickname}
                   onChange={handleInputChange}
                   required
                 />
@@ -263,19 +186,18 @@ export function UsersPage() {
                     onChange={handleInputChange}
                     error={
                       newUser.password !== "" &&
-                      !validatePassword(newUser.password)
+                      !validateUpdatePassword(newUser.password)
                     }
-                    required
                   />
                   <FormHelperText
                     style={{ whiteSpace: "pre-line" }}
                     error={
                       newUser.password !== "" &&
-                      !validatePassword(newUser.password)
+                      !validateUpdatePassword(newUser.password)
                     }
                   >
                     {newUser.password !== "" &&
-                    !validatePassword(newUser.password)
+                    !validateUpdatePassword(newUser.password)
                       ? `Password too small`
                       : ""}
                   </FormHelperText>
@@ -295,7 +217,6 @@ export function UsersPage() {
                       ? "Passwords don't match"
                       : ""
                   }
-                  required
                 />
               </Grid>
             </Grid>
@@ -306,16 +227,6 @@ export function UsersPage() {
             </Grid>
           </Grid>
         </form>
-        <Grid item xs={12}>
-          <CustomTable
-            title="Users"
-            loading={user?.loading}
-            data={data}
-            columns={columns}
-            disableRowSelection
-            actions={({ row }) => Actions(row)}
-          />
-        </Grid>
       </Grid>
     </Grid>
   );
