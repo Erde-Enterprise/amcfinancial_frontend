@@ -5,4 +5,5 @@ export interface UserModel {
   name: string;
   photo: string;
   user_type: number;
+  mime_type: string;
 }

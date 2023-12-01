@@ -28,25 +28,25 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-api.interceptors.response.use(
-  async (response) => {
-    const success = await verifyRequest(response);
-    if (success) {
-      snackActions.success(`Successfully`);
-    }
-    return response;
-  },
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      snackActions.error("Without authorization, please log in again");
-      localStorage.clear();
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
-    }
-    return Promise.reject(error);
-  }
-);
+// api.interceptors.response.use(
+//   async (response) => {
+//     const success = await verifyRequest(response);
+//     if (success) {
+//       snackActions.success(`Successfully`);
+//     }
+//     return response;
+//   },
+//   (error) => {
+//     if (error.response && error.response.status === 401) {
+//       snackActions.error("Without authorization, please log in again");
+//       localStorage.clear();
+//       setTimeout(() => {
+//         window.location.reload();
+//       }, 3000);
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 api.sendForm = function (
   url: string,

@@ -5,6 +5,7 @@ import { UserInsertEntity, UserUpdateEntity } from "../model/user.entity";
 import { useContext } from "react";
 import UsersContext from "../context/users-context";
 import { base64ToBlob } from "../utils/utils";
+import { verifyRequest } from "../../../utils/utils";
 
 function useUser() {
   const user = useContext(UsersContext);
@@ -19,7 +20,12 @@ function useUser() {
       if (newUser.photo) {
         formData.append("photo", newUser.photo as File);
       }
-      await api.sendForm("/register/customer/", formData);
+      await api.sendForm("/register/customer/", formData).then(async (res) => {
+        const success = await verifyRequest(res);
+        if (success) {
+          snackActions.success(`Successfully`);
+        }
+      });
     } catch (error) {
       const axiosError = error as AxiosError;
       snackActions.error(axiosError.request.response);
@@ -37,44 +43,56 @@ function useUser() {
       if (newUser.photo) {
         formData.append("photo", newUser.photo as File);
       }
-      
-      await api.sendUpdateForm("/update/customer/", formData);
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      snackActions.error(axiosError.request.response);
-    }
-  }
 
-  async function listAllUsers(){
-    try { 
-    const response =  await api.get("/list/customers/");
-    return response;
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      snackActions.error(axiosError.request.response);
-    }
-  }
-  
-  
-  async  function getAllUsers() {
-      user?.setLoading(true);
-      await listAllUsers().then((data)=>{
-        user?.setUsers(data?.data);
-        user?.setLoading(false);
-      });
-
-    };
-    async function deleteUser(nickname: string){
-      try {
-        await api.delete("/delete/customer/", {
-          data: { nickname: nickname },
+      await api
+        .sendUpdateForm("/update/customer/", formData)
+        .then(async (res) => {
+          const success = await verifyRequest(res);
+          if (success) {
+            snackActions.success(`Successfully`);
+          }
         });
-      } catch (error) {
-        console.error(error);
-        const axiosError = error as AxiosError;
-        snackActions.error(axiosError.message);
-      }
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      snackActions.error(axiosError.request.response);
     }
+  }
+
+  async function listAllUsers() {
+    try {
+      const response = await api.get("/list/customers/");
+      return response;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      snackActions.error(axiosError.request.response);
+    }
+  }
+
+  async function getAllUsers() {
+    user?.setLoading(true);
+    await listAllUsers().then((data) => {
+      user?.setUsers(data?.data);
+      user?.setLoading(false);
+    });
+  }
+  async function deleteUser(nickname: string) {
+    try {
+      await api
+        .delete("/delete/customer/", {
+          data: { nickname: nickname },
+        })
+        .then(async (res) => {
+          const success = await verifyRequest(res);
+          if (success) {
+            snackActions.success(`Successfully`);
+          }
+        });
+    } catch (error) {
+      console.error(error);
+      const axiosError = error as AxiosError;
+      snackActions.error(axiosError.message);
+    }
+  }
 
   return { registerUser, user, getAllUsers, deleteUser, updateUser };
 }

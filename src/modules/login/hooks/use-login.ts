@@ -21,6 +21,7 @@ function useLogin() {
       const success = await verifyRequest(response);
 
       if (success) {
+        snackActions.success(`Successfully`);
         setUser(response.data);
         const encryptedData = CryptoJS.AES.encrypt(
           JSON.stringify(response.data),
@@ -35,8 +36,11 @@ function useLogin() {
       snackActions.error(axiosError.message);
     }
   }
+  function logOut(){
+    navigate("/login/");
+  }
 
-  return { login };
+  return { login, logOut };
 }
 
 export default useLogin;

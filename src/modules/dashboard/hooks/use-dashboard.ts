@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import { snackActions } from "../../../utils/notification/snackbar-util";
 import api from "../../../auth/api";
-import { getKeyFromValue } from "../../../utils/utils";
+import { getKeyFromValue, verifyRequest } from "../../../utils/utils";
 import { InvoiceInsertEntity } from "../features/add-invoice/model/add-invoice.entity";
 import { CustomTypeEnum } from "../../../components/inputs/enum/type.enum";
 import { StatusInvoiceEnum } from "../features/add-invoice/enum/add-invoice.enum";
@@ -38,7 +38,12 @@ function useDashboard() {
         formData.append("attachment", invoice.attachment as File);
       }
       formData.append("reminder", invoice.mahnung.toString());
-      await api.sendForm("/register/invoice/", formData);
+      await api.sendForm("/register/invoice/", formData).then(async (res) => {
+        const success = await verifyRequest(res);
+        if (success) {
+          snackActions.success(`Successfully`);
+        }
+      });
     } catch (error) {
       const axiosError = error as AxiosError;
       snackActions.error(axiosError.request.response);
@@ -68,11 +73,11 @@ function useDashboard() {
     });
   }
 
-  async function uniqueInvoice(rechnung: string){
+  async function uniqueInvoice(rechnung: string) {
     try {
       const response = await api.get("/find/invoice/", {
         params: {
-          invoice_number: rechnung
+          invoice_number: rechnung,
         },
       });
       return response;
@@ -82,9 +87,9 @@ function useDashboard() {
     }
   }
 
-  async function getUniqueInvoice(rechung: string){
+  async function getUniqueInvoice(rechung: string) {
     invoice?.setLoading(true);
-    await uniqueInvoice(rechung).then((data)=>{
+    await uniqueInvoice(rechung).then((data) => {
       const uniqueData: InvoiceEntity[] = [];
       uniqueData.push(data?.data);
       invoice?.setInvoices(uniqueData);
@@ -110,7 +115,14 @@ function useDashboard() {
       formData.append("reminder", invoice.reminder.toString());
       formData.append("new_invoice_number", invoice.new_invoice_number);
 
-      await api.sendUpdateForm("/update/invoice/", formData);
+      await api
+        .sendUpdateForm("/update/invoice/", formData)
+        .then(async (res) => {
+          const success = await verifyRequest(res);
+          if (success) {
+            snackActions.success(`Successfully`);
+          }
+        });
     } catch (error) {
       const axiosError = error as AxiosError;
       snackActions.error(axiosError.request.response);
@@ -119,9 +131,16 @@ function useDashboard() {
 
   async function deleteInvoice(invoices_numbers: string[]) {
     try {
-      await api.delete("/delete/invoice/", {
-        data: { invoices_number: invoices_numbers },
-      });
+      await api
+        .delete("/delete/invoice/", {
+          data: { invoices_number: invoices_numbers },
+        })
+        .then(async (res) => {
+          const success = await verifyRequest(res);
+          if (success) {
+            snackActions.success(`Successfully`);
+          }
+        });
     } catch (error) {
       console.error(error);
       const axiosError = error as AxiosError;
@@ -134,7 +153,7 @@ function useDashboard() {
         invoice_number,
       });
       const base64Response = response.data.attachment;
-      const fileType = response.data.mime_type; 
+      const fileType = response.data.mime_type;
       const fileBlob = base64ToBlob(base64Response, fileType);
       const url = URL.createObjectURL(fileBlob);
       window.open(url, name_invoice);
@@ -144,7 +163,7 @@ function useDashboard() {
       snackActions.error(axiosError.message);
     }
   }
-  
+
   function base64ToBlob(base64: string, type: string) {
     const binaryString = window.atob(base64);
     const len = binaryString.length;
@@ -152,7 +171,7 @@ function useDashboard() {
     for (let i = 0; i < len; i++) {
       bytes[i] = binaryString.charCodeAt(i);
     }
-    return new Blob([bytes], {type});
+    return new Blob([bytes], { type });
   }
   return {
     goToAddInvoice,
@@ -164,7 +183,7 @@ function useDashboard() {
     updateInvoice,
     deleteInvoice,
     downloadInvoice,
-    getUniqueInvoice
+    getUniqueInvoice,
   };
 }
 export default useDashboard;
