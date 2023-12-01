@@ -4,6 +4,7 @@ import { snackActions } from "../../../utils/notification/snackbar-util";
 import { UserInsertEntity, UserUpdateEntity } from "../model/user.entity";
 import { useContext } from "react";
 import UsersContext from "../context/users-context";
+import { base64ToBlob } from "../utils/utils";
 
 function useUser() {
   const user = useContext(UsersContext);

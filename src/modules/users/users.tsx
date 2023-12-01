@@ -9,11 +9,11 @@ import {
   SelectChangeEvent,
   Avatar,
 } from "@mui/material";
-import { UserEntity, UserInsertEntity } from "./model/user.entity";
+import { UserEntity, UserInsertEntity, UserRowEntity } from "./model/user.entity";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { snackActions } from "../../utils/notification/snackbar-util";
 import { validateLogin, validatePassword } from "../login/utils/utils";
-import { passwordsMatch } from "./utils/utils";
+import { base64ToBlob, passwordsMatch } from "./utils/utils";
 import { CancelButtonFormToDashboard } from "../../components/header/buttons/Cancel-Form-Button";
 import { ResetButtonForm } from "../../components/header/buttons/Reset-Form-Button";
 import { SubmitButtonForm } from "../../components/header/buttons/Submit-Form-Button";
@@ -34,7 +34,7 @@ export function UsersPage() {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const { registerUser, user, getAllUsers } = useUsers();
   const [fileName, setFileName] = useState("");
-  const [data, setData] = useState<UserEntity[]>([]);
+  const [data, setData] = useState<UserRowEntity[]>([]);
   const [newUser, setNewUser] = useState<UserInsertEntity>({
     email: "",
     nickname: "",
@@ -160,20 +160,45 @@ export function UsersPage() {
     getAllUsers();
   }, []);
 
+  // useLayoutEffect(() => {
+  //   const base64Response = item.photo;
+  //   const fileType = item.mime_type; 
+  //   const fileBlob = base64ToBlob(base64Response, fileType);
+  //   const url = URL.createObjectURL(fileBlob);
+  //   if (Array.isArray(user?.users)) {
+  //     setData(
+  //       user?.users?.map((item: UserEntity, index: number) => ({
+  //         id: ++index,
+  //         email: item.email,
+  //         name: item.name,
+  //         nickname: item.nickname,
+  //         photo: item.photo,
+  //         type: item.type,
+  //       })) as UserEntity[]
+  //     );
+  //   }
+  // }, [user?.users]);
   useLayoutEffect(() => {
     if (Array.isArray(user?.users)) {
       setData(
-        user?.users?.map((item: UserEntity, index: number) => ({
-          id: ++index,
-          email: item.email,
-          name: item.name,
-          nickname: item.nickname,
-          photo: item.photo,
-          type: item.type,
-        })) as UserEntity[]
+        user?.users?.map((item: UserEntity, index: number) => {
+          const base64Response = item.photo as unknown as string;
+          const fileType = item.mime_type; 
+          const fileBlob = base64ToBlob(base64Response, fileType);
+          const url = URL.createObjectURL(fileBlob);
+          return {
+            id: ++index,
+            email: item.email,
+            name: item.name,
+            nickname: item.nickname,
+            photo: url,
+            type: item.type,
+          };
+        }) as UserRowEntity[]
       );
     }
   }, [user?.users]);
+  
   return (
     <Grid container direction={"column"} spacing={2}>
       <Grid item xs={12}>
