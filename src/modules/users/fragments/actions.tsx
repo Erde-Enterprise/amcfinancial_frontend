@@ -6,9 +6,12 @@ import UpdateIcon from "@mui/icons-material/Update";
 import CustomTooltip from "../../dashboard/components/table/custom-tooltip/Custom-Tooltip";
 import useUser from "../hooks/use-users";
 import ConfirmDialog from "../../../components/modal/custom-dialog";
+import { CustomModal } from "../../../components/modal/custom-modal";
+import { UserModalUpdateForm } from "./user-modal-form";
 
-export function Actions(nickname: string) {
+export function Actions(row: any) {
   const [open, setOpen] = useState<boolean>(false);
+  const [openUpdate, setOpenUpdate] = useState<boolean>(false);
   const { getAllUsers, deleteUser } = useUser();
   const handleOpen = () => {
     setOpen(true);
@@ -17,7 +20,7 @@ export function Actions(nickname: string) {
     setOpen(false);
   };
   const handleYes = async () => {
-    await deleteUser(nickname)
+    await deleteUser(row.original.nickname)
       .then(async () => {
         await getAllUsers();
       })
@@ -25,18 +28,24 @@ export function Actions(nickname: string) {
         handleClose();
       });
   };
+  const handleOpenUpdate = () => {
+    setOpenUpdate(true);
+  };
+  const handleCloseUpdate = () => {
+    setOpenUpdate(false);
+  };
 
   return (
     <>
-      {/* <CustomTooltip title="Update">
+      <CustomTooltip title="Update">
         <IconButton
-          sx={{ color: `${invoice.clinic.color}` }}
-          onClick={handleOpen}
+          // sx={{ color: `${invoice.clinic.color}` }}
+          onClick={handleOpenUpdate}
           disableRipple
         >
           <SaveAsIcon />
         </IconButton>
-      </CustomTooltip> */}
+      </CustomTooltip>
       <CustomTooltip title="Delete">
         <IconButton
           color="error"
@@ -54,22 +63,18 @@ export function Actions(nickname: string) {
         onClickYes={handleYes}
         text="Confirm?"
       />
-      {/* <CustomModal open={open} title="Update" handleClose={handleClose}>
-        <DashBoardModal
-          handleCancel={handleClose}
-          attachment={new File([""], "")}
-          clinic={invoice.clinic.name}
-          description={invoice.description}
-          dueDate={invoice.due_date}
-          issuedOn={invoice.issue_date}
-          mahnung={invoice.reminder}
-          name={invoice.title}
-          price={invoice.amount}
-          rechnung={invoice.invoice_number}
-          status={getValueFromKey(invoice.status, StatusInvoiceEnum)}
-          type={getValueFromKey(invoice.type, CustomTypeEnum)}
-        />
-      </CustomModal> */}
+        <CustomModal open={openUpdate} title="Update" handleClose={handleCloseUpdate}>
+          <UserModalUpdateForm
+            email={row.original.email}
+            name={row.original.name}
+            nickname={row.original.nickname}
+            new_nickname={row.original.nickname}
+            photo={row.original.photo}
+            type={row.original.type}
+            password=""
+          />
+        </CustomModal>
+
     </>
   );
 }
