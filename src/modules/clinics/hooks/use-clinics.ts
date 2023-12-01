@@ -4,6 +4,7 @@ import api from "../../../auth/api";
 import { ClinicsEntity } from "../model/clinics.entity";
 import { useContext, useState } from "react";
 import ClinicsContext from "../context/clinics-context";
+import { verifyRequest } from "../../../utils/utils";
 
 function useClinic() {
   const clinic = useContext(ClinicsContext);
@@ -15,7 +16,12 @@ function useClinic() {
         formData.append("name", clinic.name);
         formData.append("color", clinic.color);
         
-        await api.post("/register/clinic/", formData);
+        await api.post("/register/clinic/", formData).then(async (res)=>{
+          const success = await verifyRequest(res);
+          if(success){
+            snackActions.success(`Successfully`);
+          }
+        });
       } catch (error) {
         const axiosError = error as AxiosError;
         snackActions.error(axiosError.request.response);
@@ -46,6 +52,11 @@ function useClinic() {
           try {
             await api.delete("/delete/clinic/", {
               data: { name: clinic_name },
+            }).then(async (res)=>{
+              const success = await verifyRequest(res);
+              if(success){
+                snackActions.success(`Successfully`);
+              }
             });
           } catch (error) {
             console.error(error);

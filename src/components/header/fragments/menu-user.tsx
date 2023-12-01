@@ -1,11 +1,15 @@
 import { Avatar, Button, Menu, MenuItem } from "@mui/material";
-import { MouseEvent, useContext, useState } from "react";
+import { MouseEvent, useContext, useEffect, useState } from "react";
 import AuthContext from "../../../auth/auth";
+import useLogin from "../../../modules/login/hooks/use-login";
+import { base64ToBlob } from "../../../modules/users/utils/utils";
 
 export function MenuUser() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLButtonElement>(null);
   const open = Boolean(anchorEl);
   const { user } = useContext(AuthContext);
+  const { logOut } = useLogin();
+  const [photo, setPhoto] = useState<string>("");
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget as HTMLButtonElement);
@@ -14,7 +18,16 @@ export function MenuUser() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const handleLogOut = () => {
+    handleClose();
+    logOut();
+  };
+  useEffect(() => {
+    const base64Response = user?.photo as string;
+    const fileType = user?.mime_type as string;
+    const fileBlob = base64ToBlob(base64Response, fileType);
+    setPhoto(URL.createObjectURL(fileBlob));
+  }, []);
   return (
     <div>
       <Button
@@ -25,7 +38,7 @@ export function MenuUser() {
       >
         <Avatar
           alt={user?.nickname}
-          src="/static/images/avatar/1.jpg"
+          src={photo}
           style={{ border: "none" }}
         />{" "}
       </Button>
@@ -38,7 +51,7 @@ export function MenuUser() {
         sx={{ ".MuiPaper-root": { boxShadow: "none", border: "none" } }}
       >
         <MenuItem onClick={handleClose}>Configuration</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleLogOut}>Logout</MenuItem>
       </Menu>
     </div>
   );
