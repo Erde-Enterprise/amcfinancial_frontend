@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { TextField, Button, Container, Grid } from "@mui/material";
 import { InvoiceInsertEntity } from "./model/add-invoice.entity";
 import { validateForm, validatorsInvoice } from "../../utils/utils";
@@ -16,6 +16,7 @@ export function AddInvoice() {
   const [fileName, setFileName] = useState("");
   const { clinic, getAllClinics } = useClinic();
   const { registerInvoice } = useDashboard();
+  const inputFileRef = useRef<HTMLInputElement>(null);
   const [invoice, setInvoice] = useState<InvoiceInsertEntity>({
     rechnung: "",
     name: "",
@@ -35,7 +36,14 @@ export function AddInvoice() {
     name?: string
   ) => {
     const targetName = name ?? event.target.name;
-    const targetValue = event.target.value;
+    let targetValue = event.target.value;
+    if (targetName === "mahnung") {
+      const numericValue = Number(targetValue);
+      if (numericValue > 3) {
+        targetValue = "3";
+      }
+    }
+  
 
     if (targetName === "attachment") {
       if (event.target.files && event.target.files.length > 0) {
@@ -73,6 +81,9 @@ export function AddInvoice() {
       clinic: "",
     });
     setFileName("");
+    if (inputFileRef.current) {
+      inputFileRef.current.value = '';
+    }
   };
 
   useEffect(() => {
@@ -97,6 +108,7 @@ export function AddInvoice() {
             >
               Attachment
               <input
+                ref={inputFileRef}
                 type="file"
                 id="attachment"
                 name="attachment"

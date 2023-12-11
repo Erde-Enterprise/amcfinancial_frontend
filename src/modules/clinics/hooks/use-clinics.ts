@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { snackActions } from "../../../utils/notification/snackbar-util";
 import api from "../../../auth/api";
-import { ClinicsEntity } from "../model/clinics.entity";
+import { ClinicsEntity, ClinicsUpdateEntity } from "../model/clinics.entity";
 import { useContext, useState } from "react";
 import ClinicsContext from "../context/clinics-context";
 import { verifyRequest } from "../../../utils/utils";
@@ -41,6 +41,7 @@ function useClinic() {
     async  function getAllClinics() {
         clinic?.setLoading(true);
         await listAllClinics().then((data)=>{
+          console.log(data?.data);
           clinic?.setClinics(data?.data);
           clinic?.setLoading(false);
         });
@@ -65,9 +66,28 @@ function useClinic() {
           }
         
       }
+
+      async function updateClinic(clinic: ClinicsUpdateEntity):Promise<void> {
+        try {
+          const formData = new FormData();
+          formData.append("name", clinic.name);
+          formData.append("color", clinic.color);
+          formData.append("new_name", clinic.new_name);
+          console.log(clinic);
+          await api.patch("/update/clinic/", formData).then(async (res)=>{
+            const success = await verifyRequest(res);
+            if(success){
+              snackActions.success(`Successfully`);
+            }
+          });
+        } catch (error) {
+          const axiosError = error as AxiosError;
+          snackActions.error(axiosError.request.response);
+        }
+      }
   
   
   
-    return { registerClinic, clinic, getAllClinics, deleteClinic };
+    return { registerClinic, clinic, getAllClinics, deleteClinic, updateClinic };
   }
   export default useClinic;

@@ -7,36 +7,46 @@ import useClinic from "./hooks/use-clinics";
 import CustomTable from "../dashboard/components/table/custom-table/Custom-React-Table";
 import { MRT_ColumnDef } from "material-react-table";
 import { ClinicsEntity } from "./model/clinics.entity";
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { Actions } from "./fragments/actions";
+import PlaylistAddCircleIcon from "@mui/icons-material/PlaylistAddCircle";
+import { CustomModal } from "../../components/modal/custom-modal";
+import { ClinicsModalFormInsert } from "./fragments/clinics-modal-form-insert";
 
 export function ClinicsPage() {
-  const { registerClinic, clinic, getAllClinics } = useClinic();
-  const [name, setName] = useState<string>("");
-  const [color, setColor] = useState("#fff11");
-  const [displayColorPicker, setDisplayColorPicker] = useState(false);
+  const { clinic, getAllClinics } = useClinic();
+  // const [name, setName] = useState<string>("");
+  // const [color, setColor] = useState("#fff11");
+  // const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [data, setData] = useState<ClinicsEntity[]>([]);
-  const handleClick = () => {
-    setDisplayColorPicker(!displayColorPicker);
+  const [open, setOpen] = useState<boolean>(false);
+  const handleOpen = () => {
+    setOpen(true);
   };
+  const handleInsertClose = () => {
+    setOpen(false);
+  };
+  // const handleClick = () => {
+  //   setDisplayColorPicker(!displayColorPicker);
+  // };
 
-  const handleClose = () => {
-    setDisplayColorPicker(false);
-  };
+  // const handleClose = () => {
+  //   setDisplayColorPicker(false);
+  // };
 
-  const handleColorChange = (color: any) => {
-    setColor(color.hex);
-    handleClose();
-  };
-  const handleSubmit = async () => {
-    await registerClinic({
-      name: name,
-      color: color,
-    });
-    setColor("#fff11");
-    setName("");
-    await getAllClinics();
-  };
+  // const handleColorChange = (color: any) => {
+  //   setColor(color.hex);
+  //   handleClose();
+  // };
+  // const handleSubmit = async () => {
+  //   await registerClinic({
+  //     name: name,
+  //     color: color,
+  //   });
+  //   setColor("#fff11");
+  //   setName("");
+  //   await getAllClinics();
+  // };
 
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
@@ -69,8 +79,8 @@ export function ClinicsPage() {
         minSize: 10,
         Cell: ({ row }) => (
           <>
-            <IconButton sx={{color:`${row.original.color}`}}>
-              <FiberManualRecordIcon/>
+            <IconButton sx={{ color: `${row.original.color}` }}>
+              <FiberManualRecordIcon />
             </IconButton>
           </>
         ),
@@ -95,11 +105,27 @@ export function ClinicsPage() {
       );
     }
   }, [clinic?.clinics]);
-  
+
   return (
     <Grid container spacing={2} direction={"column"} alignItems={"center"}>
       <Grid item>
-        <form onSubmit={handleSubmit}>
+        <CancelButtonFormToDashboard />
+        <Button
+          endIcon={<PlaylistAddCircleIcon fontSize="small" />}
+          color="primary"
+          onClick={handleOpen}
+        >
+          Insert
+        </Button>
+        <CustomModal
+          sx={{ width: "35%", height: "450px" }}
+          open={open}
+          title="Insert"
+          handleClose={handleInsertClose}
+        >
+          <ClinicsModalFormInsert handleClose={handleInsertClose} />
+        </CustomModal>
+        {/* <form onSubmit={handleSubmit}>
           <Grid
             container
             spacing={1}
@@ -137,7 +163,7 @@ export function ClinicsPage() {
               </Box>
             </Grid>
           </Grid>
-        </form>
+        </form> */}
       </Grid>
       <Grid item>
         <CustomTable
@@ -146,7 +172,7 @@ export function ClinicsPage() {
           data={data}
           columns={columns}
           disableRowSelection
-          actions={({ row }) => Actions(row.original.name)}
+          actions={({ row }) => Actions(row)}
         ></CustomTable>
       </Grid>
     </Grid>
