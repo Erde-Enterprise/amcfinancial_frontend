@@ -63,7 +63,7 @@ export function validateForm(invoice: InvoiceInsertEntity) {
 export const validatorsInvoice = {
   rechnung: (value: string) => value !== "" && /^[0-9]+$/.test(value),
   name: (value: string) => value !== "",
-  price: (value: string) => value !== "" && /^[0-9]*\.?[0-9]*$/.test(value),
+  price: (value: string) => value !== "" && /^[0-9]*,?[0-9]*$/.test(value),
   dueDate: (value: string) => value !== "", //&& /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d\d$/.test(value),
   mahnung: (value: number) => value >= 0,
   description: (value: string) => value !== "",
