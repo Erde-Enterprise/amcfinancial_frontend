@@ -8,7 +8,7 @@ import { verifyRequest } from "../utils/utils";
 export const SECURITY_KEY = "@Security_MRR@amcAMCfinancialFINANCIAL_@";
 
 const api = axios.create({
-  baseURL: " https://amcfinancial.onrender.com",//"http://127.0.0.1:8000",
+  baseURL: "https://amcfinancial.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },
