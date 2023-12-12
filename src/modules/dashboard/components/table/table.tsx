@@ -94,6 +94,13 @@ export function Table() {
             </span>
           </>
         ),
+        Cell:({ cell, row }: any) => (
+          <>
+            <span style={{ color: getColor(Number(row.original.mahnung)) }}>
+              {cell.getValue()}
+            </span>
+          </>
+        ),
       },
       {
         accessorKey: "mahnung",
@@ -117,6 +124,23 @@ export function Table() {
             >
               <span style={{ color: getColor(Number(row.original.mahnung)) }}>
                 <b>{cell.getValue()}</b> ({cell.row.leafRows.length})
+              </span>
+            </Box>
+          </>
+        ),
+        Cell:({ cell, row }: any) => (
+          <>
+            <Box
+              style={{
+                border: "1px",
+                backgroundColor: getColorWithOpacity(
+                  Number(row.original.mahnung)
+                ),
+              }}
+              sx={{ width: "7.5%" }}
+            >
+              <span style={{ color: getColor(Number(row.original.mahnung)) }}>
+                {cell.getValue()}
               </span>
             </Box>
           </>
@@ -166,7 +190,7 @@ export function Table() {
         accessorKey: "clinic",
         header: "Clinuc",
         maxSize: 400,
-        size: 50,
+        size: 75,
         minSize: 20,
         id: "clinic",
         columnDefType: "data",
@@ -343,36 +367,36 @@ export function Table() {
             data={data}
             containerProps={{
               sx: {
-                maxHeight: "60vh",
-                minHeight: "55vh",
-                minWidth: "75%",
+                maxHeight: "80vh",
+                minHeight: "70vh",
+                minWidth: "120%",
                 flex: 1,
               },
             }}
             displayColumnDefOptions={{
               "mrt-row-actions": {
-                size: 20,
+                size: 70,
                 minSize: 10,
-                maxSize: 40,
+                maxSize: 100,
                 enableColumnActions: false,
                 enableHiding: false,
               },
               "mrt-row-select": {
                 enableColumnActions: false,
                 enableHiding: false,
-                size: 20,
-                minSize: 5,
-                maxSize: 20,
+                size: 50,
+                minSize: 10,
+                maxSize: 60,
               },
               "mrt-row-expand": {
-                size: 40,
-                minSize: 10,
-                maxSize: 40,
+                size: 50,
+                minSize: 20,
+                maxSize: 60,
               },
             }}
-            initialState={{ grouping: ["mahnung", "dueDate"], expanded: true }}
-            cellFontSizeInBody={"0.5rem"}
-            headerCellFontSize={"0.6rem"}
+            //initialState={{ grouping: ["mahnung", "dueDate"], expanded: true }}
+            cellFontSizeInBody={"0.7rem"}
+            headerCellFontSize={"0.8rem"}
             actions={({ row }) => Actions(row.original.invoice)}
           />
         </Grid>
