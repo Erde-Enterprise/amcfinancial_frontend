@@ -94,6 +94,7 @@ export function ClinicsPage() {
   }, []);
 
   useEffect(() => {
+    console.log(clinic?.clinics);
     if (Array.isArray(clinic?.clinics)) {
       setData(
         clinic?.clinics.map((item: ClinicsEntity, index: number) => ({
@@ -125,45 +126,6 @@ export function ClinicsPage() {
         >
           <ClinicsModalFormInsert handleClose={handleInsertClose} />
         </CustomModal>
-        {/* <form onSubmit={handleSubmit}>
-          <Grid
-            container
-            spacing={1}
-            direction={"column"}
-            alignItems={"center"}
-          >
-            <Grid item>
-              <TextField
-                required
-                label="Clinic Name"
-                value={name}
-                onChange={(e) => setName(e.target.value as string)}
-              />
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                style={{ background: color }}
-                onClick={handleClick}
-              >
-                Select Color
-              </Button>
-              <br />
-              {displayColorPicker ? (
-                <div>
-                  <div onClick={handleClose} />
-                  <SketchPicker color={color} onChange={handleColorChange} />
-                </div>
-              ) : null}
-            </Grid>
-            <Grid item>
-              <Box>
-                <CancelButtonFormToDashboard />
-                <SubmitButtonForm />
-              </Box>
-            </Grid>
-          </Grid>
-        </form> */}
       </Grid>
       <Grid item>
         <CustomTable

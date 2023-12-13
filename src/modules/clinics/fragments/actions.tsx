@@ -27,7 +27,8 @@ export function Actions(row: any) {
   };
 
   const handleYes = async () => {
-    await deleteClinic(row.original.clinic_name)
+    
+    await deleteClinic(row.original.name)
       .then(async () => {
         await getAllClinics();
       })
