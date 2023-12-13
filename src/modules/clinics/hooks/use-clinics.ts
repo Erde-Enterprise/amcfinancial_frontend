@@ -41,7 +41,6 @@ function useClinic() {
     async  function getAllClinics() {
         clinic?.setLoading(true);
         await listAllClinics().then((data)=>{
-          console.log(data?.data);
           clinic?.setClinics(data?.data);
           clinic?.setLoading(false);
         });
@@ -49,7 +48,7 @@ function useClinic() {
       };
 
       async function deleteClinic(clinic_name: string){
-        
+          
           try {
             await api.delete("/delete/clinic/", {
               data: { name: clinic_name },
