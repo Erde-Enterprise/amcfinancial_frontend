@@ -5,13 +5,14 @@ import {
   MRT_BottomToolbar as BottomToolbar,
   MRT_ColumnDef,
 } from "material-react-table";
-import { memo, useRef, useState } from "react";
+import { memo, useContext, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import * as XLSX from "xlsx";
 import { ExportToCsv } from "export-to-csv-fix-source-map";
 import { BsFiletypeCsv, BsFiletypePdf, BsFiletypeXlsx } from "react-icons/bs";
 import CustomGridCell from "../custom-gridcell/CustomGridCell";
+import AuthContext from "../../../../../auth/auth";
 export interface CustomTableProps {
   state?: Object;
   columns: MRT_ColumnDef<any>[];
@@ -52,6 +53,7 @@ const isEqual = (
 };
 
 const CustomTable = memo((props: CustomTableProps) => {
+  const { user } = useContext(AuthContext);
   const [showGenerate, setShowGenerate] = useState<number>(0);
   const { data } = props;
   const handleClick = () => {
@@ -129,6 +131,12 @@ const CustomTable = memo((props: CustomTableProps) => {
         columns={props.columns}
         data={props.data}
         globalFilterFn="contains"
+        enableColumnActions={false}
+        enableColumnFilters={user?.type !== 0 ? false : true}
+        enablePagination={user?.type !== 0 ? false : true}
+        enableSorting={user?.type !== 0 ? false : true}
+        enableBottomToolbar={user?.type !== 0 ? false : true}
+        enableTopToolbar={user?.type !== 0 ? false : true}
         enableRowActions={props.actions ? true : false}
         enableRowSelection={!props.disableRowSelection}
         enableMultiRowSelection={!props.disableMultiRowSelection}
