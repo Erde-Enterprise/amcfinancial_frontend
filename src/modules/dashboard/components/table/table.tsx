@@ -12,8 +12,8 @@ import {
   getColor,
   getColorWithOpacity,
   getFirstDayOfMonth,
+  getLastDayOfMonth,
   getRandomPhrase,
-  getToday,
   styleMenuItem,
 } from "../../utils/utils";
 import AuthContext from "../../../../auth/auth";
@@ -94,7 +94,7 @@ export function Table() {
             </span>
           </>
         ),
-        Cell:({ cell, row }: any) => (
+        Cell: ({ cell, row }: any) => (
           <>
             <span style={{ color: getColor(Number(row.original.mahnung)) }}>
               {cell.getValue()}
@@ -128,7 +128,7 @@ export function Table() {
             </Box>
           </>
         ),
-        Cell:({ cell, row }: any) => (
+        Cell: ({ cell, row }: any) => (
           <>
             <Box
               style={{
@@ -220,6 +220,10 @@ export function Table() {
           <Box sx={{ height: "10%", width: "10%" }}>
             <Button
               onClick={async () => {
+                if (user?.type !== 0) {
+                  snackActions.info("Invoice not currently available");
+                  return;
+                }
                 await downloadInvoice(row.original.rechnung, row.original.name);
               }}
               size="small"
@@ -247,7 +251,7 @@ export function Table() {
     []
   );
   useEffect(() => {
-    getInvoices(getFirstDayOfMonth(), getToday());
+    getInvoices(getFirstDayOfMonth(), getLastDayOfMonth());
   }, []);
 
   useLayoutEffect(() => {
@@ -292,26 +296,28 @@ export function Table() {
     });
     setInvoicesDeleted(rechungsSelecteds);
   }, [rowSelection]);
-  const handleOpen = ()=>{
+  const handleOpen = () => {
     setOpen(true);
-  }
-  const handleClose = ()=>{
+  };
+  const handleClose = () => {
     setOpen(false);
-  }
+  };
 
   const handleManyDelets = async () => {
     if (invoicesDeleted.length === 0) {
       snackActions.warning("Please select one or more itens");
       return;
     }
-    await deleteInvoice(invoicesDeleted).then(() => {
-      const newData = data.filter(
-        (item) => !invoicesDeleted.includes(item.rechnung)
-      );
-      setData(newData);
-    }).then(()=>{
-      handleClose();
-    });
+    await deleteInvoice(invoicesDeleted)
+      .then(() => {
+        const newData = data.filter(
+          (item) => !invoicesDeleted.includes(item.rechnung)
+        );
+        setData(newData);
+      })
+      .then(() => {
+        handleClose();
+      });
   };
   return (
     <Grid container alignItems={"center"} spacing={1} flexDirection={"column"}>
@@ -326,34 +332,40 @@ export function Table() {
         </Grid>
       </Box>
       <Box mb={1}>
-        <Grid item>
-          <SearchInvoice />
-        </Grid>
+        {user?.type !== 0 ? undefined : (
+          <Grid item>
+            <SearchInvoice />
+          </Grid>
+        )}
       </Box>
       <Box mb={0.1}>
         <Grid item>
-          <Button
-            onClick={handleOpen}
-            endIcon={<DeleteForeverIcon fontSize="small" />}
-            color="error"
-          >
-            Delete
-          </Button>
+          {user?.type !== 0 ? undefined : (
+            <Button
+              onClick={handleOpen}
+              endIcon={<DeleteForeverIcon fontSize="small" />}
+              color="error"
+            >
+              Delete
+            </Button>
+          )}
           {/* <Button
             endIcon={<DeleteForeverIcon fontSize="small" />}
             color="warning"
           >
             Update
           </Button> */}
-          <Button
-            endIcon={<PlaylistAddCircleIcon fontSize="small" />}
-            color="primary"
-            onClick={() => {
-              goToAddInvoice();
-            }}
-          >
-            Insert
-          </Button>
+          {user?.type === 1 ? undefined : (
+            <Button
+              endIcon={<PlaylistAddCircleIcon fontSize="small" />}
+              color="primary"
+              onClick={() => {
+                goToAddInvoice();
+              }}
+            >
+              Insert
+            </Button>
+          )}
         </Grid>
       </Box>
       <Box mb={0.1}>
@@ -365,6 +377,7 @@ export function Table() {
             title="Invoices"
             columns={columns}
             data={data}
+            disableRowSelection={user?.type !== 0 ? true : false}
             containerProps={{
               sx: {
                 maxHeight: "80vh",
@@ -397,7 +410,11 @@ export function Table() {
             //initialState={{ grouping: ["mahnung", "dueDate"], expanded: true }}
             cellFontSizeInBody={"0.7rem"}
             headerCellFontSize={"0.8rem"}
-            actions={({ row }) => Actions(row.original.invoice)}
+            actions={
+              user?.type === 1
+                ? undefined
+                : ({ row }) => Actions(row.original.invoice)
+            }
           />
         </Grid>
       </Box>

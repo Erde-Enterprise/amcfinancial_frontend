@@ -1,6 +1,6 @@
 import { IconButton } from "@mui/material";
 import CustomTooltip from "../table/custom-tooltip/Custom-Tooltip";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { CustomModal } from "../../../../components/modal/custom-modal";
 import { DashBoardModal } from "./dashboard-form";
@@ -12,11 +12,13 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import useDashboard from "../../hooks/use-dashboard";
 import UpdateIcon from "@mui/icons-material/Update";
 import ConfirmDialog from "../../../../components/modal/custom-dialog";
-import { getFirstDayOfMonth, getToday } from "../../utils/utils";
+import { getFirstDayOfMonth, getLastDayOfMonth} from "../../utils/utils";
+import AuthContext from "../../../../auth/auth";
 
 export function Actions(invoice: InvoiceEntity) {
   const [open, setOpen] = useState<boolean>(false);
   const [confirm, setConfirm] = useState<boolean>(false);
+  const { user } = useContext(AuthContext);
   const { deleteInvoice, getInvoices } = useDashboard();
   const handleOpen = () => {
     setOpen(true);
@@ -33,11 +35,15 @@ export function Actions(invoice: InvoiceEntity) {
   const handleDelete = async () => {
     const arrInvoice: string[] = [];
     arrInvoice.push(invoice.invoice_number);
-    await deleteInvoice(arrInvoice).then(()=>{
-      handleCloseConfirm();
-    }).then(async ()=>{await getInvoices(getFirstDayOfMonth(), getToday());});
+    await deleteInvoice(arrInvoice)
+      .then(() => {
+        handleCloseConfirm();
+      })
+      .then(async () => {
+        await getInvoices(getFirstDayOfMonth(), getLastDayOfMonth());
+      });
   };
-  
+
   return (
     <>
       <CustomTooltip title="Update">
@@ -49,17 +55,20 @@ export function Actions(invoice: InvoiceEntity) {
           <SaveAsIcon />
         </IconButton>
       </CustomTooltip>
-      <CustomTooltip title="Delete">
-        <IconButton
-          color="error"
-          onClick={ () => {
-            //console.log(invoice);
-            handleOpenConfirm();
-          }}
-        >
-          <DeleteForeverIcon />
-        </IconButton>
-      </CustomTooltip>
+      {user?.type !== 0 ? undefined : (
+        <CustomTooltip title="Delete">
+          <IconButton
+            color="error"
+            onClick={() => {
+              //console.log(invoice);
+              handleOpenConfirm();
+            }}
+          >
+            <DeleteForeverIcon />
+          </IconButton>
+        </CustomTooltip>
+      )}
+
       <CustomModal open={open} title="Update" handleClose={handleClose}>
         <DashBoardModal
           handleCancel={handleClose}

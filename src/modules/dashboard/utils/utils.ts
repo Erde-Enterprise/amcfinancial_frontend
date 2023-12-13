@@ -86,15 +86,17 @@ export function getFirstDayOfMonth() {
   return `${year}-${month}-${day}`;
 }
 
-export function getToday() {
+export function getLastDayOfMonth() {
   const today = new Date();
+  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
-  const year = today.getFullYear();
-  const month = ("0" + (today.getMonth() + 1)).slice(-2);
-  const day = ("0" + today.getDate()).slice(-2);
+  const year = lastDayOfMonth.getFullYear();
+  const month = ("0" + (lastDayOfMonth.getMonth() + 1)).slice(-2);
+  const day = ("0" + lastDayOfMonth.getDate()).slice(-2);
 
   return `${year}-${month}-${day}`;
 }
+
 
 export function getColor(mahnung: number){
   if (mahnung >= 3) {

@@ -4,6 +4,6 @@ export interface UserModel {
   nickname: string;
   name: string;
   photo: string;
-  user_type: number;
+  type: number;
   mime_type: string;
 }
