@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { TextField, Button, Grid, Box, IconButton } from "@mui/material";
-import { SketchPicker } from "react-color";
+import { Button, Grid, IconButton } from "@mui/material";
 import { CancelButtonFormToDashboard } from "../../components/header/buttons/Cancel-Form-Button";
-import { SubmitButtonForm } from "../../components/header/buttons/Submit-Form-Button";
 import useClinic from "./hooks/use-clinics";
 import CustomTable from "../dashboard/components/table/custom-table/Custom-React-Table";
 import { MRT_ColumnDef } from "material-react-table";
@@ -15,9 +13,6 @@ import { ClinicsModalFormInsert } from "./fragments/clinics-modal-form-insert";
 
 export function ClinicsPage() {
   const { clinic, getAllClinics } = useClinic();
-  // const [name, setName] = useState<string>("");
-  // const [color, setColor] = useState("#fff11");
-  // const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [data, setData] = useState<ClinicsEntity[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const handleOpen = () => {
@@ -26,27 +21,6 @@ export function ClinicsPage() {
   const handleInsertClose = () => {
     setOpen(false);
   };
-  // const handleClick = () => {
-  //   setDisplayColorPicker(!displayColorPicker);
-  // };
-
-  // const handleClose = () => {
-  //   setDisplayColorPicker(false);
-  // };
-
-  // const handleColorChange = (color: any) => {
-  //   setColor(color.hex);
-  //   handleClose();
-  // };
-  // const handleSubmit = async () => {
-  //   await registerClinic({
-  //     name: name,
-  //     color: color,
-  //   });
-  //   setColor("#fff11");
-  //   setName("");
-  //   await getAllClinics();
-  // };
 
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
@@ -94,7 +68,7 @@ export function ClinicsPage() {
   }, []);
 
   useEffect(() => {
-    console.log(clinic?.clinics);
+    
     if (Array.isArray(clinic?.clinics)) {
       setData(
         clinic?.clinics.map((item: ClinicsEntity, index: number) => ({

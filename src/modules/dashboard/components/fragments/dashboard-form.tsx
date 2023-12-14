@@ -5,7 +5,11 @@ import { SubmitButtonForm } from "../../../../components/header/buttons/Submit-F
 import { CancelButtonModalForm } from "../../../../components/header/buttons/Cancel-Modal-Form";
 import useClinic from "../../../clinics/hooks/use-clinics";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { getFirstDayOfMonth, getLastDayOfMonth, validatorsInvoice } from "../../utils/utils";
+import {
+  getFirstDayOfMonth,
+  getLastDayOfMonth,
+  validatorsInvoice,
+} from "../../utils/utils";
 import { CustomType } from "../../../../components/inputs/input-type";
 import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
 import { StatusInvoiceEnum } from "../../features/add-invoice/enum/add-invoice.enum";
@@ -24,6 +28,7 @@ interface ModalDashboardEntity {
   status: string;
   type: string;
   clinic: string;
+  scheduledDate: string;
   handleCancel: () => void;
 }
 
@@ -69,7 +74,8 @@ export function DashBoardModal(props: ModalDashboardEntity) {
       status: getKeyFromValue(values.status, StatusInvoiceEnum),
       title: values.name,
       type: getKeyFromValue(values.type, CustomTypeEnum),
-    }).then(async ()=>{
+      scheduled_date: values.scheduledDate,
+    }).then(async () => {
       await getInvoices(getFirstDayOfMonth(), getLastDayOfMonth());
     });
   };
@@ -179,6 +185,23 @@ export function DashBoardModal(props: ModalDashboardEntity) {
           />
         </Grid>
         <Grid item>
+          <TextField
+            variant="filled"
+            name="scheduledDate"
+            label="Scheduled"
+            value={values.scheduledDate}
+            onChange={handleChange}
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            error={
+              values.status === StatusInvoiceEnum.S &&
+              (values.scheduledDate === "" ||
+                values.scheduledDate === undefined)
+            }
+            sx={{ width: "100%" }}
+          />
+        </Grid>
+        <Grid item>
           <CustomType
             variant="filled"
             label="Type"
@@ -190,13 +213,13 @@ export function DashBoardModal(props: ModalDashboardEntity) {
           />
         </Grid>
         <Grid item>
-        <CustomType
+          <CustomType
             variant="filled"
             label="Clinics"
             value={values.clinic}
             onChange={(event: any) => handleChange(event, "clinic")}
             error={!validatorsInvoice.clinic(values.clinic)}
-            itens={clinic?.clinics?.map(item=> item.name)}
+            itens={clinic?.clinics?.map((item) => item.name)}
             sx={{ width: "100%" }}
           />
         </Grid>

@@ -7,6 +7,7 @@ export interface DashboardInsertEntity {
   title: string;
   issue_date: string;
   due_date: string;
+  scheduled_date?: string;
   attachment: File;
   status: string;
   type: string;
@@ -21,6 +22,7 @@ export interface InvoiceEntity {
   title: string;
   issue_date: string;
   due_date: string;
+  scheduled_date?: string;
   reminder: number;
   status: string;
   type: string;
@@ -38,6 +40,7 @@ export interface InvoiceRowsEntity {
   type: string;
   clinic: string;
   invoice: InvoiceEntity;
+  scheduledDate?: string;
   checked?: boolean
 }
 
@@ -51,6 +54,7 @@ export interface InvoiceUpdateEntity {
   title: string;
   issue_date: string;
   due_date: string;
+  scheduled_date?: string;
   reminder: number;
   status: string;
   type: string;
