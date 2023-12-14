@@ -5,6 +5,7 @@ export interface InvoiceInsertEntity {
     dueDate: string;
     mahnung: number;
     description: string;
+    scheduledDate?: string;
     issuedOn: string;
     attachment: File;
     status: string;

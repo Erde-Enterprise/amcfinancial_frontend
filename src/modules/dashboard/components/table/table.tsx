@@ -37,8 +37,6 @@ export function Table() {
     goToAddInvoice,
     getInvoices,
     invoice,
-    //invoices,
-    //loading,
     deleteInvoice,
     downloadInvoice,
   } = useDashboard();
@@ -77,6 +75,23 @@ export function Table() {
         id: "price",
         columnDefType: "data",
         _filterFn: "contains",
+      },
+      {
+        accessorKey: "scheduledDate",
+        header: "Scheduled",
+        maxSize: 400,
+        size: 80,
+        minSize: 20,
+        id: "scheduledDate",
+        columnDefType: "data",
+        _filterFn: "contains",
+        Cell: ({ cell, row }: any) => (
+          <>
+            <span style={{ color: getColor(Number(row.original.mahnung)) }}>
+              {cell.getValue()}
+            </span>
+          </>
+        ),
       },
       {
         accessorKey: "dueDate",
@@ -270,6 +285,7 @@ export function Table() {
           type: getValueFromKey(item.type, CustomTypeEnum),
           clinic: item.clinic.name,
           color: item.clinic.color,
+          scheduledDate: item.scheduled_date,
           invoice: item,
         })) as InvoiceRowsEntity[]
       );

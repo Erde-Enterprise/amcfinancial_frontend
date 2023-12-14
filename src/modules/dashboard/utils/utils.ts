@@ -1,6 +1,7 @@
 import { SxProps, Theme } from "@mui/material";
 import { InvoiceInsertEntity } from "../features/add-invoice/model/add-invoice.entity";
 import { snackActions } from "../../../utils/notification/snackbar-util";
+import { StatusInvoiceEnum } from "../features/add-invoice/enum/add-invoice.enum";
 
 export const styleMenuItem: SxProps<Theme> | undefined = {
   color: "#A0A3BD",
@@ -97,8 +98,7 @@ export function getLastDayOfMonth() {
   return `${year}-${month}-${day}`;
 }
 
-
-export function getColor(mahnung: number){
+export function getColor(mahnung: number) {
   if (mahnung >= 3) {
     return "#FF0000";
   } else if (mahnung === 2) {
@@ -108,8 +108,8 @@ export function getColor(mahnung: number){
   } else {
     return undefined;
   }
-};
-export function getColorWithOpacity(mahnung: number){
+}
+export function getColorWithOpacity(mahnung: number) {
   const color = getColor(mahnung);
   if (color) {
     const r = parseInt(color.slice(1, 3), 16);
@@ -119,5 +119,19 @@ export function getColorWithOpacity(mahnung: number){
   } else {
     return `rgba(0, 0, 0, 0.2)`;
   }
-};
+}
 
+export function changeColorIconButtonPaid(status: string) {
+  // if (status === "P") {
+  //   return "success";
+  // } else 
+  if (status === "D") {
+    return "primary";
+  } else if (status === "S") {
+    return "warning";
+  } else if (status === "E") {
+    return "error";
+  }
+  return "inherit";
+  //"default" | "error" | "inherit" | "primary" | "secondary" | "info" | "success" | "warning"
+}

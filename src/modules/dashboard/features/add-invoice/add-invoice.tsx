@@ -29,6 +29,7 @@ export function AddInvoice() {
     status: "",
     type: "",
     clinic: "",
+    scheduledDate: "",
   });
 
   const handleChange = (
@@ -43,7 +44,6 @@ export function AddInvoice() {
         targetValue = "3";
       }
     }
-  
 
     if (targetName === "attachment") {
       if (event.target.files && event.target.files.length > 0) {
@@ -79,10 +79,11 @@ export function AddInvoice() {
       status: "",
       type: "",
       clinic: "",
+      scheduledDate: "",
     });
     setFileName("");
     if (inputFileRef.current) {
-      inputFileRef.current.value = '';
+      inputFileRef.current.value = "";
     }
   };
 
@@ -198,7 +199,7 @@ export function AddInvoice() {
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <TextField
                     variant="filled"
                     name="name"
@@ -209,7 +210,7 @@ export function AddInvoice() {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={2.5}>
                   <CustomType
                     variant="filled"
                     label="Status"
@@ -221,6 +222,22 @@ export function AddInvoice() {
                   />
                 </Grid>
                 <Grid item xs={3}>
+                  <TextField
+                    variant="filled"
+                    name="scheduledDate"
+                    label="Scheduled"
+                    value={invoice.scheduledDate}
+                    onChange={handleChange}
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    error={
+                      invoice.status === StatusInvoiceEnum.S &&
+                      invoice.scheduledDate === ""
+                    }
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={2.5}>
                   <CustomType
                     variant="filled"
                     label="Clinic"
