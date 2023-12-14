@@ -46,6 +46,20 @@ export function getRandomPhrase(): string {
   return financialPhrases[randomIndex];
 }
 
+// export function validateForm(invoice: InvoiceInsertEntity) {
+//   for (let key in invoice) {
+//     if (key === "attachment") {
+//       if ((invoice[key as keyof InvoiceInsertEntity] as File).size === 0) {
+//         snackActions.error(`${key} is required.`);
+//         return false;
+//       }
+//     } else if (invoice[key as keyof InvoiceInsertEntity] === "") {
+//       snackActions.error(`${key} is required.`);
+//       return false;
+//     }
+//   }
+//   return true;
+// }
 export function validateForm(invoice: InvoiceInsertEntity) {
   for (let key in invoice) {
     if (key === "attachment") {
@@ -53,13 +67,21 @@ export function validateForm(invoice: InvoiceInsertEntity) {
         snackActions.error(`${key} is required.`);
         return false;
       }
-    } else if (invoice[key as keyof InvoiceInsertEntity] === "") {
+    } else if (key !== 'scheduledDate' && invoice[key as keyof InvoiceInsertEntity] === "") {
       snackActions.error(`${key} is required.`);
       return false;
     }
   }
+
+  // Adicionando a nova condição
+  if (invoice.status === 'Schedule' && (invoice.scheduledDate === "" || invoice.scheduledDate === undefined)) {
+    snackActions.error(`schedule is required when status is Schedule.`);
+    return false;
+  }
+
   return true;
 }
+
 
 export const validatorsInvoice = {
   rechnung: (value: string) => value !== "" && /^[0-9]+$/.test(value),
