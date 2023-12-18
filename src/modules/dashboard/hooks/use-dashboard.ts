@@ -22,7 +22,7 @@ function useDashboard() {
   async function registerInvoice(invoice: InvoiceInsertEntity) {
     try {
       const formData = new FormData();
-      formData.append("amount", invoice.price);
+      formData.append("amount", parseFloat(invoice.price.replace(',','.')).toString());
       formData.append("description", invoice.description);
       formData.append("due_date", invoice.dueDate);
       formData.append("invoice_number", invoice.rechnung);
