@@ -431,6 +431,10 @@ export function Table() {
                 ? undefined
                 : ({ row }) => Actions(row.original.invoice)
             }
+            bottomToolbar={(table)=>{
+              console.log(table.table);
+              return <></>
+            }}
           />
         </Grid>
       </Box>
