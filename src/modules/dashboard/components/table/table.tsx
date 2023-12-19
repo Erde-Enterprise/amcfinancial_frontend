@@ -6,7 +6,11 @@ import {
   useState,
 } from "react";
 import CustomTable from "./custom-table/Custom-React-Table";
-import { MRT_ColumnDef, MRT_RowSelectionState } from "material-react-table";
+import {
+  MRT_ColumnDef,
+  MRT_RowSelectionState,
+  MRT_BottomToolbar as BottomToolbar,
+} from "material-react-table";
 import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import {
   getColor,
@@ -44,6 +48,7 @@ export function Table() {
   const [data, setData] = useState<InvoiceRowsEntity[]>([]);
   const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
   const [invoicesDeleted, setInvoicesDeleted] = useState<string[]>([]);
+  // const [totalAmount, setTotalAmount] = useState<number>(0);
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
       {
@@ -312,6 +317,7 @@ export function Table() {
     });
     setInvoicesDeleted(rechungsSelecteds);
   }, [rowSelection]);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -336,108 +342,127 @@ export function Table() {
       });
   };
   return (
-    <Grid container alignItems={"center"} spacing={1} flexDirection={"column"}>
-      <Box mb={0.5}>
-        <Grid item>
-          <h3>Welcome, {user?.name}</h3>
+    <Grid
+      sx={{ flex: 1 }}
+      container
+      alignItems={"center"}
+      spacing={1}
+      flexDirection={"column"}
+      mt={"15%"}
+    >
+      <Grid sx={{ flex: 1 }} item>
+        <h3>Welcome, {user?.name}</h3>
+      </Grid>
+
+      <Grid item sx={styleMenuItem}>
+        {getRandomPhrase()}
+      </Grid>
+
+      {user?.type !== 0 ? undefined : (
+        <Grid item sx={{ flex: 1 }}>
+          <SearchInvoice />
         </Grid>
-      </Box>
-      <Box mb={3}>
-        <Grid item sx={styleMenuItem}>
-          {getRandomPhrase()}
-        </Grid>
-      </Box>
-      <Box mb={1}>
+      )}
+
+      <Grid item>
         {user?.type !== 0 ? undefined : (
-          <Grid item>
-            <SearchInvoice />
-          </Grid>
-        )}
-      </Box>
-      <Box mb={0.1}>
-        <Grid item>
-          {user?.type !== 0 ? undefined : (
-            <Button
-              onClick={handleOpen}
-              endIcon={<DeleteForeverIcon fontSize="small" />}
-              color="error"
-            >
-              Delete
-            </Button>
-          )}
-          {/* <Button
+          <Button
+            onClick={handleOpen}
             endIcon={<DeleteForeverIcon fontSize="small" />}
-            color="warning"
+            color="error"
           >
-            Update
-          </Button> */}
-          {user?.type === 1 ? undefined : (
-            <Button
-              endIcon={<PlaylistAddCircleIcon fontSize="small" />}
-              color="primary"
-              onClick={() => {
-                goToAddInvoice();
-              }}
-            >
-              Insert
-            </Button>
-          )}
-        </Grid>
-      </Box>
-      <Box mb={0.1}>
-        <Grid item>
-          <CustomTable
-            state={{ rowSelection: { ...rowSelection } }}
-            onRowSelectionChange={setRowSelection}
-            loading={invoice?.loading}
-            title="Invoices"
-            columns={columns}
-            data={data}
-            disableRowSelection={user?.type !== 0 ? true : false}
-            containerProps={{
-              sx: {
-                maxHeight: "80vh",
-                minHeight: "70vh",
-                minWidth: "120%",
-                flex: 1,
-              },
+            Delete
+          </Button>
+        )}
+        {user?.type === 1 ? undefined : (
+          <Button
+            endIcon={<PlaylistAddCircleIcon fontSize="small" />}
+            color="primary"
+            onClick={() => {
+              goToAddInvoice();
             }}
-            displayColumnDefOptions={{
-              "mrt-row-actions": {
-                size: 70,
-                minSize: 10,
-                maxSize: 100,
-                enableColumnActions: false,
-                enableHiding: false,
-              },
-              "mrt-row-select": {
-                enableColumnActions: false,
-                enableHiding: false,
-                size: 50,
-                minSize: 10,
-                maxSize: 60,
-              },
-              "mrt-row-expand": {
-                size: 50,
-                minSize: 20,
-                maxSize: 60,
-              },
-            }}
-            //initialState={{ grouping: ["mahnung", "dueDate"], expanded: true }}
-            cellFontSizeInBody={"0.7rem"}
-            headerCellFontSize={"0.8rem"}
-            actions={
-              user?.type === 1
-                ? undefined
-                : ({ row }) => Actions(row.original.invoice)
-            }
-            bottomToolbar={(table)=>{
-              console.log(table.table);
-              return <></>
-            }}
-          />
-        </Grid>
-      </Box>
+          >
+            Insert
+          </Button>
+        )}
+      </Grid>
+
+      <Grid item>
+        <CustomTable
+          state={{ rowSelection: { ...rowSelection } }}
+          onRowSelectionChange={setRowSelection}
+          loading={invoice?.loading}
+          title="Invoices"
+          columns={columns}
+          data={data}
+          disableRowSelection={user?.type !== 0 ? true : false}
+          containerProps={{
+            sx: {
+              maxHeight: "80vh",
+              minHeight: "70vh",
+              minWidth: "120%",
+              flex: 1,
+            },
+          }}
+          displayColumnDefOptions={{
+            "mrt-row-actions": {
+              size: 70,
+              minSize: 10,
+              maxSize: 100,
+              enableColumnActions: false,
+              enableHiding: false,
+            },
+            "mrt-row-select": {
+              enableColumnActions: false,
+              enableHiding: false,
+              size: 50,
+              minSize: 10,
+              maxSize: 60,
+            },
+            "mrt-row-expand": {
+              size: 50,
+              minSize: 20,
+              maxSize: 60,
+            },
+          }}
+          //initialState={{ grouping: ["mahnung", "dueDate"], expanded: true }}
+          cellFontSizeInBody={"0.7rem"}
+          headerCellFontSize={"0.8rem"}
+          actions={
+            user?.type === 1
+              ? undefined
+              : ({ row }) => Actions(row.original.invoice)
+          }
+          bottomToolbar={(table) => {
+            return (
+              <>
+                <Grid
+                  container
+                  spacing={2}
+                  alignItems={"flex-end"}
+                  display={"flex"}
+                  justifyContent={"flex-end"}
+                >
+                  <Grid item>
+                    <Typography fontWeight="bold" display="inline">
+                      Total Invoice Payable/Expire:
+                    </Typography>{" "}
+                    {"0"}
+                  </Grid>
+                  <Grid item>
+                    <Typography fontWeight="bold" display="inline">
+                      Total Invoice Scheduled:
+                    </Typography>{" "}
+                    {"0"}
+                  </Grid>
+                </Grid>
+                <BottomToolbar table={table.table} />
+              </>
+            );
+          }}
+        />
+      </Grid>
+
       <ConfirmDialog
         open={open}
         onClose={handleClose}

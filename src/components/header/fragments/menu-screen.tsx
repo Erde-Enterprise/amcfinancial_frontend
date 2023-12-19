@@ -38,7 +38,7 @@ export function MenuScreen(props: MenuScreenProps) {
         style={{ transition: "transform 1s" }}
         onClick={open ? handleMenuClose : handleMenuOpen}
       >
-        <img src={MenuIcon} style={{ width: "90%", ...responsiveStyles }} />
+        <img src={MenuIcon} style={{ width: "100%", ...responsiveStyles }} />
         {open ? (
           <ArrowBackIosIcon
             fontSize="small"

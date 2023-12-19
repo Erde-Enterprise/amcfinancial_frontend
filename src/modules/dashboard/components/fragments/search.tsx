@@ -37,9 +37,10 @@ function SearchInvoice() {
       direction={"column"}
       alignItems={"center"}
       justifyContent={"center"}
+      sx={{flex:1}}
     >
-      <Grid item>
-        <FormControlLabel
+      <Grid item sx={{flex:1}}>
+        <FormControlLabel sx={{flex:1}}
           control={
             <Checkbox
               checked={isDateSearch}
@@ -50,12 +51,13 @@ function SearchInvoice() {
           label="Date Search"
         />
       </Grid>
-      <Grid item>
+      <Grid item sx={{flex:1}}>
         <form onSubmit={handleSearch}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
+          <Grid container spacing={1} sx={{flex:1}}>
+            <Grid item xs={12} sx={{flex:1}}>
               {!isDateSearch && (
                 <TextField
+                sx={{flex:1}}
                   label="Invoice Number"
                   value={invoiceNumber}
                   onChange={(e) => setInvoiceNumber(e.target.value)}
@@ -69,9 +71,10 @@ function SearchInvoice() {
                 />
               )}
               {isDateSearch && (
-                <Grid container spacing={1}>
-                  <Grid item>
+                <Grid sx={{flex:1}} container spacing={1}>
+                  <Grid item sx={{flex:1}}>
                     <TextField
+                    sx={{flex:1}}
                       label="Issued Date"
                       type="date"
                       InputLabelProps={{
@@ -81,8 +84,9 @@ function SearchInvoice() {
                       onChange={(e) => setStartDate(e.target.value)}
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid item sx={{flex:1}}>
                     <TextField
+                    sx={{flex:1}}
                       label="Due Date"
                       type="date"
                       InputLabelProps={{
@@ -92,8 +96,8 @@ function SearchInvoice() {
                       onChange={(e) => setEndDate(e.target.value)}
                     />
                   </Grid>
-                  <Grid item>
-                    <SearchButtonForm />
+                  <Grid item sx={{flex:1}}>
+                    <SearchButtonForm sx={{flex:1}}/>
                   </Grid>
                 </Grid>
               )}

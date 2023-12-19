@@ -5,9 +5,11 @@ import { StatusInvoiceEnum } from "../features/add-invoice/enum/add-invoice.enum
 
 export const styleMenuItem: SxProps<Theme> | undefined = {
   color: "#A0A3BD",
+  
 };
 export const styleMenuIconItem: SxProps<Theme> | undefined = {
   marginRight: 2,
+  
 };
 
 export function getRandomPhrase(): string {

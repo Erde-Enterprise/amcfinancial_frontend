@@ -10,7 +10,7 @@ interface HeaderProps{
 export function Header({handleMenuOpen, handleMenuClose, open}:HeaderProps) {
  
   return (
-    <Box sx={{ display: "flex", flexDirection: "row" }}>
+    <Box sx={{ display: "flex", flexDirection: "row", width:"100%", minWidth:"100%" }}>
       <AppBar
         position="static"
         style={{
