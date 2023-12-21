@@ -151,7 +151,7 @@ const CustomTable = memo((props: CustomTableProps) => {
                 endIcon={<FileDownloadIcon />}
                 style={{ color: "#A0A3BD", fontWeight: "bold" }}
               >
-                Generate
+                Bericht generieren
               </Button>
             </Box>
             <Box

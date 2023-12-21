@@ -50,8 +50,8 @@ export function MenuUser() {
         onClose={handleClose}
         sx={{ ".MuiPaper-root": { boxShadow: "none", border: "none" } }}
       >
-        <MenuItem onClick={handleClose}>Configuration</MenuItem>
-        <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+        <MenuItem onClick={handleClose}>Einstellungen</MenuItem>
+        <MenuItem onClick={handleLogOut}>Ausloggen</MenuItem>
       </Menu>
     </div>
   );

@@ -107,7 +107,7 @@ export function AddInvoice() {
               endIcon={<AttachFileIcon fontSize="small" />}
               component="label"
             >
-              Attachment
+              Anhang
               <input
                 ref={inputFileRef}
                 type="file"
@@ -137,7 +137,7 @@ export function AddInvoice() {
                   <TextField
                     variant="filled"
                     name="price"
-                    label="Price"
+                    label="Preis (CHF)"
                     value={invoice.price}
                     onChange={handleChange}
                     error={!validatorsInvoice.price(invoice.price)}
@@ -158,7 +158,7 @@ export function AddInvoice() {
                 <Grid item xs={2}>
                   <CustomType
                     variant="filled"
-                    label="Type"
+                    label="Typ"
                     value={invoice.type}
                     onChange={(event: any) => handleChange(event, "type")}
                     error={!validatorsInvoice.type(invoice.type)}
@@ -170,7 +170,7 @@ export function AddInvoice() {
                   <TextField
                     variant="filled"
                     name="issuedOn"
-                    label="Issue Date"
+                    label="Ausgegeben am"
                     value={invoice.issuedOn}
                     onChange={handleChange}
                     type="date"
@@ -183,7 +183,7 @@ export function AddInvoice() {
                   <TextField
                     variant="filled"
                     name="dueDate"
-                    label="Due Date"
+                    label="Fälligkeitsdatum"
                     value={invoice.dueDate}
                     onChange={handleChange}
                     type="date"
@@ -225,7 +225,7 @@ export function AddInvoice() {
                   <TextField
                     variant="filled"
                     name="scheduledDate"
-                    label="Scheduled"
+                    label="Geplant"
                     value={invoice.scheduledDate}
                     onChange={handleChange}
                     type="date"
@@ -240,7 +240,7 @@ export function AddInvoice() {
                 <Grid item xs={2.5}>
                   <CustomType
                     variant="filled"
-                    label="Clinic"
+                    label="Lokal"
                     value={invoice.clinic}
                     onChange={(event: any) => handleChange(event, "clinic")}
                     error={!validatorsInvoice.clinic(invoice.clinic)}
@@ -258,7 +258,7 @@ export function AddInvoice() {
                   <TextField
                     variant="filled"
                     name="description"
-                    label="Description"
+                    label="Beschreibung"
                     value={invoice.description}
                     onChange={handleChange}
                     error={!validatorsInvoice.description(invoice.description)}

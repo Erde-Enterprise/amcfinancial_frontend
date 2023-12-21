@@ -127,7 +127,7 @@ export function DashBoardModal(props: ModalDashboardEntity) {
             name="price"
             value={values.price}
             onChange={handleChange}
-            label="Price"
+            label="Preis (CHF)"
             type="number"
             sx={{ width: "100%" }}
           />
@@ -158,7 +158,7 @@ export function DashBoardModal(props: ModalDashboardEntity) {
             name="description"
             value={values.description}
             onChange={handleChange}
-            label="Description"
+            label="Beschreibung"
             sx={{ width: "100%" }}
           />
         </Grid>

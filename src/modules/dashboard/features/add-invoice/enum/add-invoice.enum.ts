@@ -1,6 +1,6 @@
 export enum StatusInvoiceEnum{
-    P = "Paid",
-    D = "Payable",
-    E = "Expired",
-    S = "Scheduled"
+    P = "Ausbezahlt",
+    D = "Zahlbar",
+    E = "Abgelaufen",
+    S = "Geplant"
 }

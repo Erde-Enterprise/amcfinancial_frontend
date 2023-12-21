@@ -68,7 +68,7 @@ export function Table() {
       },
       {
         accessorKey: "price",
-        header: "Price",
+        header: "Preis (CHF)",
         maxSize: 400,
         size: 80,
         minSize: 20,
@@ -78,7 +78,7 @@ export function Table() {
       },
       {
         accessorKey: "scheduledDate",
-        header: "Scheduled",
+        header: "Geplant",
         maxSize: 400,
         size: 80,
         minSize: 20,
@@ -95,7 +95,7 @@ export function Table() {
       },
       {
         accessorKey: "dueDate",
-        header: "Due Date",
+        header: "Fälligkeitsdatum",
         maxSize: 400,
         size: 80,
         minSize: 20,
@@ -163,7 +163,7 @@ export function Table() {
       },
       {
         accessorKey: "description",
-        header: "Description",
+        header: "Beschreibung",
         maxSize: 400,
         size: 80,
         minSize: 20,
@@ -173,7 +173,7 @@ export function Table() {
       },
       {
         accessorKey: "issuedOn",
-        header: "Issued On",
+        header: "Ausgegeben am",
         maxSize: 400,
         size: 80,
         minSize: 20,
@@ -193,7 +193,7 @@ export function Table() {
       },
       {
         accessorKey: "type",
-        header: "Type",
+        header: "Typ",
         maxSize: 400,
         size: 45,
         minSize: 20,
@@ -203,7 +203,7 @@ export function Table() {
       },
       {
         accessorKey: "clinic",
-        header: "Clinuc",
+        header: "Klinik",
         maxSize: 400,
         size: 75,
         minSize: 20,
@@ -224,7 +224,7 @@ export function Table() {
       },
       {
         accessorKey: "attachment",
-        header: "Attachment",
+        header: "Anhang",
         maxSize: 400,
         size: 80,
         minSize: 20,
@@ -339,7 +339,7 @@ export function Table() {
     <Grid container alignItems={"center"} spacing={1} flexDirection={"column"}>
       <Box mb={0.5}>
         <Grid item>
-          <h3>Welcome, {user?.name}</h3>
+          <h3>Willkommen, {user?.name}</h3>
         </Grid>
       </Box>
       <Box mb={3}>
@@ -362,7 +362,7 @@ export function Table() {
               endIcon={<DeleteForeverIcon fontSize="small" />}
               color="error"
             >
-              Delete
+              Löschen
             </Button>
           )}
           {/* <Button
@@ -379,7 +379,7 @@ export function Table() {
                 goToAddInvoice();
               }}
             >
-              Insert
+              Einfügen
             </Button>
           )}
         </Grid>

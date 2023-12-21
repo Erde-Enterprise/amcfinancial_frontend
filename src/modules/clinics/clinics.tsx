@@ -90,7 +90,7 @@ export function ClinicsPage() {
           color="primary"
           onClick={handleOpen}
         >
-          Insert
+          Einfügen
         </Button>
         <CustomModal
           sx={{ width: "35%", height: "450px" }}

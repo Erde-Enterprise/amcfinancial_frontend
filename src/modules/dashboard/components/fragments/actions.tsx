@@ -79,7 +79,7 @@ export function Actions(invoice: InvoiceEntity) {
 
   return (
     <>
-      <CustomTooltip title="Update">
+      <CustomTooltip title="Aktualisieren">
         <IconButton
           sx={{
             color: `${invoice.clinic.color}`,
@@ -93,7 +93,7 @@ export function Actions(invoice: InvoiceEntity) {
         </IconButton>
       </CustomTooltip>
       {user?.type !== 0 ? undefined : (
-        <CustomTooltip title="Delete">
+        <CustomTooltip title="Löschen">
           <IconButton
             sx={{ minWidth: "15px !important", padding: "3px" }}
             color="error"
@@ -107,7 +107,7 @@ export function Actions(invoice: InvoiceEntity) {
         </CustomTooltip>
       )}
       {user?.type === 1 || invoice.status === "P" ? undefined : (
-        <CustomTooltip title="Payment">
+        <CustomTooltip title="Zahlung">
           <IconButton
             sx={{ minWidth: "15px !important", padding: "3px" }}
             color={changeColorIconButtonPaid(invoice.status)}
@@ -142,13 +142,13 @@ export function Actions(invoice: InvoiceEntity) {
         open={confirm}
         onClose={handleCloseConfirm}
         onClickYes={handleDelete}
-        text="Confirm?"
+        text="Bestätigen Sie?"
       />
       <ConfirmDialog
         open={paidConfirm}
         onClose={handleClosePaidConfirm}
         onClickYes={handlePaid}
-        text="Do you confirm the payment?"
+        text="Bestätigen Sie die Zahlung?"
       />
     </>
   );

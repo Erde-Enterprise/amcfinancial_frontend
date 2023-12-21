@@ -47,7 +47,7 @@ function SearchInvoice() {
               color="primary"
             />
           }
-          label="Date Search"
+          label="Datumssuche"
         />
       </Grid>
       <Grid item>
@@ -56,7 +56,7 @@ function SearchInvoice() {
             <Grid item xs={12}>
               {!isDateSearch && (
                 <TextField
-                  label="Invoice Number"
+                  label="Rechnungsnummer"
                   value={invoiceNumber}
                   onChange={(e) => setInvoiceNumber(e.target.value)}
                   InputProps={{
