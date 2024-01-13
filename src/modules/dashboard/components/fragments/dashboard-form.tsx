@@ -2,7 +2,6 @@ import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 
 import { Button, Grid, InputLabel, TextField } from "@mui/material";
 import { SubmitButtonForm } from "../../../../components/header/buttons/Submit-Form-Button";
-import { CancelButtonModalForm } from "../../../../components/header/buttons/Cancel-Modal-Form";
 import useClinic from "../../../clinics/hooks/use-clinics";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import {
@@ -15,7 +14,7 @@ import { CustomType } from "../../../../components/inputs/input-type";
 import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
 import { StatusInvoiceEnum } from "../../features/add-invoice/enum/add-invoice.enum";
 import useDashboard from "../../hooks/use-dashboard";
-import { getKeyFromValue, getValueFromKey } from "../../../../utils/utils";
+import { getKeyFromValue } from "../../../../utils/utils";
 import { ResetButtonForm } from "../../../../components/header/buttons/Reset-Form-Button";
 
 interface ModalDashboardEntity {
@@ -164,10 +163,6 @@ export function DashBoardModal(props: ModalDashboardEntity) {
             name="price"
             value={values.price}
             onChange={handleChange}
-<<<<<<< HEAD
-=======
-            label="Preis (CHF)"
->>>>>>> 3735036a5422e23d0aa99d53d19a5b0fcd3c5c15
             type="number"
             sx={{ width: "100%" }}
             InputProps={{
