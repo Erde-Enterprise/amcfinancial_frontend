@@ -1,20 +1,21 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 
-import { Button, Grid, TextField } from "@mui/material";
+import { Button, Grid, InputLabel, TextField } from "@mui/material";
 import { SubmitButtonForm } from "../../../../components/header/buttons/Submit-Form-Button";
-import { CancelButtonModalForm } from "../../../../components/header/buttons/Cancel-Modal-Form";
 import useClinic from "../../../clinics/hooks/use-clinics";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import {
   getFirstDayOfMonth,
   getLastDayOfMonth,
+  styleInputTextField,
   validatorsInvoice,
 } from "../../utils/utils";
 import { CustomType } from "../../../../components/inputs/input-type";
 import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
 import { StatusInvoiceEnum } from "../../features/add-invoice/enum/add-invoice.enum";
 import useDashboard from "../../hooks/use-dashboard";
-import { getKeyFromValue, getValueFromKey } from "../../../../utils/utils";
+import { getKeyFromValue } from "../../../../utils/utils";
+import { ResetButtonForm } from "../../../../components/header/buttons/Reset-Form-Button";
 
 interface ModalDashboardEntity {
   rechnung: string;
@@ -29,7 +30,7 @@ interface ModalDashboardEntity {
   type: string;
   clinic: string;
   scheduledDate: string;
-  handleCancel: () => void;
+  handleCancel?: () => void;
 }
 
 export function DashBoardModal(props: ModalDashboardEntity) {
@@ -37,6 +38,7 @@ export function DashBoardModal(props: ModalDashboardEntity) {
   const [fileName, setFileName] = useState("");
   const { clinic, getAllClinics } = useClinic();
   const { getInvoices, updateInvoice } = useDashboard();
+  const inputFileRef = useRef<HTMLInputElement>(null);
   const actualityRechnung = props.rechnung;
 
   const handleChange = (
@@ -83,19 +85,40 @@ export function DashBoardModal(props: ModalDashboardEntity) {
   useEffect(() => {
     getAllClinics();
   }, []);
+  const handleReset = () => {
+    setValues({
+      rechnung: "",
+      name: "",
+      price: 0,
+      dueDate: "",
+      mahnung: 0,
+      description: "",
+      issuedOn: "",
+      attachment: new File([""], ""),
+      status: "",
+      type: "",
+      clinic: "",
+      scheduledDate: "",
+    });
+    setFileName("");
+    if (inputFileRef.current) {
+      inputFileRef.current.value = "";
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          {fileName && <p>Arquivo selecionado: {fileName}</p>}
+          {fileName && <p>Ausgewählte Datei: {fileName}</p>}
           <Button
             variant="outlined"
             endIcon={<AttachFileIcon fontSize="small" />}
             component="label"
           >
-            Attachment
+            Anhang
             <input
+              ref={inputFileRef}
               type="file"
               id="attachment"
               name="attachment"
@@ -105,90 +128,132 @@ export function DashBoardModal(props: ModalDashboardEntity) {
           </Button>
         </Grid>
         <Grid item>
+          <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+            Rechnung
+          </InputLabel>
           <TextField
             name="rechnung"
             value={values.rechnung}
             onChange={handleChange}
-            label="Rechnung"
+            InputProps={{
+              sx: { borderRadius: styleInputTextField },
+            }}
             sx={{ width: "100%" }}
           />
         </Grid>
         <Grid item>
+          <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+            Name
+          </InputLabel>
           <TextField
             name="name"
             value={values.name}
             onChange={handleChange}
-            label="Name"
             sx={{ width: "100%" }}
+            InputProps={{
+              sx: { borderRadius: styleInputTextField },
+            }}
           />
         </Grid>
         <Grid item>
+          <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+            {"Preis (CHF)"}
+          </InputLabel>
           <TextField
             name="price"
             value={values.price}
             onChange={handleChange}
-            label="Preis (CHF)"
             type="number"
             sx={{ width: "100%" }}
+            InputProps={{
+              sx: { borderRadius: styleInputTextField },
+            }}
           />
         </Grid>
         <Grid item>
+          <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+            Fälligkeitsdatum
+          </InputLabel>
           <TextField
             name="dueDate"
             value={values.dueDate}
             onChange={handleChange}
-            label="Due Date"
             type="date"
             InputLabelProps={{ shrink: true }}
             sx={{ width: "100%" }}
+            InputProps={{
+              sx: { borderRadius: styleInputTextField },
+            }}
           />
         </Grid>
         <Grid item>
+          <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+            Mahnung
+          </InputLabel>
           <TextField
             name="mahnung"
             value={values.mahnung}
             onChange={handleChange}
-            label="Mahnung"
             type="number"
             sx={{ width: "100%" }}
+            InputProps={{
+              sx: { borderRadius: styleInputTextField },
+            }}
           />
         </Grid>
         <Grid item>
+          <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+            Beschreibung
+          </InputLabel>
           <TextField
+            multiline
+            rows={4}
             name="description"
             value={values.description}
             onChange={handleChange}
-            label="Beschreibung"
             sx={{ width: "100%" }}
+            InputProps={{
+              sx: { borderRadius: styleInputTextField },
+            }}
           />
         </Grid>
         <Grid item>
+          <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+            Ausgegeben am
+          </InputLabel>
           <TextField
             name="issuedOn"
             value={values.issuedOn}
             onChange={handleChange}
-            label="Issued On"
             type="date"
             InputLabelProps={{ shrink: true }}
             sx={{ width: "100%" }}
+            InputProps={{
+              sx: { borderRadius: styleInputTextField },
+            }}
           />
         </Grid>
         <Grid item>
+          <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+            Status
+          </InputLabel>
           <CustomType
-            variant="filled"
-            label="Status"
+            variant="outlined"
             value={values.status}
             onChange={(event: any) => handleChange(event, "status")}
             error={!validatorsInvoice.status(values.status)}
             itens={Object.values(StatusInvoiceEnum)}
             sx={{ width: "100%" }}
+            style={{ borderRadius: styleInputTextField }}
           />
         </Grid>
         <Grid item>
+          <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+            Geplant
+          </InputLabel>
           <TextField
-            variant="filled"
+            variant="outlined"
             name="scheduledDate"
-            label="Scheduled"
             value={values.scheduledDate}
             onChange={handleChange}
             type="date"
@@ -199,33 +264,50 @@ export function DashBoardModal(props: ModalDashboardEntity) {
                 values.scheduledDate === undefined)
             }
             sx={{ width: "100%" }}
+            InputProps={{
+              sx: { borderRadius: styleInputTextField },
+            }}
           />
         </Grid>
         <Grid item>
+          <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+            Typ
+          </InputLabel>
           <CustomType
-            variant="filled"
-            label="Type"
+            variant="outlined"
             value={values.type}
             onChange={(event: any) => handleChange(event, "type")}
             error={!validatorsInvoice.type(values.type)}
             itens={Object.values(CustomTypeEnum)}
             sx={{ width: "100%" }}
+            style={{ borderRadius: styleInputTextField }}
           />
         </Grid>
         <Grid item>
+          <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+            Lokal
+          </InputLabel>
           <CustomType
-            variant="filled"
-            label="Clinics"
+            variant="outlined"
             value={values.clinic}
             onChange={(event: any) => handleChange(event, "clinic")}
             error={!validatorsInvoice.clinic(values.clinic)}
             itens={clinic?.clinics?.map((item) => item.name)}
             sx={{ width: "100%" }}
+            style={{ borderRadius: styleInputTextField }}
           />
         </Grid>
-        <Grid item>
-          <CancelButtonModalForm handleCancel={props.handleCancel} />
-          <SubmitButtonForm />
+        <Grid
+          container
+          spacing={2}
+          alignItems={"flex-end"}
+          justifyContent={"flex-end"}
+          mt={1}
+        >
+          <Grid item>
+            <ResetButtonForm handleReset={handleReset} />
+            <SubmitButtonForm sx={{ml:1}} />
+          </Grid>
         </Grid>
       </Grid>
     </form>

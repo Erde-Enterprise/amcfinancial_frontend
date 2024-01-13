@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button, Grid, IconButton } from "@mui/material";
-import { CancelButtonFormToDashboard } from "../../components/header/buttons/Cancel-Form-Button";
+import { Grid, IconButton } from "@mui/material";
 import useClinic from "./hooks/use-clinics";
 import CustomTable from "../dashboard/components/table/custom-table/Custom-React-Table";
 import { MRT_ColumnDef } from "material-react-table";
 import { ClinicsEntity } from "./model/clinics.entity";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { Actions } from "./fragments/actions";
-import PlaylistAddCircleIcon from "@mui/icons-material/PlaylistAddCircle";
+import AddBoxRoundedIcon from "@mui/icons-material/AddBoxRounded";
 import { CustomModal } from "../../components/modal/custom-modal";
 import { ClinicsModalFormInsert } from "./fragments/clinics-modal-form-insert";
 
@@ -40,14 +39,14 @@ export function ClinicsPage() {
       },
       {
         accessorKey: "codeColor",
-        header: "Hex Color",
+        header: "Hex-Farbe",
         maxSize: 200,
         size: 30,
         minSize: 10,
       },
       {
         accessorKey: "color",
-        header: "Color",
+        header: "Farben",
         maxSize: 200,
         size: 30,
         minSize: 10,
@@ -65,10 +64,10 @@ export function ClinicsPage() {
 
   useEffect(() => {
     getAllClinics();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    
     if (Array.isArray(clinic?.clinics)) {
       setData(
         clinic?.clinics.map((item: ClinicsEntity, index: number) => ({
@@ -84,18 +83,13 @@ export function ClinicsPage() {
   return (
     <Grid container spacing={2} direction={"column"} alignItems={"center"}>
       <Grid item>
-        <CancelButtonFormToDashboard />
-        <Button
-          endIcon={<PlaylistAddCircleIcon fontSize="small" />}
-          color="primary"
-          onClick={handleOpen}
-        >
-          Einfügen
-        </Button>
+        <IconButton color="primary" onClick={handleOpen}>
+          <AddBoxRoundedIcon fontSize="large" />
+        </IconButton>
         <CustomModal
-          sx={{ width: "35%", height: "450px" }}
+          sx={{ width: "35%", height: "55%" }}
           open={open}
-          title="Insert"
+          title="Neue Klinik einfügen"
           handleClose={handleInsertClose}
         >
           <ClinicsModalFormInsert handleClose={handleInsertClose} />
@@ -103,7 +97,7 @@ export function ClinicsPage() {
       </Grid>
       <Grid item>
         <CustomTable
-          title="List Clinics"
+          title="Kliniken auflisten"
           loading={clinic?.loading}
           data={data}
           columns={columns}

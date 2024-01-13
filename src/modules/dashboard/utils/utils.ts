@@ -5,10 +5,14 @@ import { StatusInvoiceEnum } from "../features/add-invoice/enum/add-invoice.enum
 
 export const styleMenuItem: SxProps<Theme> | undefined = {
   color: "#A0A3BD",
+  
 };
 export const styleMenuIconItem: SxProps<Theme> | undefined = {
   marginRight: 2,
+  
 };
+
+export const styleInputTextField: string = "9px";
 
 export function getRandomPhrase(): string {
   let financialPhrases: string[] = [
@@ -46,20 +50,6 @@ export function getRandomPhrase(): string {
   return financialPhrases[randomIndex];
 }
 
-// export function validateForm(invoice: InvoiceInsertEntity) {
-//   for (let key in invoice) {
-//     if (key === "attachment") {
-//       if ((invoice[key as keyof InvoiceInsertEntity] as File).size === 0) {
-//         snackActions.error(`${key} is required.`);
-//         return false;
-//       }
-//     } else if (invoice[key as keyof InvoiceInsertEntity] === "") {
-//       snackActions.error(`${key} is required.`);
-//       return false;
-//     }
-//   }
-//   return true;
-// }
 export function validateForm(invoice: InvoiceInsertEntity) {
   for (let key in invoice) {
     if (key === "attachment") {
@@ -73,7 +63,7 @@ export function validateForm(invoice: InvoiceInsertEntity) {
     }
   }
 
-  // Adicionando a nova condição
+
   if (invoice.status === 'Schedule' && (invoice.scheduledDate === "" || invoice.scheduledDate === undefined)) {
     snackActions.error(`schedule is required when status is Schedule.`);
     return false;
@@ -87,10 +77,10 @@ export const validatorsInvoice = {
   rechnung: (value: string) => value !== "" && /^[0-9]+$/.test(value),
   name: (value: string) => value !== "",
   price: (value: string) => value !== "" && /^[0-9]*,?[0-9]*$/.test(value),
-  dueDate: (value: string) => value !== "", //&& /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d\d$/.test(value),
+  dueDate: (value: string) => value !== "", 
   mahnung: (value: number) => value >= 0,
   description: (value: string) => value !== "",
-  issuedOn: (value: string) => value !== "", // && /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d\d$/.test(value),
+  issuedOn: (value: string) => value !== "", 
   attachment: (file: File) =>
     /\.(pdf|jpg|jpeg|png|gif)$/.test(file.name.toLowerCase()),
   status: (value: string) => value !== "",
@@ -126,7 +116,7 @@ export function getColor(mahnung: number) {
   } else if (mahnung === 2) {
     return "#FF9900";
   } else if (mahnung === 1) {
-    return "#DDFF00";
+    return "#4C7840";
   } else {
     return undefined;
   }
@@ -144,9 +134,7 @@ export function getColorWithOpacity(mahnung: number) {
 }
 
 export function changeColorIconButtonPaid(status: string) {
-  // if (status === "P") {
-  //   return "success";
-  // } else 
+ 
   if (status === "D") {
     return "primary";
   } else if (status === "S") {
@@ -155,5 +143,5 @@ export function changeColorIconButtonPaid(status: string) {
     return "error";
   }
   return "inherit";
-  //"default" | "error" | "inherit" | "primary" | "secondary" | "info" | "success" | "warning"
+  
 }

@@ -59,3 +59,7 @@ export interface InvoiceUpdateEntity {
   status: string;
   type: string;
 }
+
+export interface InvoiceSumEntity{
+  sum: number;
+}

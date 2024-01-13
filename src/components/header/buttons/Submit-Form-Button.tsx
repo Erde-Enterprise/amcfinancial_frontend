@@ -11,13 +11,13 @@ export function SubmitButtonForm(
 ) {
   return (
     <Button
+      variant="contained"
       color="primary"
-      endIcon={<SendIcon fontSize="small" />}
     //   onClick={props.handleSubmit}
       sx={props.sx}
       type="submit"
     >
-      Submit
+      Speichern
     </Button>
   );
 }

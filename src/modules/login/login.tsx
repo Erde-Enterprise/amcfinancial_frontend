@@ -1,4 +1,4 @@
-import { Button, Grid, TextField } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 import { FormEvent, useState } from "react";
 import {
   buttonStyle,
@@ -9,6 +9,7 @@ import {
 } from "./utils/utils";
 import { FinancialImage } from "./components/financial";
 import useLogin from "./hooks/use-login";
+import { LoadingButton } from "@mui/lab";
 
 
 
@@ -16,10 +17,15 @@ export function LoginPage() {
   const [access, setAccess] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { login } = useLogin();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await login(access, password);
+    setLoading(true);
+    navigator.geolocation.getCurrentPosition(async (position)=>{
+      await login(access, password, position.coords.latitude, position.coords.longitude);
+    });
+    setLoading(false);
   };
 
   const isLoginValid = validateLogin(access);
@@ -68,14 +74,15 @@ export function LoginPage() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button
+                <LoadingButton
+                  loading={loading}
                   type="submit"
                   variant="contained"
                   sx={buttonStyle}
                   disabled={!isFormValid}
                 >
-                  Login
-                </Button>
+                  ANMELDEN
+                </LoadingButton>
               </Grid>
             </Grid>
           </form>

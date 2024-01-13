@@ -14,7 +14,7 @@ export const inputStyle: SxProps<Theme> | undefined = {
   color: "#A0A3BD",
   borderRadius: "15px",
   "& fieldset": { border: "none" },
-  width: "90%",
+  width: "80%",
 };
 export const labelStyle: Partial<InputLabelProps> | undefined = {
   style: { color: "#A0A3BD" },
@@ -23,5 +23,5 @@ export const labelStyle: Partial<InputLabelProps> | undefined = {
 export const buttonStyle: SxProps<Theme> | undefined = {
   backgroundColor: "#007AFF",
   borderRadius: "10px",
-  width: "90%",
+  width: "80%",
 };

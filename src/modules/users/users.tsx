@@ -1,30 +1,16 @@
 import {
-  Button,
   Grid,
-  TextField,
-  FormHelperText,
-  Box,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
   Avatar,
+  IconButton,
 } from "@mui/material";
-import PlaylistAddCircleIcon from "@mui/icons-material/PlaylistAddCircle";
+import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import {
   UserEntity,
-  UserInsertEntity,
   UserRowEntity,
 } from "./model/user.entity";
-import { snackActions } from "../../utils/notification/snackbar-util";
-import { validateLogin, validatePassword } from "../login/utils/utils";
-import { base64ToBlob, passwordsMatch } from "./utils/utils";
-import { CancelButtonFormToDashboard } from "../../components/header/buttons/Cancel-Form-Button";
-import { ResetButtonForm } from "../../components/header/buttons/Reset-Form-Button";
-import { SubmitButtonForm } from "../../components/header/buttons/Submit-Form-Button";
+import { base64ToBlob } from "./utils/utils";
 import useUsers from "./hooks/use-users";
 import {
-  ChangeEvent,
-  FormEvent,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -81,21 +67,21 @@ export function UsersPage() {
       },
       {
         accessorKey: "nickname",
-        header: "Nickname",
+        header: "Spitzname",
         maxSize: 200,
         size: 35,
         minSize: 10,
       },
       {
         accessorKey: "type",
-        header: "Type",
+        header: "Typ",
         maxSize: 200,
         size: 25,
         minSize: 10,
       },
       {
         accessorKey: "email",
-        header: "Email",
+        header: "E-mail",
         maxSize: 200,
         size: 60,
         minSize: 10,
@@ -105,6 +91,7 @@ export function UsersPage() {
   );
   useEffect(() => {
     getAllUsers();
+    // eslint-disable-next-line
   }, []);
 
   useLayoutEffect(() => {
@@ -129,20 +116,16 @@ export function UsersPage() {
   }, [user?.users]);
 
   return (
-    <Grid container direction="column" spacing={2}>
-      <Grid item xs={12} alignItems={"center"} justifyContent={"center"}>
-        <CancelButtonFormToDashboard />
-        <Button
-          endIcon={<PlaylistAddCircleIcon fontSize="small" />}
+    <Grid container direction="column" spacing={2} alignItems={"center"}>
+      <Grid item alignItems={"flex-start"} justifyContent={"flex-start"}>
+        <IconButton
           color="primary"
           onClick={handleOpen}
-        >
-          Insert
-        </Button>
-        <CustomModal open={open} title="Insert" handleClose={handleClose}>
-          <UserModalFormInsert handleClose={handleClose}/>
-        </CustomModal>
-        <CustomTable
+        ><AddBoxRoundedIcon fontSize="large" />
+        </IconButton>
+      </Grid>
+      <Grid item xs={6}>
+      <CustomTable
           title="Users"
           loading={user?.loading}
           data={data}
@@ -151,6 +134,9 @@ export function UsersPage() {
           actions={({ row }) => Actions(row)}
         />
       </Grid>
+      <CustomModal open={open} title="Neuen Benutzer registrieren" handleClose={handleClose}>
+          <UserModalFormInsert handleClose={handleClose}/>
+        </CustomModal>
     </Grid>
   );
 }

@@ -4,8 +4,9 @@ export function FinancialImage() {
   const text = [
     "AMC Financial wurde entwickelt,",
     "um die Finanzverwaltung des Avegena Medical Center",
-    "zu erleichtern.",
+    "zu erleichtern."
   ];
+  
   return (
     <div style={{ textAlign: "center" }}>
       <img src={Logo} alt="Imagem" />

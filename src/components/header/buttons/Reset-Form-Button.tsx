@@ -1,22 +1,21 @@
 import { Button, SxProps, Theme } from "@mui/material";
-import ReplayIcon from "@mui/icons-material/Replay";
+import RestoreRoundedIcon from '@mui/icons-material/RestoreRounded';
 
 interface ResetButtonFormEntity {
   handleReset: () => void;
   sx?: SxProps<Theme> | undefined;
 }
 
-export function ResetButtonForm(
-  props: ResetButtonFormEntity
-) {
+export function ResetButtonForm(props: ResetButtonFormEntity) {
   return (
     <Button
-      color="secondary"
-      endIcon={<ReplayIcon fontSize="small" />}
+      variant="outlined"
+      color="error"
+      startIcon={<RestoreRoundedIcon fontSize="medium" />}
       onClick={props.handleReset}
       sx={props.sx}
     >
-      Reset
+      Sauber
     </Button>
   );
 }

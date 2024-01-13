@@ -1,17 +1,16 @@
 import { IconButton } from "@mui/material";
 import CustomTooltip from "../table/custom-tooltip/Custom-Tooltip";
 import { useContext, useState } from "react";
-import SaveAsIcon from "@mui/icons-material/SaveAs";
+import DriveFileRenameOutlineRoundedIcon from '@mui/icons-material/DriveFileRenameOutlineRounded';
 import { CustomModal } from "../../../../components/modal/custom-modal";
 import { DashBoardModal } from "./dashboard-form";
-import { InvoiceEntity, InvoiceRowsEntity } from "../../model/dashboard.entity";
+import { InvoiceEntity } from "../../model/dashboard.entity";
 import { StatusInvoiceEnum } from "../../features/add-invoice/enum/add-invoice.enum";
 import { getKeyFromValue, getValueFromKey } from "../../../../utils/utils";
 import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import useDashboard from "../../hooks/use-dashboard";
-import UpdateIcon from "@mui/icons-material/Update";
-import PaidIcon from "@mui/icons-material/Paid";
+import EuroSymbolRoundedIcon from "@mui/icons-material/EuroSymbolRounded";
 import ConfirmDialog from "../../../../components/modal/custom-dialog";
 import {
   changeColorIconButtonPaid,
@@ -89,7 +88,7 @@ export function Actions(invoice: InvoiceEntity) {
           onClick={handleOpen}
           disableRipple
         >
-          <SaveAsIcon />
+          <DriveFileRenameOutlineRoundedIcon />
         </IconButton>
       </CustomTooltip>
       {user?.type !== 0 ? undefined : (
@@ -102,7 +101,7 @@ export function Actions(invoice: InvoiceEntity) {
               handleOpenConfirm();
             }}
           >
-            <DeleteForeverIcon />
+            <DeleteRoundedIcon />
           </IconButton>
         </CustomTooltip>
       )}
@@ -116,12 +115,20 @@ export function Actions(invoice: InvoiceEntity) {
               handleOpenPaidConfirm();
             }}
           >
-            <PaidIcon />
+            <EuroSymbolRoundedIcon />
           </IconButton>
         </CustomTooltip>
       )}
 
-      <CustomModal open={open} title="Update" handleClose={handleClose}>
+      <CustomModal
+        sx={{
+          width: "40%",
+          height: "80%",
+        }}
+        open={open}
+        title="Aktualisieren"
+        handleClose={handleClose}
+      >
         <DashBoardModal
           handleCancel={handleClose}
           attachment={new File([""], "")}

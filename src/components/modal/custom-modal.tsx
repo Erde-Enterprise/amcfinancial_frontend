@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Grid,
   IconButton,
   SxProps,
   Theme,
@@ -16,6 +17,7 @@ interface CustomModalProps {
   handleClose: () => void;
   children: ReactNode;
   sx?: SxProps<Theme> | undefined;
+  sxGrid?: SxProps<Theme> | undefined;
 }
 export function CustomModal({
   open,
@@ -23,16 +25,18 @@ export function CustomModal({
   handleClose,
   children,
   sx,
+  sxGrid,
 }: CustomModalProps) {
   return (
-    <div>
+    <Grid container sx={sxGrid?? {flex:1}}>
       <Dialog
+        maxWidth={false}
         open={open}
         onClose={handleClose}
         PaperProps={{
           sx: sx ?? {
             width: "45%",
-            height: "325px",
+            height: "50%",
           },
         }}
       >
@@ -61,6 +65,6 @@ export function CustomModal({
           {children}
         </DialogContent>
       </Dialog>
-    </div>
+    </Grid>
   );
 }

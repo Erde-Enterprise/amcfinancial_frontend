@@ -12,11 +12,13 @@ function useLogin() {
   const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  async function login(email_or_nickname: string, password: string) {
+  async function login(email_or_nickname: string, password: string, latitude: number, longitude: number) {
     try {
       const response = await api.post("/login/", {
         email_or_nickname,
         password,
+        latitude,
+        longitude
       });
       const success = await verifyRequest(response);
 

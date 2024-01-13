@@ -12,8 +12,6 @@ import InvoiceContext from "../context/invoice-context";
 
 function useDashboard() {
   const invoice = useContext(InvoiceContext);
-  //const [loading, setLoading] = useState<boolean>(false);
-  //const [invoices, setInvoices] = useState<InvoiceEntity[] | undefined>();
   const navigate = useNavigate();
   function goToAddInvoice() {
     navigate("/new-invoice/");
@@ -173,17 +171,47 @@ function useDashboard() {
     }
     return new Blob([bytes], { type });
   }
+
+
+  async function getTotalSum(scheduled_date?: string){
+    try {
+      const response = await api.get("/sum/amount/", {
+        params: {
+          scheduled_date: scheduled_date || ""
+        }
+      });
+      
+      return response;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      snackActions.error(axiosError.request.response);
+    }
+  }
+  async function getScheduledSum(scheduled_date?: string){
+    try {
+      const response = await api.get("/sum/scheduled/", {
+        params: {
+          scheduled_date: scheduled_date || ""
+        }
+      });
+      
+      return response;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      snackActions.error(axiosError.request.response);
+    }
+  }
   return {
     goToAddInvoice,
     registerInvoice,
     invoice,
-    //invoices,
-    //loading,
     getInvoices,
     updateInvoice,
     deleteInvoice,
     downloadInvoice,
     getUniqueInvoice,
+    getTotalSum,
+    getScheduledSum
   };
 }
 export default useDashboard;
