@@ -12,7 +12,7 @@ import {
   styleMenuItem,
 } from "../../../modules/dashboard/utils/utils";
 import { useResponsive } from "../../../utils/use-utils";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import AuthContext from "../../../auth/auth";
 
 interface MenuScreenProps {
@@ -26,8 +26,10 @@ export function MenuScreen(props: MenuScreenProps) {
   const navigate = useNavigate();
   const { responsiveStyles } = useResponsive();
   const { user } = useContext(AuthContext);
-  
+  const [activePage, setActivePage] = useState<string>("/dashboard");
+
   const handleRedirect = (path: string) => {
+    setActivePage(path);
     navigate(path);
     handleMenuClose();
   };
@@ -52,18 +54,18 @@ export function MenuScreen(props: MenuScreenProps) {
         )}
       </Button>
       <Drawer
+        sx={{ display: "flex" }}
         variant="persistent"
         anchor="left"
         open={open}
         onClose={handleMenuClose}
         PaperProps={{
-          style: {
+          sx: {
             flex: 1,
             width: "15%",
             maxHeight: "100vh",
             overflowY: "auto",
-            top: "10%",
-            border: "none",
+            top: "5.8%",
             transition: "width 1s",
           },
         }}
@@ -72,7 +74,11 @@ export function MenuScreen(props: MenuScreenProps) {
           <List>
             <MenuItem></MenuItem>
             <MenuItem
-              sx={{ ...styleMenuItem, responsiveStyles }}
+              sx={{
+                ...styleMenuItem,
+                responsiveStyles,
+                color: activePage === "/dashboard" ? "#007AFF" : "#A0A3BD",
+              }}
               onClick={() => handleRedirect("/dashboard")}
             >
               <DashboardRoundedIcon
@@ -84,7 +90,7 @@ export function MenuScreen(props: MenuScreenProps) {
             <MenuItem></MenuItem>
             {}
             <MenuItem
-              sx={{ ...styleMenuItem, responsiveStyles }}
+              sx={{ ...styleMenuItem, responsiveStyles, color: activePage === "/activity-history" ? "#007AFF" : "#A0A3BD", }}
               onClick={() => handleRedirect("/activity-history")}
             >
               <ArticleRoundedIcon
@@ -95,7 +101,7 @@ export function MenuScreen(props: MenuScreenProps) {
             </MenuItem>
             <MenuItem></MenuItem>
             <MenuItem
-              sx={{ ...styleMenuItem, responsiveStyles }}
+              sx={{ ...styleMenuItem, responsiveStyles, color: activePage === "/clinics" ? "#007AFF" : "#A0A3BD"}}
               onClick={() => handleRedirect("/clinics")}
             >
               <LocalHospitalRoundedIcon
@@ -106,7 +112,7 @@ export function MenuScreen(props: MenuScreenProps) {
             </MenuItem>
             <MenuItem></MenuItem>
             <MenuItem
-              sx={{ ...styleMenuItem, responsiveStyles }}
+              sx={{ ...styleMenuItem, responsiveStyles, color: activePage === "/users" ? "#007AFF" : "#A0A3BD"}}
               onClick={() => handleRedirect("/users")}
             >
               <PersonRoundedIcon
@@ -120,7 +126,7 @@ export function MenuScreen(props: MenuScreenProps) {
           <List>
             <MenuItem></MenuItem>
             <MenuItem
-              sx={{ ...styleMenuItem, responsiveStyles }}
+              sx={{ ...styleMenuItem, responsiveStyles, color: activePage === "/dashboard" ? "#007AFF" : "#A0A3BD", }}
               onClick={() => handleRedirect("/dashboard")}
             >
               <DashboardRoundedIcon

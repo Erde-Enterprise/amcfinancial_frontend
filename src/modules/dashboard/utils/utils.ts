@@ -12,56 +12,44 @@ export const styleMenuIconItem: SxProps<Theme> | undefined = {
   
 };
 
+export const styleInputTextField: string = "9px";
+
 export function getRandomPhrase(): string {
   let financialPhrases: string[] = [
-    "Today is a great day to conduct financial activities.",
-    "It's a perfect day to dive into the financial world.",
-    "Today is a wonderful day to make smart financial decisions.",
-    "It's a fantastic day to explore new financial opportunities.",
-    "Today is an excellent day to invest in your financial future.",
-    "It's a splendid day to learn more about finance.",
-    "Today is a superb day to improve your financial literacy.",
-    "It's an amazing day to plan for your financial future.",
-    "Today is a brilliant day to work on your budget.",
-    "It's an ideal day to review your investments.",
-    "Today is a perfect day to set new financial goals.",
-    "It's a great day to check on your savings and investments.",
-    "Today is a good day to think about retirement planning.",
-    "It's a wonderful day to work on your tax planning.",
-    "Today is an excellent day for financial strategizing.",
-    "It's a good day to think about diversifying your portfolio.",
-    "Today is a great day for financial planning and organization.",
-    "It's an ideal day for reviewing your insurance policies.",
-    "Today is a perfect day for wealth creation and management.",
-    "It's a fantastic day for improving your credit score.",
-    "Today is an excellent day for debt management and reduction.",
-    "It's a wonderful day for learning about the stock market.",
-    "Today is a good day for exploring real estate investments.",
-    "It's an amazing day for setting up an emergency fund.",
-    "Today is a brilliant day for learning about mutual funds and ETFs.",
-    "It's an ideal day for setting up automatic savings transfers.",
-    "Today is a perfect day for checking on your financial health.",
-    "It's a great day for creating a new income stream.",
-    "Today is an excellent day for reviewing your financial goals progress.",
+    "Heute ist ein großartiger Tag für finanzielle Aktivitäten.",
+    "Es ist ein perfekter Tag, um in die Finanzwelt einzutauchen.",
+    "Heute ist ein wundervoller Tag, um kluge finanzielle Entscheidungen zu treffen.",
+    "Es ist ein fantastischer Tag, um neue finanzielle Möglichkeiten zu erkunden.",
+    "Heute ist ein ausgezeichneter Tag, um in deine finanzielle Zukunft zu investieren.",
+    "Es ist ein herrlicher Tag, um mehr über Finanzen zu erfahren.",
+    "Heute ist ein prächtiger Tag, um deine finanzielle Allgemeinbildung zu verbessern.",
+    "Es ist ein erstaunlicher Tag, um für deine finanzielle Zukunft zu planen.",
+    "Heute ist ein brillanter Tag, um an deinem Budget zu arbeiten.",
+    "Es ist ein idealer Tag, um deine Investitionen zu überprüfen.",
+    "Heute ist ein perfekter Tag, um neue finanzielle Ziele zu setzen.",
+    "Es ist ein großartiger Tag, um deine Ersparnisse und Investitionen zu überprüfen.",
+    "Heute ist ein guter Tag, um über die Planung deiner Rente nachzudenken.",
+    "Es ist ein wundervoller Tag, um an deiner Steuerplanung zu arbeiten.",
+    "Heute ist ein ausgezeichneter Tag für finanzielle Strategien.",
+    "Es ist ein guter Tag, um über die Diversifizierung deines Portfolios nachzudenken.",
+    "Heute ist ein großartiger Tag für finanzielle Planung und Organisation.",
+    "Es ist ein idealer Tag, um deine Versicherungspolicen zu überprüfen.",
+    "Heute ist ein perfekter Tag für Vermögensbildung und -management.",
+    "Es ist ein fantastischer Tag, um deine Kreditwürdigkeit zu verbessern.",
+    "Heute ist ein ausgezeichneter Tag für Schuldenmanagement und -reduktion.",
+    "Es ist ein wundervoller Tag, um sich über die Börse zu informieren.",
+    "Heute ist ein guter Tag, um Immobilieninvestitionen zu erkunden.",
+    "Es ist ein erstaunlicher Tag, um einen Notfallfonds einzurichten.",
+    "Heute ist ein brillanter Tag, um mehr über Investmentfonds und ETFs zu erfahren.",
+    "Es ist ein idealer Tag, um automatische Sparüberweisungen einzurichten.",
+    "Heute ist ein perfekter Tag, um deine finanzielle Gesundheit zu überprüfen.",
+    "Es ist ein großartiger Tag, um eine neue Einnahmequelle zu schaffen.",
+    "Heute ist ein ausgezeichneter Tag, um den Fortschritt deiner finanziellen Ziele zu überprüfen."
   ];
   let randomIndex = Math.floor(Math.random() * financialPhrases.length);
   return financialPhrases[randomIndex];
 }
 
-// export function validateForm(invoice: InvoiceInsertEntity) {
-//   for (let key in invoice) {
-//     if (key === "attachment") {
-//       if ((invoice[key as keyof InvoiceInsertEntity] as File).size === 0) {
-//         snackActions.error(`${key} is required.`);
-//         return false;
-//       }
-//     } else if (invoice[key as keyof InvoiceInsertEntity] === "") {
-//       snackActions.error(`${key} is required.`);
-//       return false;
-//     }
-//   }
-//   return true;
-// }
 export function validateForm(invoice: InvoiceInsertEntity) {
   for (let key in invoice) {
     if (key === "attachment") {
@@ -75,7 +63,7 @@ export function validateForm(invoice: InvoiceInsertEntity) {
     }
   }
 
-  // Adicionando a nova condição
+
   if (invoice.status === 'Schedule' && (invoice.scheduledDate === "" || invoice.scheduledDate === undefined)) {
     snackActions.error(`schedule is required when status is Schedule.`);
     return false;
@@ -89,10 +77,10 @@ export const validatorsInvoice = {
   rechnung: (value: string) => value !== "" && /^[0-9]+$/.test(value),
   name: (value: string) => value !== "",
   price: (value: string) => value !== "" && /^[0-9]*,?[0-9]*$/.test(value),
-  dueDate: (value: string) => value !== "", //&& /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d\d$/.test(value),
+  dueDate: (value: string) => value !== "", 
   mahnung: (value: number) => value >= 0,
   description: (value: string) => value !== "",
-  issuedOn: (value: string) => value !== "", // && /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d\d$/.test(value),
+  issuedOn: (value: string) => value !== "", 
   attachment: (file: File) =>
     /\.(pdf|jpg|jpeg|png|gif)$/.test(file.name.toLowerCase()),
   status: (value: string) => value !== "",
@@ -128,7 +116,7 @@ export function getColor(mahnung: number) {
   } else if (mahnung === 2) {
     return "#FF9900";
   } else if (mahnung === 1) {
-    return "#DDFF00";
+    return "#4C7840";
   } else {
     return undefined;
   }
@@ -146,9 +134,7 @@ export function getColorWithOpacity(mahnung: number) {
 }
 
 export function changeColorIconButtonPaid(status: string) {
-  // if (status === "P") {
-  //   return "success";
-  // } else 
+ 
   if (status === "D") {
     return "primary";
   } else if (status === "S") {
@@ -157,5 +143,5 @@ export function changeColorIconButtonPaid(status: string) {
     return "error";
   }
   return "inherit";
-  //"default" | "error" | "inherit" | "primary" | "secondary" | "info" | "success" | "warning"
+  
 }

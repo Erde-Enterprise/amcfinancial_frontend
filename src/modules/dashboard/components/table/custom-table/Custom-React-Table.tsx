@@ -142,76 +142,76 @@ const CustomTable = memo((props: CustomTableProps) => {
         enableMultiRowSelection={!props.disableMultiRowSelection}
         onRowSelectionChange={props.onRowSelectionChange}
         positionToolbarAlertBanner={props.positionToolbarAlertBanner ?? "top"}
-        renderTopToolbarCustomActions={({ table }) => (
-          <Box width={"auto"} display={"flex"}>
-            <Box>
-              <Button
-                id="basic-button"
-                onClick={handleClick}
-                endIcon={<FileDownloadIcon />}
-                style={{ color: "#A0A3BD", fontWeight: "bold" }}
-              >
-                Generate
-              </Button>
-            </Box>
-            <Box
-              sx={{
-                transition: "opacity 0.25s ease-in-out",
-                opacity: showGenerate,
-                zIndex: showGenerate === 1 ? "auto" : "-999",
-              }}
-            >
-              <Button
-                onClick={() => {
-                  if (table.getIsSomeRowsSelected()) {
-                    exportToXLSX(table.getSelectedRowModel().rows);
-                  } else if (
-                    table.getPrePaginationRowModel().rows.length !== 0
-                  ) {
-                    exportToXLSX(table.getPrePaginationRowModel().rows);
-                  } else if (table.getRowModel().rows.length !== 0) {
-                    exportToXLSX(table.getRowModel().rows);
-                  } else {
-                    exportToXLSX(props.data);
-                  }
-                }}
-                sx={{ color: "darkgreen" }}
-              >
-                <BsFiletypeXlsx size={25} />
-              </Button>
-              <Button
-                onClick={() => {
-                  exportToPdf();
-                  handleClose();
-                }}
-                style={{ color: "red" }}
-              >
-                <BsFiletypePdf size={25} />
-              </Button>
-              <Button
-                onClick={() => {
-                  if (table.getIsSomeRowsSelected()) {
-                    exportToCSV(table.getSelectedRowModel().rows);
-                  } else if (
-                    table.getPrePaginationRowModel().rows.length !== 0
-                  ) {
-                    exportToCSV(table.getPrePaginationRowModel().rows);
-                  } else if (table.getRowModel().rows.length !== 0) {
-                    exportToCSV(table.getRowModel().rows);
-                  } else {
-                    exportToCSV(props.data);
-                  }
-                }}
-                style={{ color: "#78be67", textDecorationLine: "none" }}
-              >
-                <BsFiletypeCsv size={25} />
-              </Button>
-            </Box>
-            <Box>
-              {props.topToolbarCustomActions && props.topToolbarCustomActions()}
-            </Box>
-          </Box>
-        )}
+        // renderTopToolbarCustomActions={({ table }) => (
+        //   <Box width={"auto"} display={"flex"}>
+        //     <Box>
+        //       <Button
+        //         id="basic-button"
+        //         onClick={handleClick}
+        //         endIcon={<FileDownloadIcon />}
+        //         style={{ color: "#A0A3BD", fontWeight: "bold" }}
+        //       >
+        //         Generate
+        //       </Button>
+        //     </Box>
+        //     <Box
+        //       sx={{
+        //         transition: "opacity 0.25s ease-in-out",
+        //         opacity: showGenerate,
+        //         zIndex: showGenerate === 1 ? "auto" : "-999",
+        //       }}
+        //     >
+        //       <Button
+        //         onClick={() => {
+        //           if (table.getIsSomeRowsSelected()) {
+        //             exportToXLSX(table.getSelectedRowModel().rows);
+        //           } else if (
+        //             table.getPrePaginationRowModel().rows.length !== 0
+        //           ) {
+        //             exportToXLSX(table.getPrePaginationRowModel().rows);
+        //           } else if (table.getRowModel().rows.length !== 0) {
+        //             exportToXLSX(table.getRowModel().rows);
+        //           } else {
+        //             exportToXLSX(props.data);
+        //           }
+        //         }}
+        //         sx={{ color: "darkgreen" }}
+        //       >
+        //         <BsFiletypeXlsx size={25} />
+        //       </Button>
+        //       <Button
+        //         onClick={() => {
+        //           exportToPdf();
+        //           handleClose();
+        //         }}
+        //         style={{ color: "red" }}
+        //       >
+        //         <BsFiletypePdf size={25} />
+        //       </Button>
+        //       <Button
+        //         onClick={() => {
+        //           if (table.getIsSomeRowsSelected()) {
+        //             exportToCSV(table.getSelectedRowModel().rows);
+        //           } else if (
+        //             table.getPrePaginationRowModel().rows.length !== 0
+        //           ) {
+        //             exportToCSV(table.getPrePaginationRowModel().rows);
+        //           } else if (table.getRowModel().rows.length !== 0) {
+        //             exportToCSV(table.getRowModel().rows);
+        //           } else {
+        //             exportToCSV(props.data);
+        //           }
+        //         }}
+        //         style={{ color: "#78be67", textDecorationLine: "none" }}
+        //       >
+        //         <BsFiletypeCsv size={25} />
+        //       </Button>
+        //     </Box>
+        //     <Box>
+        //       {props.topToolbarCustomActions && props.topToolbarCustomActions()}
+        //     </Box>
+        //   </Box>
+        // )}
         renderRowActions={
           props.actions
             ? ({ row }) => (
@@ -311,6 +311,8 @@ const CustomTable = memo((props: CustomTableProps) => {
             fontSize: props.headerCellFontSize
               ? props.headerCellFontSize
               : "0.875rem",
+              fontWeight: "bold",
+              
           },
         })}
         enableRowVirtualization={props.enableRowVirtualization || false}

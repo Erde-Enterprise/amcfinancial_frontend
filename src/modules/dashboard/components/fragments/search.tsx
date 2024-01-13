@@ -1,22 +1,32 @@
 import {
+  Box,
   Button,
   Checkbox,
   FormControlLabel,
   Grid,
+  IconButton,
   InputAdornment,
   TextField,
 } from "@mui/material";
-import { FormEvent, useState } from "react";
+import { FormEvent, ReactElement, useContext, useState } from "react";
 import { SearchButtonForm } from "../../../../components/header/buttons/Search-Button-Form";
 import useDashboard from "../../hooks/use-dashboard";
 import { snackActions } from "../../../../utils/notification/snackbar-util";
+import AuthContext from "../../../../auth/auth";
+import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 
-function SearchInvoice() {
+
+interface SearchInvoiceProps {
+  additionalComponents: ReactElement[];
+}
+
+function SearchInvoice({ additionalComponents }: SearchInvoiceProps) {
   const [invoiceNumber, setInvoiceNumber] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [isDateSearch, setIsDateSearch] = useState(false);
   const { getInvoices, getUniqueInvoice } = useDashboard();
+  const { user } = useContext(AuthContext);
 
   const handleSearch = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,68 +47,90 @@ function SearchInvoice() {
       direction={"column"}
       alignItems={"center"}
       justifyContent={"center"}
-      sx={{flex:1}}
+      sx={{ flex: 1 }}
     >
-      <Grid item sx={{flex:1}}>
-        <FormControlLabel sx={{flex:1}}
-          control={
-            <Checkbox
-              checked={isDateSearch}
-              onChange={(e) => setIsDateSearch(e.target.checked)}
-              color="primary"
-            />
-          }
-          label="Date Search"
-        />
-      </Grid>
-      <Grid item sx={{flex:1}}>
+      <Grid item sx={{ flex: 1 }}>
         <form onSubmit={handleSearch}>
-          <Grid container spacing={1} sx={{flex:1}}>
-            <Grid item xs={12} sx={{flex:1}}>
+          <Grid container spacing={1} sx={{ flex: 1 }}>
+            <Grid item xs={12} sx={{ flex: 1 }}>
               {!isDateSearch && (
-                <TextField
-                sx={{flex:1}}
-                  label="Invoice Number"
-                  value={invoiceNumber}
-                  onChange={(e) => setInvoiceNumber(e.target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <SearchButtonForm />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
+                <Grid container spacing={1} alignItems="center">
+                  <Grid item>
+                    <TextField
+                      label="Rechnungsnummer"
+                      value={invoiceNumber}
+                      variant="outlined"
+                      onChange={(e) => setInvoiceNumber(e.target.value)}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchButtonForm fontSize="large"/>
+                          </InputAdornment>
+                        ),
+                        sx: { borderRadius: "20px" },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                  <Grid container>
+                    <Grid item>
+                    <IconButton onClick={(e) => setIsDateSearch(!isDateSearch)}>
+                      <CalendarMonthRoundedIcon fontSize="large" />
+                    </IconButton>
+                    </Grid>
+                    {additionalComponents.map((Component, index) => (
+                      <Grid item key={index+2}>{Component}</Grid>
+                    ))}
+                  </Grid>
+                  </Grid>
+                </Grid>
               )}
               {isDateSearch && (
-                <Grid sx={{flex:1}} container spacing={1}>
-                  <Grid item sx={{flex:1}}>
+                <Grid container spacing={1} alignItems="center">
+                  <Grid item>
                     <TextField
-                    sx={{flex:1}}
-                      label="Issued Date"
+                      label="Ausgegeben am"
                       type="date"
                       InputLabelProps={{
                         shrink: true,
                       }}
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
+                      InputProps={{
+                        sx: { borderRadius: "20px" },
+                      }}
                     />
                   </Grid>
-                  <Grid item sx={{flex:1}}>
+                  <Grid item>
                     <TextField
-                    sx={{flex:1}}
-                      label="Due Date"
+                      label="Fälligkeitsdatum"
                       type="date"
                       InputLabelProps={{
                         shrink: true,
                       }}
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
+                      InputProps={{
+                        sx: { borderRadius: "20px" },
+                      }}
                     />
                   </Grid>
-                  <Grid item sx={{flex:1}}>
-                    <SearchButtonForm sx={{flex:1}}/>
+                  <Grid item>
+                  <Grid container>
+                    <Grid item>
+                    <SearchButtonForm fontSize="large" />
+                    </Grid>
+                    <Grid item>
+                    <IconButton onClick={(e) => setIsDateSearch(!isDateSearch)}>
+                      <CalendarMonthRoundedIcon fontSize="large" />
+                    </IconButton>
+                    </Grid>
+                    {additionalComponents.map((Component, index) => (
+                      <Grid item key={index+2}>{Component}</Grid>
+                    ))}
                   </Grid>
+                  </Grid>
+                  
                 </Grid>
               )}
             </Grid>

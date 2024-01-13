@@ -3,20 +3,21 @@ import {
   Button,
   FormHelperText,
   Grid,
+  InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
 import { UserUpdateEntity } from "../model/user.entity";
-import { CancelButtonFormToDashboard } from "../../../components/header/buttons/Cancel-Form-Button";
 import { ResetButtonForm } from "../../../components/header/buttons/Reset-Form-Button";
 import { SubmitButtonForm } from "../../../components/header/buttons/Submit-Form-Button";
-import { passwordsMatch, validatePassword, validateUpdatePassword } from "../utils/utils";
+import { passwordsMatch, validateUpdatePassword } from "../utils/utils";
 import { ChangeEvent, FormEvent, useState } from "react";
 import useUsers from "../hooks/use-users";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
+import AttachmentRoundedIcon from "@mui/icons-material/AttachmentRounded";
 import { validateLogin } from "../../login/utils/utils";
+import { styleInputTextField } from "../../dashboard/utils/utils";
 
 export function UserModalUpdateForm({
   email,
@@ -102,14 +103,14 @@ export function UserModalUpdateForm({
       <Grid item xs={12}>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2} direction="column" alignItems="center">
-            {fileName && <p>Arquivo selecionado: {fileName}</p>}
+            {fileName && <p>Ausgewählte Datei: {fileName}</p>}
             <Grid item>
               <Button
                 variant="outlined"
-                endIcon={<AttachFileIcon fontSize="small" />}
+                startIcon={<AttachmentRoundedIcon fontSize="small" />}
                 component="label"
               >
-                Image
+                Foto
                 <input
                   type="file"
                   accept="image/*"
@@ -120,9 +121,14 @@ export function UserModalUpdateForm({
             </Grid>
             <Grid item container spacing={2}>
               <Grid item xs={5}>
+                <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+                  Name
+                </InputLabel>
                 <TextField
-                  variant="filled"
-                  label="Name"
+                  fullWidth
+                  InputProps={{
+                    sx: { borderRadius: styleInputTextField },
+                  }}
                   name="name"
                   value={newUser.name}
                   onChange={handleInputChange}
@@ -130,9 +136,14 @@ export function UserModalUpdateForm({
                 />
               </Grid>
               <Grid item xs={5}>
+                <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+                  Spitzname
+                </InputLabel>
                 <TextField
-                  variant="filled"
-                  label="Nickname"
+                  fullWidth
+                  InputProps={{
+                    sx: { borderRadius: styleInputTextField },
+                  }}
                   name="new_nickname"
                   value={newUser.new_nickname}
                   onChange={handleInputChange}
@@ -140,9 +151,12 @@ export function UserModalUpdateForm({
                 />
               </Grid>
               <Grid item xs={2}>
+                <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+                  Typ
+                </InputLabel>
                 <Select
-                  variant="filled"
-                  label="Type"
+                  fullWidth
+                  style={{ borderRadius: styleInputTextField }}
                   name="type"
                   id="type"
                   value={newUser.type.toString()}
@@ -158,9 +172,13 @@ export function UserModalUpdateForm({
               </Grid>
             </Grid>
             <Grid item xs={12} style={{ width: "100%" }}>
+              <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+                E-mail
+              </InputLabel>
               <TextField
-                variant="filled"
-                label="Email"
+                InputProps={{
+                  sx: { borderRadius: styleInputTextField },
+                }}
                 name="email"
                 value={newUser.email}
                 error={newUser.email !== "" && !validateLogin(newUser.email)}
@@ -169,7 +187,7 @@ export function UserModalUpdateForm({
                 required
                 helperText={
                   newUser.email !== "" && !validateLogin(newUser.email)
-                    ? "Invalid email format"
+                    ? "Ungültiges E-Mail-Format"
                     : ""
                 }
               />
@@ -177,9 +195,14 @@ export function UserModalUpdateForm({
             <Grid item container spacing={2}>
               <Grid item xs={6}>
                 <Box>
+                  <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+                    Passwort Bestätigen
+                  </InputLabel>
                   <TextField
-                    variant="filled"
-                    label="Password"
+                    fullWidth
+                    InputProps={{
+                      sx: { borderRadius: styleInputTextField },
+                    }}
                     name="password"
                     type="password"
                     value={newUser.password}
@@ -198,15 +221,20 @@ export function UserModalUpdateForm({
                   >
                     {newUser.password !== "" &&
                     !validateUpdatePassword(newUser.password)
-                      ? `Password too small`
+                      ? `Passwort zu klein`
                       : ""}
                   </FormHelperText>
                 </Box>
               </Grid>
               <Grid item xs={6}>
+                <InputLabel sx={{ mb: 1, fontSize: 20, fontWeight: "bold" }}>
+                  Passwort Bestätigen
+                </InputLabel>
                 <TextField
-                  variant="filled"
-                  label="Confirm Password"
+                  fullWidth
+                  InputProps={{
+                    sx: { borderRadius: styleInputTextField },
+                  }}
                   name="confirmPassword"
                   type="password"
                   value={confirmPassword}
@@ -214,16 +242,22 @@ export function UserModalUpdateForm({
                   error={!passwordsMatch(newUser.password, confirmPassword)}
                   helperText={
                     !passwordsMatch(newUser.password, confirmPassword)
-                      ? "Passwords don't match"
+                      ? "Passwörter stimmen nicht überein"
                       : ""
                   }
                 />
               </Grid>
             </Grid>
-            <Grid item>
-              <CancelButtonFormToDashboard />
-              <ResetButtonForm handleReset={handleReset} />
-              <SubmitButtonForm />
+            <Grid
+              container
+              spacing={2}
+              alignItems={"flex-end"}
+              justifyContent={"flex-end"}
+            >
+              <Grid item marginTop={2}>
+                <ResetButtonForm handleReset={handleReset} />
+                <SubmitButtonForm sx={{ ml: 1 }} />
+              </Grid>
             </Grid>
           </Grid>
         </form>

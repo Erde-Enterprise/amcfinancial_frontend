@@ -1,23 +1,21 @@
-import { Button, SxProps, Theme } from "@mui/material";
-import SearchIcon from '@mui/icons-material/Search';
+import { Button, IconButton, SxProps, Theme } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface SearchButtonFormEntity {
-//   handleSubmit: () => void;
+  //   handleSubmit: () => void;
   sx?: SxProps<Theme> | undefined;
+  fontSize?: "small" | "inherit" | "medium" | "large";
 }
 
-export function SearchButtonForm(
-  props: SearchButtonFormEntity
-) {
+export function SearchButtonForm(props: SearchButtonFormEntity) {
   return (
-    <Button
+    <IconButton
       color="primary"
-      endIcon={<SearchIcon fontSize="small" />}
-    //   onClick={props.handleSubmit}
+      //   onClick={props.handleSubmit}
       sx={props.sx}
       type="submit"
     >
-      Search
-    </Button>
+      <SearchIcon fontSize={props.fontSize ?? "small"} />
+    </IconButton>
   );
 }

@@ -1,9 +1,12 @@
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
-import { TextField, Button, Container, Grid } from "@mui/material";
+import { TextField, Button, Container, Grid, InputLabel } from "@mui/material";
 import { InvoiceInsertEntity } from "./model/add-invoice.entity";
-import { validateForm, validatorsInvoice } from "../../utils/utils";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
-import { CancelButtonFormToDashboard } from "../../../../components/header/buttons/Cancel-Form-Button";
+import {
+  styleInputTextField,
+  validateForm,
+  validatorsInvoice,
+} from "../../utils/utils";
+import AttachmentRoundedIcon from '@mui/icons-material/AttachmentRounded';
 import { ResetButtonForm } from "../../../../components/header/buttons/Reset-Form-Button";
 import { SubmitButtonForm } from "../../../../components/header/buttons/Submit-Form-Button";
 import useDashboard from "../../hooks/use-dashboard";
@@ -92,22 +95,22 @@ export function AddInvoice() {
   }, []);
   return (
     <>
-      <Container sx={{ flexDirection: "column", flex: 1, marginTop: "10%" }}>
+      <Container sx={{ flexDirection: "column", flex: 1, marginTop: "5%" }}>
         <form onSubmit={handleSubmit}>
           <Grid
             container
-            spacing={2}
+            spacing={3}
             direction={"column"}
             alignItems={"center"}
             justifyContent={"center"}
-          >
+          ><InputLabel sx={{mb:1, fontSize:20, fontWeight: "bold"}}>Anhang</InputLabel>
             {fileName && <p>Arquivo selecionado: {fileName}</p>}
             <Button
               variant="outlined"
-              endIcon={<AttachFileIcon fontSize="small" />}
+              startIcon={<AttachmentRoundedIcon fontSize="medium" />}
               component="label"
             >
-              Attachment
+              Anhang
               <input
                 ref={inputFileRef}
                 type="file"
@@ -119,36 +122,45 @@ export function AddInvoice() {
             </Button>
             <br />
           </Grid>
-          <Grid container spacing={2}>
+          <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item xs={2}>
+              <Grid container spacing={6}>
+                <Grid item xs={6}>
+                  <InputLabel sx={{mb:1, fontSize:20, fontWeight: "bold"}}>Rechnung</InputLabel>
                   <TextField
-                    variant="filled"
                     name="rechnung"
-                    label="Rechnung"
+                    
                     value={invoice.rechnung}
                     onChange={handleChange}
                     error={!validatorsInvoice.rechnung(invoice.rechnung)}
                     fullWidth
+                    InputProps={{
+                      sx: { borderRadius: styleInputTextField },
+                    }}
                   />
                 </Grid>
-                <Grid item xs={1.5}>
+                <Grid item xs={2}>
+                <InputLabel sx={{mb:1, fontSize:20, fontWeight: "bold"}}>{"Preis (CHF)"}</InputLabel>
                   <TextField
-                    variant="filled"
+                    InputProps={{
+                      sx: { borderRadius: styleInputTextField },
+                    }}
                     name="price"
-                    label="Price"
+                    
                     value={invoice.price}
                     onChange={handleChange}
                     error={!validatorsInvoice.price(invoice.price)}
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={1.5}>
+                <Grid item xs={2}>
+                <InputLabel sx={{mb:1, fontSize:20, fontWeight: "bold"}}>Mahnung</InputLabel>
                   <TextField
-                    variant="filled"
+                    InputProps={{
+                      sx: { borderRadius: styleInputTextField },
+                    }}
                     name="mahnung"
-                    label="Mahnung"
+                    
                     value={invoice.mahnung}
                     onChange={handleChange}
                     error={!validatorsInvoice.mahnung(invoice.mahnung)}
@@ -156,9 +168,10 @@ export function AddInvoice() {
                   />
                 </Grid>
                 <Grid item xs={2}>
+                <InputLabel sx={{mb:1, fontSize:20, fontWeight: "bold"}}>Typ</InputLabel>
                   <CustomType
-                    variant="filled"
-                    label="Type"
+                    variant="outlined"
+                    
                     value={invoice.type}
                     onChange={(event: any) => handleChange(event, "type")}
                     error={!validatorsInvoice.type(invoice.type)}
@@ -166,11 +179,97 @@ export function AddInvoice() {
                     sx={{ width: "100%" }}
                   />
                 </Grid>
-                <Grid item xs={2.5}>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container spacing={6}>
+                <Grid item xs={4.5}>
+                <InputLabel sx={{mb:1, fontSize:20, fontWeight: "bold"}}>Name</InputLabel>
                   <TextField
-                    variant="filled"
+                    InputProps={{
+                      sx: { borderRadius: styleInputTextField },
+                    }}
+                    name="name"
+                    
+                    value={invoice.name}
+                    onChange={handleChange}
+                    error={!validatorsInvoice.name(invoice.name)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={2.5}>
+                <InputLabel sx={{mb:1, fontSize:20, fontWeight: "bold"}}>Status</InputLabel>
+                  <CustomType
+                    variant="outlined"
+                    
+                    value={invoice.status}
+                    onChange={(event: any) => handleChange(event, "status")}
+                    error={!validatorsInvoice.status(invoice.status)}
+                    itens={Object.values(StatusInvoiceEnum)}
+                    sx={{ width: "100%" }}
+                  />
+                </Grid>
+                <Grid item xs={2.5}>
+                <InputLabel sx={{mb:1, fontSize:20, fontWeight: "bold"}}>Geplant</InputLabel>
+                  <TextField
+                    InputProps={{
+                      sx: { borderRadius: styleInputTextField },
+                    }}
+                    name="scheduledDate"
+                    
+                    value={invoice.scheduledDate}
+                    onChange={handleChange}
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    error={
+                      invoice.status === StatusInvoiceEnum.S &&
+                      invoice.scheduledDate === ""
+                    }
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={2.5}>
+                <InputLabel sx={{mb:1, fontSize:20, fontWeight: "bold"}}>Lokal</InputLabel>
+                  <CustomType
+                    variant="outlined"
+                    
+                    value={invoice.clinic}
+                    onChange={(event: any) => handleChange(event, "clinic")}
+                    error={!validatorsInvoice.clinic(invoice.clinic)}
+                    itens={clinic?.clinics?.map((item) => {
+                      return item.name;
+                    })}
+                    sx={{ width: "100%" }}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container spacing={6}>
+                <Grid item xs={5}>
+                <InputLabel sx={{mb:1, fontSize:20, fontWeight: "bold"}}>Beschreibung</InputLabel>
+                  <TextField
+                    multiline
+                    rows={4}
+                    InputProps={{
+                      sx: { borderRadius: styleInputTextField },
+                    }}
+                    name="description"
+                    
+                    value={invoice.description}
+                    onChange={handleChange}
+                    error={!validatorsInvoice.description(invoice.description)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={3.5}>
+                <InputLabel sx={{mb:1, fontSize:20, fontWeight: "bold"}}>Ausgegeben am</InputLabel>
+                  <TextField
+                    InputProps={{
+                      sx: { borderRadius: styleInputTextField },
+                    }}
                     name="issuedOn"
-                    label="Issue Date"
+                    
                     value={invoice.issuedOn}
                     onChange={handleChange}
                     type="date"
@@ -179,11 +278,14 @@ export function AddInvoice() {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={2.5}>
+                <Grid item xs={3.5}>
+                <InputLabel sx={{mb:1, fontSize:20, fontWeight: "bold"}}>Fälligkeitsdatum</InputLabel>
                   <TextField
-                    variant="filled"
+                    InputProps={{
+                      sx: { borderRadius: styleInputTextField },
+                    }}
                     name="dueDate"
-                    label="Due Date"
+                   
                     value={invoice.dueDate}
                     onChange={handleChange}
                     type="date"
@@ -198,86 +300,15 @@ export function AddInvoice() {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item xs={4}>
-                  <TextField
-                    variant="filled"
-                    name="name"
-                    label="Name"
-                    value={invoice.name}
-                    onChange={handleChange}
-                    error={!validatorsInvoice.name(invoice.name)}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={2.5}>
-                  <CustomType
-                    variant="filled"
-                    label="Status"
-                    value={invoice.status}
-                    onChange={(event: any) => handleChange(event, "status")}
-                    error={!validatorsInvoice.status(invoice.status)}
-                    itens={Object.values(StatusInvoiceEnum)}
-                    sx={{ width: "100%" }}
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    variant="filled"
-                    name="scheduledDate"
-                    label="Scheduled"
-                    value={invoice.scheduledDate}
-                    onChange={handleChange}
-                    type="date"
-                    InputLabelProps={{ shrink: true }}
-                    error={
-                      invoice.status === StatusInvoiceEnum.S &&
-                      invoice.scheduledDate === ""
-                    }
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={2.5}>
-                  <CustomType
-                    variant="filled"
-                    label="Clinic"
-                    value={invoice.clinic}
-                    onChange={(event: any) => handleChange(event, "clinic")}
-                    error={!validatorsInvoice.clinic(invoice.clinic)}
-                    itens={clinic?.clinics?.map((item) => {
-                      return item.name;
-                    })}
-                    sx={{ width: "100%" }}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="filled"
-                    name="description"
-                    label="Description"
-                    value={invoice.description}
-                    onChange={handleChange}
-                    error={!validatorsInvoice.description(invoice.description)}
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
               <Grid
                 container
                 spacing={2}
-                alignItems={"center"}
-                justifyContent={"center"}
+                alignItems={"flex-end"}
+                justifyContent={"flex-end"}
               >
                 <Grid item xs={3.5}>
-                  <CancelButtonFormToDashboard />
                   <ResetButtonForm handleReset={handleReset} />
-                  <SubmitButtonForm />
+                  <SubmitButtonForm sx={{ml: 1}} />
                 </Grid>
               </Grid>
             </Grid>

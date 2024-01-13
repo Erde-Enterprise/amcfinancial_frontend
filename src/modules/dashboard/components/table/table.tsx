@@ -21,11 +21,15 @@ import {
   styleMenuItem,
 } from "../../utils/utils";
 import AuthContext from "../../../../auth/auth";
-import PlaylistAddCircleIcon from "@mui/icons-material/PlaylistAddCircle";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import useDashboard from "../../hooks/use-dashboard";
-import { InvoiceEntity, InvoiceRowsEntity } from "../../model/dashboard.entity";
-import { getValueFromKey } from "../../../../utils/utils";
+import {
+  InvoiceEntity,
+  InvoiceRowsEntity,
+  InvoiceSumEntity,
+} from "../../model/dashboard.entity";
+import { getValueFromKey, transformDateFormat } from "../../../../utils/utils";
 import { StatusInvoiceEnum } from "../../features/add-invoice/enum/add-invoice.enum";
 import { CustomTypeEnum } from "../../../../components/inputs/enum/type.enum";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
@@ -34,6 +38,8 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { snackActions } from "../../../../utils/notification/snackbar-util";
 import SearchInvoice from "../fragments/search";
 import ConfirmDialog from "../../../../components/modal/custom-dialog";
+import { CustomModal } from "../../../../components/modal/custom-modal";
+import { AddInvoice } from "../../features/add-invoice/add-invoice";
 
 export function Table() {
   const { user } = useContext(AuthContext);
@@ -43,12 +49,19 @@ export function Table() {
     invoice,
     deleteInvoice,
     downloadInvoice,
+    getTotalSum,
+    getScheduledSum,
   } = useDashboard();
   const [open, setOpen] = useState<boolean>(false);
+  const [openAddInvoice, setOpenAddInvoice] = useState<boolean>(false);
   const [data, setData] = useState<InvoiceRowsEntity[]>([]);
   const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
   const [invoicesDeleted, setInvoicesDeleted] = useState<string[]>([]);
   // const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [totalSum, setTotalSum] = useState<InvoiceSumEntity>({ sum: 0 });
+  const [totalScheduledSum, setTotalScheduledSum] = useState<InvoiceSumEntity>({
+    sum: 0,
+  });
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
       {
@@ -73,7 +86,7 @@ export function Table() {
       },
       {
         accessorKey: "price",
-        header: "Price",
+        header: "Preis (CHF)",
         maxSize: 400,
         size: 80,
         minSize: 20,
@@ -83,7 +96,7 @@ export function Table() {
       },
       {
         accessorKey: "scheduledDate",
-        header: "Scheduled",
+        header: "Geplant",
         maxSize: 400,
         size: 80,
         minSize: 20,
@@ -100,7 +113,7 @@ export function Table() {
       },
       {
         accessorKey: "dueDate",
-        header: "Due Date",
+        header: "Fälligkeitsdatum",
         maxSize: 400,
         size: 80,
         minSize: 20,
@@ -114,10 +127,10 @@ export function Table() {
             </span>
           </>
         ),
-        Cell: ({ cell, row }: any) => (
+        Cell: ({ row, renderedCellValue }) => (
           <>
             <span style={{ color: getColor(Number(row.original.mahnung)) }}>
-              {cell.getValue()}
+              {renderedCellValue}
             </span>
           </>
         ),
@@ -148,19 +161,17 @@ export function Table() {
             </Box>
           </>
         ),
-        Cell: ({ cell, row }: any) => (
+        Cell: ({ renderedCellValue }) => (
           <>
             <Box
               style={{
                 border: "1px",
-                backgroundColor: getColorWithOpacity(
-                  Number(row.original.mahnung)
-                ),
+                backgroundColor: getColorWithOpacity(Number(renderedCellValue)),
               }}
               sx={{ width: "7.5%" }}
             >
-              <span style={{ color: getColor(Number(row.original.mahnung)) }}>
-                {cell.getValue()}
+              <span style={{ color: getColor(Number(renderedCellValue)) }}>
+                {renderedCellValue}
               </span>
             </Box>
           </>
@@ -168,7 +179,7 @@ export function Table() {
       },
       {
         accessorKey: "description",
-        header: "Description",
+        header: "Beschreibung",
         maxSize: 400,
         size: 80,
         minSize: 20,
@@ -178,7 +189,7 @@ export function Table() {
       },
       {
         accessorKey: "issuedOn",
-        header: "Issued On",
+        header: "Ausgegeben am",
         maxSize: 400,
         size: 80,
         minSize: 20,
@@ -198,7 +209,7 @@ export function Table() {
       },
       {
         accessorKey: "type",
-        header: "Type",
+        header: "Typ",
         maxSize: 400,
         size: 45,
         minSize: 20,
@@ -208,9 +219,9 @@ export function Table() {
       },
       {
         accessorKey: "clinic",
-        header: "Clinuc",
+        header: "Klinik",
         maxSize: 400,
-        size: 75,
+        size: 95,
         minSize: 20,
         id: "clinic",
         columnDefType: "data",
@@ -229,7 +240,7 @@ export function Table() {
       },
       {
         accessorKey: "attachment",
-        header: "Attachment",
+        header: "Anhang",
         maxSize: 400,
         size: 80,
         minSize: 20,
@@ -281,20 +292,29 @@ export function Table() {
           rechnung: item.invoice_number,
           name: item.title,
           price: item.amount,
-          dueDate: item.due_date,
+          dueDate: transformDateFormat(item.due_date),
           mahnung: item.reminder,
           description: item.description,
-          issuedOn: item.issue_date,
+          issuedOn: transformDateFormat(item.issue_date),
           attachment: "",
           status: getValueFromKey(item.status, StatusInvoiceEnum),
           type: getValueFromKey(item.type, CustomTypeEnum),
           clinic: item.clinic.name,
           color: item.clinic.color,
-          scheduledDate: item.scheduled_date,
+          scheduledDate:
+            item.scheduled_date === undefined || item.scheduled_date === null
+              ? undefined
+              : transformDateFormat(item.scheduled_date),
           invoice: item,
         })) as InvoiceRowsEntity[]
       );
     }
+    getTotalSum().then((data) => {
+      setTotalSum({ sum: data?.data.sum });
+    });
+    getScheduledSum().then((data) => {
+      setTotalScheduledSum({ sum: data?.data.sum });
+    });
   }, [invoice?.invoices]);
 
   useEffect(() => {
@@ -324,6 +344,12 @@ export function Table() {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleOpenAddInvoice = ()=>{
+    setOpenAddInvoice(true);
+  }
+  const handleCloseAddInvoice = ()=>{
+    setOpenAddInvoice(false);
+  }
 
   const handleManyDelets = async () => {
     if (invoicesDeleted.length === 0) {
@@ -341,52 +367,42 @@ export function Table() {
         handleClose();
       });
   };
+  function buttons() {
+    return [
+      <>
+        {user?.type !== 0 ? undefined : (
+          <IconButton onClick={handleOpen} color="error">
+            <DeleteRoundedIcon fontSize="large" />
+          </IconButton>
+        )}
+        {user?.type === 1 ? undefined : (
+          <IconButton
+            color="primary"
+            onClick={() => {
+              handleOpenAddInvoice();
+            }}
+          >
+            <AddBoxRoundedIcon fontSize="large" />
+          </IconButton>
+        )}
+      </>,
+    ];
+  }
   return (
     <Grid
       sx={{ flex: 1 }}
       container
-      alignItems={"center"}
-      spacing={1}
+      alignItems={"start"}
       flexDirection={"column"}
-      mt={"15%"}
+      mt={"5%"}
     >
-      <Grid sx={{ flex: 1 }} item>
-        <h3>Welcome, {user?.name}</h3>
-      </Grid>
-
-      <Grid item sx={styleMenuItem}>
-        {getRandomPhrase()}
-      </Grid>
-
-      {user?.type !== 0 ? undefined : (
-        <Grid item sx={{ flex: 1 }}>
-          <SearchInvoice />
-        </Grid>
-      )}
-
       <Grid item>
-        {user?.type !== 0 ? undefined : (
-          <Button
-            onClick={handleOpen}
-            endIcon={<DeleteForeverIcon fontSize="small" />}
-            color="error"
-          >
-            Delete
-          </Button>
-        )}
-        {user?.type === 1 ? undefined : (
-          <Button
-            endIcon={<PlaylistAddCircleIcon fontSize="small" />}
-            color="primary"
-            onClick={() => {
-              goToAddInvoice();
-            }}
-          >
-            Insert
-          </Button>
-        )}
+        <h3>Willkommen, {user?.name}</h3>
+        <p style={{ color: "#A0A3BD" }}>{getRandomPhrase()}</p>
       </Grid>
-
+      <Grid item>
+        <SearchInvoice additionalComponents={buttons()} />
+      </Grid>
       <Grid item>
         <CustomTable
           state={{ rowSelection: { ...rowSelection } }}
@@ -399,7 +415,7 @@ export function Table() {
           containerProps={{
             sx: {
               maxHeight: "80vh",
-              minHeight: "70vh",
+              minHeight: "50vh",
               minWidth: "120%",
               flex: 1,
             },
@@ -425,7 +441,6 @@ export function Table() {
               maxSize: 60,
             },
           }}
-          //initialState={{ grouping: ["mahnung", "dueDate"], expanded: true }}
           cellFontSizeInBody={"0.7rem"}
           headerCellFontSize={"0.8rem"}
           actions={
@@ -447,28 +462,34 @@ export function Table() {
                     <Typography fontWeight="bold" display="inline">
                       Total Invoice Payable/Expire:
                     </Typography>{" "}
-                    {"0"}
+                    {totalSum.sum}
                   </Grid>
                   <Grid item>
                     <Typography fontWeight="bold" display="inline">
                       Total Invoice Scheduled:
                     </Typography>{" "}
-                    {"0"}
+                    {totalScheduledSum.sum}
                   </Grid>
                 </Grid>
                 <BottomToolbar table={table.table} />
               </>
             );
           }}
+          topToolbarCustomActions={buttons}
         />
       </Grid>
-
       <ConfirmDialog
         open={open}
         onClose={handleClose}
         onClickYes={handleManyDelets}
         text="Confirm?"
       />
+      <CustomModal sx={{
+            width: "70%",
+            height: "70%",
+          }} title="Rechnung Hinzufügen" open={openAddInvoice} handleClose={handleCloseAddInvoice}>
+        <AddInvoice />
+      </CustomModal>
     </Grid>
   );
 }

@@ -1,4 +1,4 @@
-import { Button, SxProps, Theme } from "@mui/material";
+import { Button, IconButton, SxProps, Theme } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 
@@ -15,13 +15,12 @@ export function CancelButtonFormToDashboard(
     navigate("/dashboard/");
   };
   return (
-    <Button
+    <IconButton
       color="inherit"
-      endIcon={<CloseIcon fontSize="small" />}
       onClick={handleCancel}
       sx={props.sx}
     >
-      Cancel
-    </Button>
+      <CloseIcon fontSize="large" />
+    </IconButton>
   );
 }

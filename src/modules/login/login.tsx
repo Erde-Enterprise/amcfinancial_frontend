@@ -22,7 +22,9 @@ export function LoginPage() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
-    await login(access, password);
+    navigator.geolocation.getCurrentPosition(async (position)=>{
+      await login(access, password, position.coords.latitude, position.coords.longitude);
+    });
     setLoading(false);
   };
 
@@ -79,7 +81,7 @@ export function LoginPage() {
                   sx={buttonStyle}
                   disabled={!isFormValid}
                 >
-                  Login
+                  ANMELDEN
                 </LoadingButton>
               </Grid>
             </Grid>

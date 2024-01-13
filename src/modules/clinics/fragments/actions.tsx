@@ -1,8 +1,7 @@
 import { IconButton } from "@mui/material";
 import { useState } from "react";
-import SaveAsIcon from "@mui/icons-material/SaveAs";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import UpdateIcon from "@mui/icons-material/Update";
+import DriveFileRenameOutlineRoundedIcon from '@mui/icons-material/DriveFileRenameOutlineRounded';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import useClinic from "../hooks/use-clinics";
 import CustomTooltip from "../../dashboard/components/table/custom-tooltip/Custom-Tooltip";
 import ConfirmDialog from "../../../components/modal/custom-dialog";
@@ -39,16 +38,16 @@ export function Actions(row: any) {
 
   return (
     <>
-      <CustomTooltip title="Update">
+      <CustomTooltip title="Aktualisieren">
         <IconButton
-          //sx={{ color: `${invoice.clinic.color}` }}
           onClick={handleOpenUpdate}
+          color="primary"
           disableRipple
         >
-          <SaveAsIcon />
+          <DriveFileRenameOutlineRoundedIcon />
         </IconButton>
       </CustomTooltip>
-      <CustomTooltip title="Delete">
+      <CustomTooltip title="Löschen">
         <IconButton
           color="error"
           onClick={() => {
@@ -56,19 +55,20 @@ export function Actions(row: any) {
             handleOpen();
           }}
         >
-          <DeleteForeverIcon />
+          <DeleteRoundedIcon />
         </IconButton>
       </CustomTooltip>
       <ConfirmDialog
         open={open}
         onClose={handleClose}
         onClickYes={handleYes}
-        text="Confirm?"
+        text="Bestätigen Sie?"
       />
       <CustomModal
         open={openUpdate}
-        title="Update"
+        title="Aktualisieren"
         handleClose={handleCloseUpdate}
+        sx={{width:"45%", height:"50%"}}
       >
         <ClinicsModalFormUpdate
           name={row.original.name}
