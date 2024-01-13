@@ -1,8 +1,4 @@
 import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
   Grid,
   IconButton,
   InputAdornment,
@@ -11,7 +7,6 @@ import {
 import { FormEvent, ReactElement, useContext, useState } from "react";
 import { SearchButtonForm } from "../../../../components/header/buttons/Search-Button-Form";
 import useDashboard from "../../hooks/use-dashboard";
-import { snackActions } from "../../../../utils/notification/snackbar-util";
 import AuthContext from "../../../../auth/auth";
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 

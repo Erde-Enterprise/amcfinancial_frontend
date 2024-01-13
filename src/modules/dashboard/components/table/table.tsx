@@ -21,8 +21,8 @@ import {
   styleMenuItem,
 } from "../../utils/utils";
 import AuthContext from "../../../../auth/auth";
-import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import AddBoxRoundedIcon from "@mui/icons-material/AddBoxRounded";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import useDashboard from "../../hooks/use-dashboard";
 import {
   InvoiceEntity,
@@ -344,12 +344,12 @@ export function Table() {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleOpenAddInvoice = ()=>{
+  const handleOpenAddInvoice = () => {
     setOpenAddInvoice(true);
-  }
-  const handleCloseAddInvoice = ()=>{
+  };
+  const handleCloseAddInvoice = () => {
     setOpenAddInvoice(false);
-  }
+  };
 
   const handleManyDelets = async () => {
     if (invoicesDeleted.length === 0) {
@@ -484,10 +484,15 @@ export function Table() {
         onClickYes={handleManyDelets}
         text="Confirm?"
       />
-      <CustomModal sx={{
-            width: "70%",
-            height: "70%",
-          }} title="Rechnung Hinzufügen" open={openAddInvoice} handleClose={handleCloseAddInvoice}>
+      <CustomModal
+        sx={{
+          width: "70%",
+          height: "70%",
+        }}
+        title="Rechnung Hinzufügen"
+        open={openAddInvoice}
+        handleClose={handleCloseAddInvoice}
+      >
         <AddInvoice />
       </CustomModal>
     </Grid>

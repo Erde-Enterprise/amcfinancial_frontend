@@ -164,6 +164,10 @@ export function DashBoardModal(props: ModalDashboardEntity) {
             name="price"
             value={values.price}
             onChange={handleChange}
+<<<<<<< HEAD
+=======
+            label="Preis (CHF)"
+>>>>>>> 3735036a5422e23d0aa99d53d19a5b0fcd3c5c15
             type="number"
             sx={{ width: "100%" }}
             InputProps={{
