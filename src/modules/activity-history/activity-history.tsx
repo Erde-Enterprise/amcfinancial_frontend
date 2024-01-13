@@ -92,7 +92,7 @@ export function ActivityHistoryPage() {
     }
   }, [historic]);
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={1} mt={"5%"} direction={"column"} alignItems={"center"}>
       <Grid item>
         <CustomTable
           title="List Last Access"

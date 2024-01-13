@@ -63,9 +63,9 @@ export function MenuScreen(props: MenuScreenProps) {
           sx: {
             flex: 1,
             width: "15%",
-            maxHeight: "100vh",
+            maxHeight: "100%",
             overflowY: "auto",
-            top: "5.8%",
+            top: "9.2%",
             transition: "width 1s",
           },
         }}
