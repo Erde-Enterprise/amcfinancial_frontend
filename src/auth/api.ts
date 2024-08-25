@@ -8,7 +8,7 @@ import { verifyRequest } from "../utils/utils";
 export const SECURITY_KEY = "@Security_MRR@amcAMCfinancialFINANCIAL_@";
 
 const api = axios.create({
-  baseURL: "http://185.173.110.61:8080",
+  baseURL: "https://avegenaapi.erdeenterprise.com:8443",
   headers: {
     "Content-Type": "application/json",
   },
